@@ -1,11 +1,7 @@
 #include <fstream>
 #include <cmath>
 
-struct PPMHeader {
-    int width;
-    int height;
-    int maxColorComponent;
-};
+#include "Common/ppm.h"
 
 struct Vec3 {
     int x, y, z;
@@ -23,8 +19,7 @@ struct Lemniscate {
     int a;
 };
 
-static void setPPMFileHeader(std::ofstream&, const PPMHeader&);
-static void drawImageWithLemniscates(std::ofstream& ppmFile, const PPMHeader& header,
+static void drawImageWithLemniscates(std::ofstream& ppmFile, const crt::PPMHeader& header,
                                      const Lemniscate& lemn1, const Lemniscate& lemn2,
                                      const Circle& circle1, const Circle& circle2,
                                      const Vec3& backColor);
@@ -35,11 +30,11 @@ int main() {
     const int imageHeight = 1240;
     const int maxColorComponent = 255;
 
-    PPMHeader header{imageWidth, imageHeight, maxColorComponent};
+    crt::PPMHeader header{imageWidth, imageHeight, maxColorComponent};
     std::ofstream ppmFile("task2_image.ppm", std::ios::out | std::ios::binary);
     if (ppmFile.fail()) return -1;
 
-    setPPMFileHeader(ppmFile, header);
+    header.setPPMFileHeader(ppmFile);
 
     Vec3 lemnCenter{imageWidth / 2, imageHeight / 2};
 
@@ -60,13 +55,13 @@ int main() {
     return 0;
 }
 
-static void setPPMFileHeader(std::ofstream& ppmFile, const PPMHeader& header) {
+static void setPPMFileHeader(std::ofstream& ppmFile, const crt::PPMHeader& header) {
     ppmFile << "P3\n";
     ppmFile << header.width << " " << header.height << '\n'; 
     ppmFile << header.maxColorComponent << '\n';
 }
 
-static void drawImageWithLemniscates(std::ofstream& ppmFile, const PPMHeader& header,
+static void drawImageWithLemniscates(std::ofstream& ppmFile, const crt::PPMHeader& header,
                                      const Lemniscate& lemn1, const Lemniscate& lemn2,
                                      const Circle& circle1, const Circle& circle2,
                                      const Vec3& backColor) {
