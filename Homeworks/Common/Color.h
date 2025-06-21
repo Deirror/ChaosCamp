@@ -6,7 +6,7 @@
 CRT_BEGIN
 
 struct Color {
-    float r, g, b;
+    unsigned int r, g, b;
 
     void printToFile(std::ofstream&) const;
 };

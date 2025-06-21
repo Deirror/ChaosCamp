@@ -33,14 +33,21 @@ public:
 
     Vector<N> normalized() const;
 
-    friend Vector<N> operator+(const Vector<N>&, const Vector<N>&);
-    friend Vector<N> operator-(const Vector<N>&, const Vector<N>&);
-    friend Vector<N> operator*(const Vector<N>&, const Vector<N>&);
-    friend Vector<N> operator*(float, const Vector<N>&);
-    friend Vector<N> operator*(const Vector<N>&, float);
-    friend Vector<N> operator/(const Vector<N>&, float); 
+    template<int M>
+    friend Vector<M> operator+(const Vector<M>&, const Vector<M>&);
+    template<int M>
+    friend Vector<M> operator-(const Vector<M>&, const Vector<M>&);
+    template<int M>
+    friend Vector<M> operator*(const Vector<M>&, const Vector<M>&);
+    template<int M>
+    friend Vector<M> operator*(float, const Vector<M>&);
+    template<int M>
+    friend Vector<M> operator*(const Vector<M>&, float);
+    template<int M>
+    friend Vector<M> operator/(const Vector<M>&, float); 
 
-    friend float dot(const Vector<N>&, const Vector<N>&);
+    template<int M>
+    friend float dot(const Vector<M>&, const Vector<M>&);
 private:
     std::array<float, N> m_Data;
 };
@@ -141,18 +148,6 @@ float dot(const Vector<N>& lhs, const Vector<N>& rhs) {
 template<int N>
 Vector<N> Vector<N>::normalized() const {
     return *this / length();
-}
-
-template<int N>
-Vector<N> cross(const Vector<N>& lhs, const Vector<N>& rhs);
-
-template<>
-Vector<3> cross<3>(const Vector<3>& lhs, const Vector<3>& rhs) {
-    return Vector<3>{
-        lhs[1] * rhs[2] - lhs[2] * rhs[1],
-        lhs[2] * rhs[0] - lhs[0] * rhs[2],
-        lhs[0] * rhs[1] - lhs[1] * rhs[0]
-    };
 }
 
 using Vec2 = Vector<2>;

@@ -1,16 +1,17 @@
 #include <fstream>
 #include <cmath>
+#include <algorithm>
 
-#include "Common/Vector.hpp"
-#include "Common/ppm.h"
-#include "Common/Color.h"
-#include "Common/Ray.h"
+#include "../../Common/Vector.hpp"
+#include "../../Common/ppm.h"
+#include "../../Common/Color.h"
+#include "../../Common/Ray.h"
 
 int main() {
     int width = 1760;
     float aspectRatio = 16.0f / 9.0f;
 
-    int height = std::min(int(width / aspectRatio), 1);
+    int height = std::max(int(width / aspectRatio), 1);
 
     unsigned char maxColorComponent = 255;
 
@@ -46,9 +47,9 @@ int main() {
 
             crt::Vec3 unitRayDir = r.m_Direction.normalized(); 
 
-            unitRayDir *= 2.0f;
-            unitRayDir -= 1.0f;
-            unitRayDir *= 255.0f;
+            for (int idx = 0; idx < 3; ++idx) {
+                unitRayDir[idx] = 255.999f * std::clamp((unitRayDir[idx] + 1.0f) / 2.0f, 0.0f, 1.0f);
+            }
 
             crt::Color pixelColor = {unitRayDir[0], unitRayDir[1], unitRayDir[2]};
             pixelColor.printToFile(ppmFile);
