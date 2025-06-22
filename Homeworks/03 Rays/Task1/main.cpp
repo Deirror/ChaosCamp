@@ -1,11 +1,18 @@
 #include <fstream>
 #include <cmath>
 #include <algorithm>
+#include <iostream>
 
 #include "../../Common/Vector.hpp"
 #include "../../Common/ppm.h"
 #include "../../Common/Color.h"
 #include "../../Common/Ray.h"
+
+crt::Vec3 rayColor(const crt::Ray& r) {
+    crt::Vec3 unit_direction = r.m_Direction.normalized();
+    float a = 0.5*(unit_direction[1] + 1.0);
+    return (1.0-a)*crt::Vec3(1.0, 1.0, 1.0) + a*crt::Vec3(0.5, 0.7, 1.0);
+}
 
 int main() {
     int width = 1760;
@@ -44,15 +51,10 @@ int main() {
             crt::Vec3 pixelCenter = pixelLoc + (i * pixelDeltaU) + (j * pixelDeltaV);
             crt::Vec3 ray_direction = pixelCenter - cameraCenter;
             crt::Ray r(cameraCenter, ray_direction);
-
-            crt::Vec3 unitRayDir = r.m_Direction.normalized(); 
-
-            for (int idx = 0; idx < 3; ++idx) {
-                unitRayDir[idx] = 255.999f * std::clamp((unitRayDir[idx] + 1.0f) / 2.0f, 0.0f, 1.0f);
-            }
-
-            crt::Color pixelColor = {unitRayDir[0], unitRayDir[1], unitRayDir[2]};
-            pixelColor.printToFile(ppmFile);
+            
+            crt::Vec3 pixelColor = rayColor(r) * 255.999f;
+            crt::Color clr = {pixelColor[0], pixelColor[1], pixelColor[2]};
+            clr.printToFile(ppmFile);
         }
         ppmFile << '\n';
     }
