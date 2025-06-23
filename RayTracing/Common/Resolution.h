@@ -4,13 +4,10 @@
 
 CRT_BEGIN
 
-struct Resolution {
+class Resolution {
 public:	
 	Resolution(unsigned short width, unsigned short height)
-		: m_Width(width), m_Height(height)
-	{
-
-	}
+		: m_Width(width), m_Height(height) {}
 
 	float getAspectRatio() const {
 		return static_cast<float>(m_Width) / static_cast<float>(m_Height);

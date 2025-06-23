@@ -19,18 +19,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="PPMFile.cpp" />
     <ClCompile Include="Ray.cpp" />
+    <ClCompile Include="Vec3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="const.h" />
     <ClInclude Include="crt.h" />
     <ClInclude Include="PPMFile.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Resolution.h" />
-    <ClInclude Include="Vector.hpp" />
+    <ClInclude Include="Vec3.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

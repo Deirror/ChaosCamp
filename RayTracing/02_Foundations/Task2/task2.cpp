@@ -4,7 +4,7 @@
 #include "PPMFile.h"
 #include "Resolution.h"
 #include "Color.h"
-#include "Vector.hpp"
+#include "Vec3.h"
 
 struct Circle {
     crt::Color color;
@@ -29,8 +29,8 @@ void task2() {
 
     crt::Vec3 lemnCenter(resolution.getWidth() / 2.0f, resolution.getHeight() / 2.0f, 0.0f);
 
-    crt::Vec3 circle1Center(lemnCenter[0] + (lemnCenter[0] / 2), lemnCenter[1] - (lemnCenter[1] / 2), 0.0f);
-    crt::Vec3 circle2Center(lemnCenter[0] - (lemnCenter[0] / 2), lemnCenter[1] + (lemnCenter[1] / 2), 0.0f);
+    crt::Vec3 circle1Center(lemnCenter.x() + (lemnCenter.x() / 2), lemnCenter.y() - (lemnCenter.y() / 2), 0.0f);
+    crt::Vec3 circle2Center(lemnCenter.x() - (lemnCenter.x() / 2), lemnCenter.y() + (lemnCenter.y() / 2), 0.0f);
 
     Lemniscate lemn1{ crt::Color{95, 0, 144}, lemnCenter, 300 };
     Lemniscate lemn2{ crt::Color{255, 204, 0}, lemnCenter, 300 };
@@ -50,8 +50,8 @@ static void drawImageWithLemniscates(crt::PPMFile& file,
     const crt::Resolution& resolution = file.getResolution();
     for (int y = 0; y < resolution.getHeight(); ++y) {
         for (int x = 0; x < resolution.getWidth(); ++x) {
-            double dx = x - lemn1.center[0];
-            double dy = y - lemn1.center[1];
+            double dx = x - lemn1.center.x();
+            double dy = y - lemn1.center.y();
 
             double r2 = dx * dx + dy * dy;
             double theta = std::atan2(dy, dx);
@@ -87,8 +87,8 @@ static void drawImageWithLemniscates(crt::PPMFile& file,
                 
             }
             else {
-                int dist1 = std::sqrt(std::pow(x - circle1.center[0], 2) + std::pow(y - circle1.center[1], 2));
-                int dist2 = std::sqrt(std::pow(x - circle2.center[0], 2) + std::pow(y - circle2.center[1], 2));
+                int dist1 = std::sqrt(std::pow(x - circle1.center.x(), 2) + std::pow(y - circle1.center.y(), 2));
+                int dist2 = std::sqrt(std::pow(x - circle2.center.x(), 2) + std::pow(y - circle2.center.y(), 2));
 
                 if (dist1 <= circle1.radius) {
                     file.printColor(circle1.color);

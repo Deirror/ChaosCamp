@@ -31,7 +31,6 @@ private:
 	const Resolution c_Resolution;
 	const unsigned char c_MaxColorComponent;
 
-
 	std::ofstream m_File;
 };
 

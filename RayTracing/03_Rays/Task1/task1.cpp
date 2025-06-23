@@ -3,23 +3,23 @@
 #include <algorithm>
 #include <iostream>
 
-#include "Vector.hpp"
+#include "Vec3.h"
 #include "PPMFile.h"
 #include "Color.h"
 #include "Ray.h"
 
-static crt::Vec3 horizontalColor(const crt::Ray& r) {
-    crt::Vec3 unitDirection = r.m_Direction.normalized();
-    float a = 0.5 * (unitDirection[1] + 1.0f);
+static crt::Vec3 horizontalColor(const crt::Ray& ray) {
+    crt::Vec3 unitDirection = ray.getDirection().normalized();
+    float a = 0.5 * (unitDirection.y() + 1.0f);
     return (1.0 - a) * crt::Vec3(1.0f, 1.0f, 1.0f) + a * crt::Vec3(0.5f, 0.7f, 1.0f);
 }
 
 static crt::Color unitColor(const crt::Ray& ray) {
-    crt::Vec3 unitDirection = ray.m_Direction.normalized();
+    crt::Vec3 unitDirection = ray.getDirection().normalized();
 
-    unsigned char r = static_cast<unsigned char>(255.999f * std::abs(unitDirection[0]));
-    unsigned char g = static_cast<unsigned char>(255.999f * std::abs(unitDirection[1]));
-    unsigned char b = static_cast<unsigned char>(255.999f * std::abs(unitDirection[2]));
+    unsigned char r = static_cast<unsigned char>(255.999f * std::abs(unitDirection.x()));
+    unsigned char g = static_cast<unsigned char>(255.999f * std::abs(unitDirection.y()));
+    unsigned char b = static_cast<unsigned char>(255.999f * std::abs(unitDirection.z()));
     
     return crt::Color{r, g, b};
 }
@@ -55,11 +55,11 @@ void task1() {
     for (int j = 0; j < height; j++) {
         for (int i = 0; i < width; i++) {
             crt::Vec3 pixelCenter = pixelLoc + (i * pixelDeltaU) + (j * pixelDeltaV);
-            crt::Vec3 ray_direction = pixelCenter - cameraCenter;
-            crt::Ray r(cameraCenter, ray_direction);
+            crt::Vec3 rayDirection = pixelCenter - cameraCenter;
+            crt::Ray ray(cameraCenter, rayDirection);
 
-            crt::Vec3 pixelColor = horizontalColor(r) * 255.999f;
-            crt::Color color = { pixelColor[0], pixelColor[1], pixelColor[2] };
+            crt::Vec3 pixelColor = horizontalColor(ray) * 255.999f;
+            crt::Color color = { pixelColor.x(), pixelColor.y(), pixelColor.z()};
             file.printColor(color);
         }
         file.addNewLine();
