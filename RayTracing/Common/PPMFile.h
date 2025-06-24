@@ -2,7 +2,6 @@
 
 #include <fstream>
 
-#include "crt.h"
 #include "Resolution.h"
 #include "Color.h"
 

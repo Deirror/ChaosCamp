@@ -2,10 +2,7 @@
 
 #include <array>
 #include <cmath>
-#include <iostream>
-#include <cassert>
 
-#include "crt.h"
 #include "const.h"
 
 CRT_BEGIN
@@ -31,7 +28,7 @@ public:
 	Vec3& operator*=(float scalar); 
 	Vec3& operator/=(float scalar);
 
-	float length_squared() const { return (x_ * x_) + (y_ * y_) * (z_ * z_); }
+	float length_squared() const { return (x_ * x_) + (y_ * y_) + (z_ * z_); }
 	float length() const { return std::sqrt(length_squared()); }
 
 	Vec3 normalized() const;

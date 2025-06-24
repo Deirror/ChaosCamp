@@ -72,7 +72,11 @@ Vec3 cross(const Vec3& lhs, const Vec3& rhs) {
 }
 
 Vec3 Vec3::normalized() const {
-	return *this / length();
+	float len = length();
+	if (len < math::EPSILON_ZERO) {
+		return Vec3(0.0f, 0.0f, 0.0f); 
+	}
+	return *this / len;
 }
 
 CRT_END

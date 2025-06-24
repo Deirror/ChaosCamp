@@ -9,6 +9,6 @@ struct Color {
     unsigned char r, g, b;
 };
 
-Color getRandomColor(int maxColorComponent);
+Color getRandomColor(unsigned char maxColorComponent);
 
 CRT_END

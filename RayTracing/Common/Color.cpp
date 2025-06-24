@@ -5,7 +5,7 @@
 
 CRT_BEGIN
 
-Color getRandomColor(int maxColorComponent) {
+Color getRandomColor(unsigned char maxColorComponent) {
     unsigned char r = rand() % (maxColorComponent + 1);
     unsigned char g = rand() % (maxColorComponent + 1);
     unsigned char b = rand() % (maxColorComponent + 1);
