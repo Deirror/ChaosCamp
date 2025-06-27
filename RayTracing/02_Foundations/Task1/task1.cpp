@@ -21,36 +21,36 @@ void task1() {
 static void drawImageWithRectangles(crt::PPMFile& file) {
     // To get 5 rectangles on each row and column, we devide into intervals
     const int rectangles = 5;
-    const crt::Resolution& resolution = file.getResolution();
+    const crt::Resolution& resolution = file.resolution();
 
-    int intervalX = resolution.getHeight() / rectangles;
-    int intervalY = resolution.getHeight() / rectangles;
+    int intervalX = resolution.height() / rectangles;
+    int intervalY = resolution.height() / rectangles;
 
     const int arraySize = 6;
 
     std::array<crt::Color, arraySize> colorsArray = {
-        crt::Color{file.getMaxColorComponent(), 0, 0}, // Red
-        crt::Color{0, file.getMaxColorComponent(), 0}, // Green
-        crt::Color{file.getMaxColorComponent(), file.getMaxColorComponent(), 0}, // Yellow
-        crt::Color{0, 0, file.getMaxColorComponent()}, // Blue
-        crt::Color{file.getMaxColorComponent(), 0, file.getMaxColorComponent()}, // Purple
-        crt::Color{0, file.getMaxColorComponent(), file.getMaxColorComponent()} // Cyan
+        crt::Color{file.maxColorComponent(), 0, 0}, // Red
+        crt::Color{0, file.maxColorComponent(), 0}, // Green
+        crt::Color{file.maxColorComponent(), file.maxColorComponent(), 0}, // Yellow
+        crt::Color{0, 0, file.maxColorComponent()}, // Blue
+        crt::Color{file.maxColorComponent(), 0, file.maxColorComponent()}, // Purple
+        crt::Color{0, file.maxColorComponent(), file.maxColorComponent()} // Cyan
     };
 
     int change = 1;
     crt::Color color;
 
-    for (int currY = 0; currY < resolution.getHeight(); currY++) {
+    for (int currY = 0; currY < resolution.height(); currY++) {
         if (currY % intervalY == 0) {
             change = (change + rectangles) % arraySize;
         }
         int idx = change;
-        for (int currX = 0; currX < resolution.getWidth(); currX++) {
+        for (int currX = 0; currX < resolution.width(); currX++) {
             if (currX % intervalX == 0) {
                 color = colorsArray[idx];
                 idx = (idx + 1) % arraySize;
             }
-            file.printColor(getSpecialRandomColor(color, file.getMaxColorComponent()));
+            file.printColor(getSpecialRandomColor(color, file.maxColorComponent()));
         }
         file.addNewLine();
     }

@@ -10,16 +10,16 @@ CRT_BEGIN
 class PPMFile {
 public:
 	PPMFile(const std::string& filepath, const Resolution& resolution, unsigned char maxColorComponent = 255)
-		: c_Resolution(resolution), c_MaxColorComponent(maxColorComponent) { open(filepath); }
+		: resolution_(resolution), maxColorComponent_(maxColorComponent) { open(filepath); }
 
 	~PPMFile() { close(); }
 
 	void printColor(const Color& color);
 
-	const Resolution& getResolution() const { return c_Resolution; }
-	unsigned char getMaxColorComponent() const { return c_MaxColorComponent; }
+	const Resolution& resolution() const { return resolution_; }
+	unsigned char maxColorComponent() const { return maxColorComponent_; }
 
-	void addNewLine() { m_File << '\n'; }
+	void addNewLine() { file_ << '\n'; }
 	
 private:
 	void setHeader();
@@ -27,10 +27,10 @@ private:
 	void open(const std::string& filename);
 	void close();
 
-	const Resolution c_Resolution;
-	const unsigned char c_MaxColorComponent;
+	const Resolution resolution_;
+	const unsigned char maxColorComponent_;
 
-	std::ofstream m_File;
+	std::ofstream file_;
 };
 
 CRT_END

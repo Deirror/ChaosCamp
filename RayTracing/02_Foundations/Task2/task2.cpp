@@ -27,7 +27,7 @@ void task2() {
     crt::Resolution resolution (1720, 1240);
     crt::PPMFile file("task2_image.ppm", resolution);
 
-    crt::Vec3 lemnCenter(resolution.getWidth() / 2.0f, resolution.getHeight() / 2.0f, 0.0f);
+    crt::Vec3 lemnCenter(resolution.width() / 2.0f, resolution.height() / 2.0f, 0.0f);
 
     crt::Vec3 circle1Center(lemnCenter.x() + (lemnCenter.x() / 2), lemnCenter.y() - (lemnCenter.y() / 2), 0.0f);
     crt::Vec3 circle2Center(lemnCenter.x() - (lemnCenter.x() / 2), lemnCenter.y() + (lemnCenter.y() / 2), 0.0f);
@@ -47,9 +47,9 @@ static void drawImageWithLemniscates(crt::PPMFile& file,
     const Lemniscate& lemn1, const Lemniscate& lemn2,
     const Circle& circle1, const Circle& circle2,
     const crt::Color& backColor) {
-    const crt::Resolution& resolution = file.getResolution();
-    for (int y = 0; y < resolution.getHeight(); ++y) {
-        for (int x = 0; x < resolution.getWidth(); ++x) {
+    const crt::Resolution& resolution = file.resolution();
+    for (int y = 0; y < resolution.height(); ++y) {
+        for (int x = 0; x < resolution.width(); ++x) {
             double dx = x - lemn1.center.x();
             double dy = y - lemn1.center.y();
 

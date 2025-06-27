@@ -9,13 +9,13 @@
 #include "Ray.h"
 
 static crt::Vec3 horizontalColor(const crt::Ray& ray) {
-    crt::Vec3 unitDirection = ray.getDirection().normalized();
+    crt::Vec3 unitDirection = ray.direction().normalized();
     float a = 0.5 * (unitDirection.y() + 1.0f);
     return (1.0 - a) * crt::Vec3(1.0f, 1.0f, 1.0f) + a * crt::Vec3(0.5f, 0.7f, 1.0f);
 }
 
 static crt::Color unitColor(const crt::Ray& ray) {
-    crt::Vec3 unitDirection = ray.getDirection().normalized();
+    crt::Vec3 unitDirection = ray.direction().normalized();
 
     unsigned char r = static_cast<unsigned char>(255.999f * std::abs(unitDirection.x()));
     unsigned char g = static_cast<unsigned char>(255.999f * std::abs(unitDirection.y()));

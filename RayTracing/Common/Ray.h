@@ -8,19 +8,19 @@ class Ray {
 public:
     Ray() = default;
     Ray(const Vec3& origin, const Vec3& direction)
-        : m_Origin(origin), m_Direction(direction) {}
+        : origin_(origin), direction_(direction) {}
 
-    const Vec3& getOrigin() const { return m_Origin; }
-    const Vec3& getDirection() const { return m_Direction; }
+    const Vec3& origin() const { return origin_; }
+    const Vec3& direction() const { return direction_; }
 
-    void setOrigin(const Vec3& origin) { m_Origin = origin;	}
-    void setDirection(const Vec3& direction) { m_Direction = direction; }
+    void origin(const Vec3& origin) { origin_ = origin;	}
+    void direction(const Vec3& direction) { direction_ = direction; }
 
     Vec3 at(float scalar) const;
 
 private:
-    Vec3 m_Origin;
-    Vec3 m_Direction;
+    Vec3 origin_;
+    Vec3 direction_;
 };
 
 CRT_END

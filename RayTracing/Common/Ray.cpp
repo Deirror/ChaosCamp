@@ -3,7 +3,7 @@
 CRT_BEGIN
 
 Vec3 Ray::at(float scalar) const {
-    return m_Origin + scalar * m_Direction;
+    return origin_ + scalar * direction_;
 }
 
 CRT_END

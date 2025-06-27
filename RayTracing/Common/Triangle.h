@@ -12,9 +12,9 @@ public:
 	const Vec3& v1() const { return v1_; }
 	const Vec3& v2() const { return v2_; }
 
-	void set_v0(const Vec3& v0) { v0_ = v0; }
-	void set_v1(const Vec3& v1) { v1_ = v1; }
-	void set_v2(const Vec3& v2) { v2_ = v2; }
+	void v0(const Vec3& v0) { v0_ = v0; }
+	void v1(const Vec3& v1) { v1_ = v1; }
+	void v2(const Vec3& v2) { v2_ = v2; }
 	
 	Vec3 normal() const;
 
@@ -22,9 +22,10 @@ public:
 	float area_squared() const;
 
 private:
-	Vec3 v0_, v1_, v2_;
-
 	bool isWindingAntiClockwise() const;
+
+private:
+	Vec3 v0_, v1_, v2_;
 };
 
 CRT_END

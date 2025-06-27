@@ -10,17 +10,16 @@ CRT_BEGIN
 class Vec3 {
 public:
 	Vec3() = default;
-
 	Vec3(float x, float y, float z) : x_(x), y_(y), z_(z) {}
 
 	float x() const { return x_; }
-	float set_x(float x) { return x_ = x; }
+	float x(float x) { return x_ = x; }
 
 	float y() const { return y_; }
-	float set_y(float y) { return y_ = y; }
+	float y(float y) { return y_ = y; }
 
 	float z() const { return z_; }
-	float set_z(float z) { return z_ = z; }
+	float z(float z) { return z_ = z; }
 
 	Vec3& operator+=(const Vec3& other);
 	Vec3& operator-=(const Vec3& other);

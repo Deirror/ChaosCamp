@@ -7,23 +7,23 @@ CRT_BEGIN
 class Resolution {
 public:	
 	Resolution(unsigned short width, unsigned short height)
-		: m_Width(width), m_Height(height) {}
+		: width_(width), height_(height) {}
 
 	float getAspectRatio() const {
-		return static_cast<float>(m_Width) / static_cast<float>(m_Height);
+		return static_cast<float>(width_) / static_cast<float>(height_);
 	}
 
-	unsigned short getWidth() const { return m_Width; }
-	unsigned short getHeight() const { return m_Height; }
+	unsigned short width() const { return width_; }
+	unsigned short height() const { return height_; }
 
-	unsigned int getPixelCount() const { return m_Width * m_Height; }
+	unsigned int getPixelCount() const { return width_ * height_; }
 
-	void setWidth(unsigned short width) { m_Width = width; }
-	void setHeight(unsigned short height) { m_Height = height; }
+	void width(unsigned short width) { width_ = width; }
+	void height(unsigned short height) { height_ = height; }
 
 private:
-	unsigned short m_Width;
-	unsigned short m_Height;
+	unsigned short width_;
+	unsigned short height_;
 };
 
 CRT_END
