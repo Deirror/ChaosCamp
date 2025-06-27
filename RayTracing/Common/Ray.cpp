@@ -2,8 +2,8 @@
 
 CRT_BEGIN
 
-Vec3 Ray::at(float scalar) const {
-    return origin_ + scalar * direction_;
+Vec3 Ray::at(float t) const {
+    return origin_ + t * direction_;
 }
 
 CRT_END

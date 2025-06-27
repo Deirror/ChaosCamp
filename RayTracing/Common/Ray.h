@@ -16,7 +16,7 @@ public:
     void origin(const Vec3& origin) { origin_ = origin;	}
     void direction(const Vec3& direction) { direction_ = direction; }
 
-    Vec3 at(float scalar) const;
+    Vec3 at(float t) const;
 
 private:
     Vec3 origin_;

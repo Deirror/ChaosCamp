@@ -10,26 +10,19 @@ Triangle::Triangle(Vec3 v0, Vec3 v1, Vec3 v2)
 }
 
 Vec3 Triangle::normal() const {
-	Vec3 normal = cross(v1_ - v0_, v2_ - v0_);
-	return normal.normalized();
+	return cross(v1_ - v0_, v2_ - v0_).normalized();
 }
 
 float Triangle::area() const {
-	Vec3 e1 = v1_ - v0_;
-	Vec3 e2 = v2_ - v0_;
-	return (0.5f * cross(e1, e2).length());
+	return (0.5f * cross(v1_ - v0_, v2_ - v0_).length());
 }
 
 float Triangle::area_squared() const {
-	Vec3 e1 = v1_ - v0_;
-	Vec3 e2 = v2_ - v0_;
-	return 0.25f * cross(e1, e2).length_squared();
+	return 0.25f * cross(v1_ - v0_, v2_ - v0_).length_squared();
 }
 
 bool Triangle::isWindingAntiClockwise() const {
-	Vec3 e1 = v1_ - v0_;
-	Vec3 e2 = v2_ - v0_;
-	return (cross(e1, e2).z() > math::EPSILON_ZERO);
+	return (cross(v1_ - v0_, v2_ - v0_).z() > -math::EPSILON_ZERO);
 }
 
 CRT_END

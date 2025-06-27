@@ -10,8 +10,8 @@
 
 static crt::Vec3 horizontalColor(const crt::Ray& ray) {
     crt::Vec3 unitDirection = ray.direction().normalized();
-    float a = 0.5 * (unitDirection.y() + 1.0f);
-    return (1.0 - a) * crt::Vec3(1.0f, 1.0f, 1.0f) + a * crt::Vec3(0.5f, 0.7f, 1.0f);
+    float a = 0.5f * (unitDirection.y() + 1.0f);
+    return (1.0f - a) * crt::Vec3(1.0f, 1.0f, 1.0f) + a * crt::Vec3(0.5f, 0.7f, 1.0f);
 }
 
 static crt::Color unitColor(const crt::Ray& ray) {
@@ -59,7 +59,7 @@ void task1() {
             crt::Ray ray(cameraCenter, rayDirection);
 
             crt::Vec3 pixelColor = horizontalColor(ray) * 255.999f;
-            crt::Color color = { pixelColor.x(), pixelColor.y(), pixelColor.z()};
+            crt::Color color = { static_cast<unsigned char>(pixelColor.x()), static_cast<unsigned char>(pixelColor.y()), static_cast<unsigned char>(pixelColor.z())};
             file.printColor(color);
         }
         file.addNewLine();
