@@ -19,18 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Hit.cpp" />
+    <ClCompile Include="Mat3.cpp" />
     <ClCompile Include="PPMFile.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Vec3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
-    <ClInclude Include="const.h" />
+    <ClInclude Include="utils.h" />
     <ClInclude Include="crt.h" />
     <ClInclude Include="Hit.h" />
+    <ClInclude Include="Mat3.h" />
     <ClInclude Include="PPMFile.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Resolution.h" />

@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04_Triangles_01", "04_Trian
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05_Triangles_02", "05_Triangles_02\05_Triangles_02.vcxproj", "{82483842-60B9-4459-926F-2F3E83955706}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06_Camera_Animations", "06_Camera_Animations\06_Camera_Animations.vcxproj", "{219B8876-6D56-4B15-AADE-A003573FAC71}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,6 +63,14 @@ Global
 		{82483842-60B9-4459-926F-2F3E83955706}.Release|x64.Build.0 = Release|x64
 		{82483842-60B9-4459-926F-2F3E83955706}.Release|x86.ActiveCfg = Release|Win32
 		{82483842-60B9-4459-926F-2F3E83955706}.Release|x86.Build.0 = Release|Win32
+		{219B8876-6D56-4B15-AADE-A003573FAC71}.Debug|x64.ActiveCfg = Debug|x64
+		{219B8876-6D56-4B15-AADE-A003573FAC71}.Debug|x64.Build.0 = Debug|x64
+		{219B8876-6D56-4B15-AADE-A003573FAC71}.Debug|x86.ActiveCfg = Debug|Win32
+		{219B8876-6D56-4B15-AADE-A003573FAC71}.Debug|x86.Build.0 = Debug|Win32
+		{219B8876-6D56-4B15-AADE-A003573FAC71}.Release|x64.ActiveCfg = Release|x64
+		{219B8876-6D56-4B15-AADE-A003573FAC71}.Release|x64.Build.0 = Release|x64
+		{219B8876-6D56-4B15-AADE-A003573FAC71}.Release|x86.ActiveCfg = Release|Win32
+		{219B8876-6D56-4B15-AADE-A003573FAC71}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

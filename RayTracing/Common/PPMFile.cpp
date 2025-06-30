@@ -5,13 +5,13 @@ CRT_BEGIN
 void PPMFile::printColor(const Color& color) {
 		file_ << static_cast<int>(color.r) << ' '
 				<< static_cast<int>(color.g) << ' '
-				<< static_cast<int>(color.b) << '\n';
+				<< static_cast<int>(color.b) << '\t';
 }
 
 void PPMFile::setHeader() {
 	file_ << "P3\n";
-	file_ << resolution_.width() << " " << resolution_.height() << '\n'; 
-	file_ << static_cast<int>(maxColorComponent_) << '\n';
+	file_ << resolution.width() << " " << resolution.height() << '\n'; 
+	file_ << static_cast<int>(maxColorComponent) << '\n';
 }
 
 
