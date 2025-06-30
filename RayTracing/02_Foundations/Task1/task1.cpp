@@ -21,7 +21,7 @@ void task1() {
 static void drawImageWithRectangles(crt::PPMFile& file) {
     // To get 5 rectangles on each row and column, we devide into intervals
     const int rectangles = 5;
-    const crt::Resolution& resolution = file.resolution();
+    const crt::Resolution& resolution = file.resolution;
 
     int intervalX = resolution.height() / rectangles;
     int intervalY = resolution.height() / rectangles;
@@ -29,12 +29,12 @@ static void drawImageWithRectangles(crt::PPMFile& file) {
     const int arraySize = 6;
 
     std::array<crt::Color, arraySize> colorsArray = {
-        crt::Color{file.maxColorComponent(), 0, 0}, // Red
-        crt::Color{0, file.maxColorComponent(), 0}, // Green
-        crt::Color{file.maxColorComponent(), file.maxColorComponent(), 0}, // Yellow
-        crt::Color{0, 0, file.maxColorComponent()}, // Blue
-        crt::Color{file.maxColorComponent(), 0, file.maxColorComponent()}, // Purple
-        crt::Color{0, file.maxColorComponent(), file.maxColorComponent()} // Cyan
+        crt::Color{file.maxColorComponent, 0, 0}, // Red
+        crt::Color{0, file.maxColorComponent, 0}, // Green
+        crt::Color{file.maxColorComponent, file.maxColorComponent, 0}, // Yellow
+        crt::Color{0, 0, file.maxColorComponent}, // Blue
+        crt::Color{file.maxColorComponent, 0, file.maxColorComponent}, // Purple
+        crt::Color{0, file.maxColorComponent, file.maxColorComponent} // Cyan
     };
 
     int change = 1;
@@ -50,7 +50,7 @@ static void drawImageWithRectangles(crt::PPMFile& file) {
                 color = colorsArray[idx];
                 idx = (idx + 1) % arraySize;
             }
-            file.printColor(getSpecialRandomColor(color, file.maxColorComponent()));
+            file.printColor(getSpecialRandomColor(color, file.maxColorComponent));
         }
         file.addNewLine();
     }

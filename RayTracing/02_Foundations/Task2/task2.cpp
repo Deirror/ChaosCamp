@@ -47,7 +47,7 @@ static void drawImageWithLemniscates(crt::PPMFile& file,
     const Lemniscate& lemn1, const Lemniscate& lemn2,
     const Circle& circle1, const Circle& circle2,
     const crt::Color& backColor) {
-    const crt::Resolution& resolution = file.resolution();
+    const crt::Resolution resolution = file.resolution;
     for (int y = 0; y < resolution.height(); ++y) {
         for (int x = 0; x < resolution.width(); ++x) {
             double dx = x - lemn1.center.x();
