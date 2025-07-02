@@ -10,13 +10,18 @@ namespace math {
 
 	constexpr float PI = 3.14159265358979323846f;
 
-	inline float clamp(float value, float min, float max) {
-		return (value < min) ? min : (value > max) ? max : value;
-	}
-
 	inline float to_radians(float degrees) {
 		return degrees * (PI / 180.0f);
 	}
+
+	inline float to_degrees(float radians) {
+		return radians / (PI / 180.0f);
+	}
+
+}
+
+inline float clamp(float value, float min, float max) {
+	return (value < min) ? min : (value > max) ? max : value;
 }
 
 CRT_END

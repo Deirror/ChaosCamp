@@ -12,11 +12,11 @@ public:
 	friend Mat3 operator*(const Mat3& lhs, const Mat3& rhs);
 	friend Vec3 operator*(const Mat3& mat, const Vec3& vec);
 
-	float get(int row, int col) const;
-	Vec3 getRow(int row) const;
+	float& operator()(int row, int col);
+	float operator()(int row, int col) const;
 
-	void set(int row, int col, float value);
-	void setRow(int row, const Vec3& vec);
+	Vec3 row(int i) const;
+	void row(int i, const Vec3& v);
 
 	static Mat3 rotationAroundAxis(const Vec3& axis, float angleRadians);
 

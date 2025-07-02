@@ -5,9 +5,9 @@
 CRT_BEGIN
 
 Mat3::Mat3(const Vec3& row0, const Vec3& row1, const Vec3& row2) {
-	setRow(0, row0);
-	setRow(1, row1);
-	setRow(2, row2);
+	row(0, row0);
+	row(1, row1);
+	row(2, row2);
 }
 
 Mat3 operator*(const Mat3& lhs, const Mat3& rhs) {
@@ -30,22 +30,22 @@ Vec3 operator*(const Mat3& mat, const Vec3& vec) {
 	);
 }
 
-float Mat3::get(int row, int col) const {
-	assert(row >= 0 && row < 3 && col >= 0 && col < 3, "Index out of bounds in Mat3::get");
+float& Mat3::operator()(int row, int col) {
+	assert(row >= 0 && row < 3 && col >= 0 && col < 3, "Index out of bounds in Mat3::operator()");
 	return m_[row][col];
 }
 
-Vec3 Mat3::getRow(int row) const {
-	assert(row >= 0 && row < 3, "Index out of bounds in Mat3::getRow");
-	return Vec3(m_[row][0], m_[row][1], m_[row][2]);
+float Mat3::operator()(int row, int col) const {
+	assert(row >= 0 && row < 3 && col >= 0 && col < 3, "Index out of bounds in Mat3::operator()");
+	return m_[row][col];
 }
 
-void Mat3::set(int row, int col, float value) {
-	assert(row >= 0 && row < 3 && col >= 0 && col < 3, "Index out of bounds in Mat3::set");
-	m_[row][col] = value;
+Vec3 Mat3::row(int i) const {
+	assert(i >= 0 && i < 3, "Index out of bounds in Mat3::row");
+	return Vec3(m_[i][0], m_[i][1], m_[i][2]);
 }
 
-void Mat3::setRow(int row, const Vec3& vec) {
+void Mat3::row(int row, const Vec3& vec) {
 	assert(row >= 0 && row < 3, "Index out of bounds in Mat3::setRow");
 	m_[row][0] = vec.x();
 	m_[row][1] = vec.y();

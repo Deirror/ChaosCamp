@@ -21,7 +21,6 @@ public:
 	float area() const;
 	float area_squared() const;
 
-private:
 	bool isWindingAntiClockwise() const;
 
 private:

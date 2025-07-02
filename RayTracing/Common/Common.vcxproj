@@ -27,6 +27,7 @@
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Vec3.cpp" />
+    <ClCompile Include="Viewport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -40,6 +41,7 @@
     <ClInclude Include="Resolution.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vec3.h" />
+    <ClInclude Include="Viewport.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

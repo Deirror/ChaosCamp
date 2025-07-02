@@ -16,7 +16,6 @@ void task5() {
 		crt::Vec3(0.0f, 0.0f, 0.0f),
 		crt::Vec3(0.0f, 0.0f, -1.0f),
 		crt::Vec3(0.0f, 1.0f, 0.0f),
-		1.0f,
 		resolution
 	);
 
@@ -61,10 +60,10 @@ void task5() {
 
 		camera.pedestal(-0.2f);
 
-		for (int y = 0; y < camera.resolution.height(); ++y) {
-			for (int x = 0; x < camera.resolution.width(); ++x) {
-				float s = static_cast<float>(x) / (camera.resolution.width() - 1);
-				float t = static_cast<float>(y) / (camera.resolution.height() - 1);
+		for (int y = 0; y < camera.height(); ++y) {
+			for (int x = 0; x < camera.width(); ++x) {
+				float s = static_cast<float>(x) / (camera.width() - 1);
+				float t = static_cast<float>(y) / (camera.height() - 1);
 				crt::Ray ray = camera.getRay(s, t);
 
 				float closestT = FLT_MAX;
@@ -95,10 +94,10 @@ void task5() {
 		camera.pedestal((0.1f));
 		camera.tilt(crt::math::to_radians(-0.1f));
 
-		for (int y = 0; y < camera.resolution.height(); ++y) {
-			for (int x = 0; x < camera.resolution.width(); ++x) {
-				float s = static_cast<float>(x) / (camera.resolution.width() - 1);
-				float t = static_cast<float>(y) / (camera.resolution.height() - 1);
+		for (int y = 0; y < camera.height(); ++y) {
+			for (int x = 0; x < camera.width(); ++x) {
+				float s = static_cast<float>(x) / (camera.width() - 1);
+				float t = static_cast<float>(y) / (camera.height() - 1);
 				crt::Ray ray = camera.getRay(s, t);
 
 				float closestT = FLT_MAX;
@@ -128,10 +127,10 @@ void task5() {
 
 		camera.dolly(-0.1f);
 
-		for (int y = 0; y < camera.resolution.height(); ++y) {
-			for (int x = 0; x < camera.resolution.width(); ++x) {
-				float s = static_cast<float>(x) / (camera.resolution.width() - 1);
-				float t = static_cast<float>(y) / (camera.resolution.height() - 1);
+		for (int y = 0; y < camera.height(); ++y) {
+			for (int x = 0; x < camera.width(); ++x) {
+				float s = static_cast<float>(x) / (camera.width() - 1);
+				float t = static_cast<float>(y) / (camera.height() - 1);
 				crt::Ray ray = camera.getRay(s, t);
 
 				float closestT = FLT_MAX;
@@ -161,10 +160,10 @@ void task5() {
 
 		camera.pan(crt::math::to_radians(1.5f));
 
-		for (int y = 0; y < camera.resolution.height(); ++y) {
-			for (int x = 0; x < camera.resolution.width(); ++x) {
-				float s = static_cast<float>(x) / (camera.resolution.width() - 1);
-				float t = static_cast<float>(y) / (camera.resolution.height() - 1);
+		for (int y = 0; y < camera.height(); ++y) {
+			for (int x = 0; x < camera.width(); ++x) {
+				float s = static_cast<float>(x) / (camera.width() - 1);
+				float t = static_cast<float>(y) / (camera.height() - 1);
 				crt::Ray ray = camera.getRay(s, t);
 
 				float closestT = FLT_MAX;

@@ -13,13 +13,13 @@ public:
 	Vec3(float x, float y, float z) : x_(x), y_(y), z_(z) {}
 
 	float x() const { return x_; }
-	float x(float x) { return x_ = x; }
+	void x(float x) { x_ = x; }
 
 	float y() const { return y_; }
-	float y(float y) { return y_ = y; }
+	void y(float y) { y_ = y; }
 
 	float z() const { return z_; }
-	float z(float z) { return z_ = z; }
+	void z(float z) { z_ = z; }
 
 	Vec3& operator+=(const Vec3& other);
 	Vec3& operator-=(const Vec3& other);

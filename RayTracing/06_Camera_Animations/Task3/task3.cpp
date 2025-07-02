@@ -14,7 +14,6 @@ void task3() {
 		crt::Vec3(0.0f, 0.0f, 0.0f),
 		crt::Vec3(0.0f, 0.0f, -1.0f),
 		crt::Vec3(0.0f, 1.0f, 0.0f),
-		1.0f,
 		resolution
 	);
 
@@ -49,10 +48,10 @@ void task3() {
 	camera.tilt(crt::math::to_radians(45));
 	// camera.roll(crt::math::to_radians(45));
 	
-	for (int y = 0; y < camera.resolution.height(); ++y) {
-		for (int x = 0; x < camera.resolution.width(); ++x) {
-			float s = static_cast<float>(x) / (camera.resolution.width() - 1);
-			float t = static_cast<float>(y) / (camera.resolution.height() - 1);
+	for (int y = 0; y < camera.height(); ++y) {
+		for (int x = 0; x < camera.width(); ++x) {
+			float s = static_cast<float>(x) / (camera.width() - 1);
+			float t = static_cast<float>(y) / (camera.height() - 1);
 			crt::Ray ray = camera.getRay(s, t);
 
 			float closestT = FLT_MAX;
