@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Resolution.h"
 #include "Mat3.h"
+#include "AspectHeight.h"
 
 CRT_BEGIN
 
@@ -12,9 +12,6 @@ public:
 
 	Viewport(const AspectHeight& aspectHeight, float focalLength = 1.0f)
 		: aspectHeight_(aspectHeight), focalLength_(focalLength) {}
-
-	Viewport(Resolution resolution, float focalLength = 1.0f)
-		: aspectHeight_(resolution.forViewport()), focalLength_{focalLength} {}
 
 	float aspectRatio() const { return aspectHeight_.ratio; }
 	float height() const { return aspectHeight_.height; }

@@ -13,7 +13,7 @@ namespace gen {
     ) {
         const int sides = 7;
         const float angleStep = 2.0f * crt::math::PI / sides;
-        const float zOffset = 0.0f;  
+        const float zOffset = -4.0f;  
 
         crt::Vec3 apex(0.0f, height, zOffset);
 

@@ -13,7 +13,7 @@
 
 	crt::Camera camera(
 		crt::Vec3(0.0f, 0.0f, 0.0f),
-		crt::Vec3(0.0f, 0.0f, -1.0f),
+		crt::Vec3(0.0f, 0.0f, -2.0f),
 		crt::Vec3(0.0f, 1.0f, 0.0f),
 		resolution
 	);

@@ -5,7 +5,7 @@ void task4();
 void task5();
 
 int main() {
-	task5();
+	task1();
 
 	return 0;
 }

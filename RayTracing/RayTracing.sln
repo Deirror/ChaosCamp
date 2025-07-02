@@ -5,8 +5,6 @@ VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02_Foundations", "02_Foundations\02_Foundations.vcxproj", "{F5F88024-AEBF-4706-91EC-46305D67ECB5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcxproj", "{7BC77355-8624-4195-9880-4FE4B9B3623A}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03_Rays", "03_Rays\03_Rays.vcxproj", "{04C6B077-3D30-4658-BC87-0F90695A094D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04_Triangles_01", "04_Triangles_01\04_Triangles_01.vcxproj", "{9EF5DD69-931A-498C-8950-64995C603716}"
@@ -16,6 +14,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06_Camera_Animations", "06_Camera_Animations\06_Camera_Animations.vcxproj", "{219B8876-6D56-4B15-AADE-A003573FAC71}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "07_Scenes", "07_Scenes\07_Scenes.vcxproj", "{F5DDBE8E-B570-4779-AF8E-05454B5A2839}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcxproj", "{EB839F39-3296-4A46-87D0-797657D503CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,14 +33,6 @@ Global
 		{F5F88024-AEBF-4706-91EC-46305D67ECB5}.Release|x64.Build.0 = Release|x64
 		{F5F88024-AEBF-4706-91EC-46305D67ECB5}.Release|x86.ActiveCfg = Release|Win32
 		{F5F88024-AEBF-4706-91EC-46305D67ECB5}.Release|x86.Build.0 = Release|Win32
-		{7BC77355-8624-4195-9880-4FE4B9B3623A}.Debug|x64.ActiveCfg = Debug|x64
-		{7BC77355-8624-4195-9880-4FE4B9B3623A}.Debug|x64.Build.0 = Debug|x64
-		{7BC77355-8624-4195-9880-4FE4B9B3623A}.Debug|x86.ActiveCfg = Debug|Win32
-		{7BC77355-8624-4195-9880-4FE4B9B3623A}.Debug|x86.Build.0 = Debug|Win32
-		{7BC77355-8624-4195-9880-4FE4B9B3623A}.Release|x64.ActiveCfg = Release|x64
-		{7BC77355-8624-4195-9880-4FE4B9B3623A}.Release|x64.Build.0 = Release|x64
-		{7BC77355-8624-4195-9880-4FE4B9B3623A}.Release|x86.ActiveCfg = Release|Win32
-		{7BC77355-8624-4195-9880-4FE4B9B3623A}.Release|x86.Build.0 = Release|Win32
 		{04C6B077-3D30-4658-BC87-0F90695A094D}.Debug|x64.ActiveCfg = Debug|x64
 		{04C6B077-3D30-4658-BC87-0F90695A094D}.Debug|x64.Build.0 = Debug|x64
 		{04C6B077-3D30-4658-BC87-0F90695A094D}.Debug|x86.ActiveCfg = Debug|Win32
@@ -81,6 +73,14 @@ Global
 		{F5DDBE8E-B570-4779-AF8E-05454B5A2839}.Release|x64.Build.0 = Release|x64
 		{F5DDBE8E-B570-4779-AF8E-05454B5A2839}.Release|x86.ActiveCfg = Release|Win32
 		{F5DDBE8E-B570-4779-AF8E-05454B5A2839}.Release|x86.Build.0 = Release|Win32
+		{EB839F39-3296-4A46-87D0-797657D503CC}.Debug|x64.ActiveCfg = Debug|x64
+		{EB839F39-3296-4A46-87D0-797657D503CC}.Debug|x64.Build.0 = Debug|x64
+		{EB839F39-3296-4A46-87D0-797657D503CC}.Debug|x86.ActiveCfg = Debug|Win32
+		{EB839F39-3296-4A46-87D0-797657D503CC}.Debug|x86.Build.0 = Debug|Win32
+		{EB839F39-3296-4A46-87D0-797657D503CC}.Release|x64.ActiveCfg = Release|x64
+		{EB839F39-3296-4A46-87D0-797657D503CC}.Release|x64.Build.0 = Release|x64
+		{EB839F39-3296-4A46-87D0-797657D503CC}.Release|x86.ActiveCfg = Release|Win32
+		{EB839F39-3296-4A46-87D0-797657D503CC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

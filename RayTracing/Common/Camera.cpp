@@ -6,7 +6,8 @@ Camera::Camera(const Vec3& position, const Vec3& lookAt, const Vec3& up, Resolut
 	: position_(position),
 	lookAt_(lookAt), up_(up),
 	focalLength_(focalLength),
-	viewport_(resolution, focalLength) {
+	resolution_(resolution),
+	viewport_(resolution.forViewport(), focalLength) {
 	update();
 }
 

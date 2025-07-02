@@ -26,8 +26,13 @@ public:
 	void focalLength(float focalLength) { focalLength_ = focalLength; update(); }
 	float focalLength() const { return focalLength_; }
 
-	float height() { return viewport_.height(); }
-	float width() { return viewport_.width(); }
+	Resolution resolution() const { return resolution_; }
+	void resolution(Resolution resolution) { resolution_ = resolution; viewport_ = Viewport(resolution.forViewport()); }
+
+	float height() const { return resolution_.height(); }
+	float width() const { return resolution_.width(); }
+
+	const Viewport& viewport() const { return viewport_; }
 
 	Vec3 u() const { return rotationMatrix_.row(0); }
 	Vec3 v() const { return rotationMatrix_.row(1); }
@@ -59,6 +64,8 @@ private:
 	Vec3 up_;
 
 	Mat3 rotationMatrix_;
+
+	Resolution resolution_;
 
 	float focalLength_;
 	Viewport viewport_;

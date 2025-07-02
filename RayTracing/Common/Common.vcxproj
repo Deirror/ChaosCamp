@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AspectHeight.h" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Hit.cpp" />
@@ -32,23 +33,23 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
-    <ClInclude Include="third-party\json.hpp" />
-    <ClInclude Include="third-party\json_fwd.hpp" />
-    <ClInclude Include="utils.h" />
     <ClInclude Include="crt.h" />
     <ClInclude Include="Hit.h" />
     <ClInclude Include="Mat3.h" />
     <ClInclude Include="PPMFile.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Resolution.h" />
+    <ClInclude Include="third-party\json.hpp" />
+    <ClInclude Include="third-party\json_fwd.hpp" />
     <ClInclude Include="Triangle.h" />
+    <ClInclude Include="utils.h" />
     <ClInclude Include="Vec3.h" />
     <ClInclude Include="Viewport.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{7bc77355-8624-4195-9880-4fe4b9b3623a}</ProjectGuid>
+    <ProjectGuid>{eb839f39-3296-4a46-87d0-797657d503cc}</ProjectGuid>
     <RootNamespace>Common</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
