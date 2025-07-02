@@ -32,6 +32,8 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="third-party\json.hpp" />
+    <ClInclude Include="third-party\json_fwd.hpp" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="crt.h" />
     <ClInclude Include="Hit.h" />
