@@ -1,5 +1,7 @@
 #include "PPMFile.h"
 
+#include "error.h"
+
 CRT_BEGIN
 
 void PPMFile::printColor(const Color& color) {
@@ -14,12 +16,9 @@ void PPMFile::setHeader() {
 	file_ << static_cast<int>(maxColorComponent) << '\n';
 }
 
-
 void PPMFile::open(const std::string& filename) {
 	file_.open(filename);
-	if (!file_.is_open()) {
-		throw std::runtime_error("Failed to open PPM file: " + filename);
-	}
+	CRT_ENSURE(file_.is_open(), "PPM file cannot be opened");
 	setHeader();
 }
 
@@ -29,4 +28,4 @@ void PPMFile::close() {
 	}
 }
 
-CRT_END
+CRT_END;

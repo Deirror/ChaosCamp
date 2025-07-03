@@ -1,12 +1,8 @@
-#include <vector>
-
-#include "PPMFile.h"
-#include "Camera.h"
-#include "Triangle.h"
-#include "Hit.h"
-
-#include "utils.h"
+#include "Render.h"
 
 void task1() {
-	
+	crt::Scene scene("Scenes/scene4.crtscene");
+
+	crt::Render render;
+	render.render(scene);
 }

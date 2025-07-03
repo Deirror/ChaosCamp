@@ -22,4 +22,11 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Scenes\scene0.crtscene" />
+    <None Include="Scenes\scene1.crtscene" />
+    <None Include="Scenes\scene4.crtscene" />
+    <None Include="Scenes\scene2.crtscene" />
+    <None Include="Scenes\scene3.crtscene" />
+  </ItemGroup>
 </Project>

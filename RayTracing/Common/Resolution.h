@@ -6,6 +6,7 @@ CRT_BEGIN
 
 class Resolution {
 public:	
+	Resolution() = default;
 	Resolution(unsigned short width, unsigned short height)
 		: width_(width), height_(height) {}
 

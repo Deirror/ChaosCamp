@@ -134,6 +134,18 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Task1\task1.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Scenes\scene0.crtscene" />
+    <None Include="Scenes\scene1.crtscene" />
+    <None Include="Scenes\scene2.crtscene" />
+    <None Include="Scenes\scene3.crtscene" />
+    <None Include="Scenes\scene4.crtscene" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.vcxproj">
+      <Project>{eb839f39-3296-4a46-87d0-797657d503cc}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

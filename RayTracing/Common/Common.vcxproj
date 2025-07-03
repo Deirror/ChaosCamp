@@ -22,28 +22,36 @@
     <ClCompile Include="AspectHeight.h" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Color.cpp" />
-    <ClCompile Include="Hit.cpp" />
-    <ClCompile Include="Mat3.cpp" />
+    <ClCompile Include="error.h" />
+    <ClCompile Include="JsonParser.cpp" />
+    <ClCompile Include="Math\Hit.cpp" />
+    <ClCompile Include="Math\Mat3.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="PPMFile.cpp" />
-    <ClCompile Include="Ray.cpp" />
-    <ClCompile Include="Triangle.cpp" />
-    <ClCompile Include="Vec3.cpp" />
+    <ClCompile Include="Math\Triangle.cpp" />
+    <ClCompile Include="Math\Vec3.cpp" />
+    <ClCompile Include="Render.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Viewport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="crt.h" />
-    <ClInclude Include="Hit.h" />
-    <ClInclude Include="Mat3.h" />
+    <ClInclude Include="JsonParser.h" />
+    <ClInclude Include="Math\Hit.h" />
+    <ClInclude Include="Math\Mat3.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="PPMFile.h" />
-    <ClInclude Include="Ray.h" />
+    <ClInclude Include="Math\Ray.h" />
+    <ClInclude Include="Render.h" />
     <ClInclude Include="Resolution.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="third-party\json.hpp" />
     <ClInclude Include="third-party\json_fwd.hpp" />
-    <ClInclude Include="Triangle.h" />
-    <ClInclude Include="utils.h" />
-    <ClInclude Include="Vec3.h" />
+    <ClInclude Include="Math\Triangle.h" />
+    <ClInclude Include="Math\utils.h" />
+    <ClInclude Include="Math\Vec3.h" />
     <ClInclude Include="Viewport.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -141,6 +149,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Common</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -159,6 +169,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Common</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>

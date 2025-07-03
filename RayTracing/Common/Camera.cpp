@@ -32,7 +32,7 @@ void Camera::computeBasis() {
 
 	rotationMatrix_.row(0, u);
 	rotationMatrix_.row(1, v);
-	rotationMatrix_.row(2, w * (-1.f));
+	rotationMatrix_.row(2, w);
 }
 
 void Camera::updateLookAtFromRotation() {
@@ -42,23 +42,38 @@ void Camera::updateLookAtFromRotation() {
 	lookAt_ = position_ + forward * distanceToLookAt;
 }
 
+void Camera::resolution(Resolution resolution) {
+	resolution_ = resolution;
+	viewport_ = Viewport(resolution.forViewport());
+	viewport_.update(position_, rotationMatrix_);
+}
+
+void Camera::fromSceneFile(const Mat3& rotationMatrix, const Vec3& position) {
+	position_ = position;
+	fromMatrix(rotationMatrix);
+}
+
+void Camera::fromMatrix(const Mat3& rotationMatrix) {
+	rotationMatrix_ = rotationMatrix;
+
+	lookAt_ = rotationMatrix_.row(2) * (-1.f);
+	up_ = rotationMatrix_.row(1);   
+
+	update();
+}
+
+void Camera::focalLength(float focalLength) {
+	CRT_ENSURE(FLT_IS_POS(focalLength), "Focal length is not positive"); 
+	focalLength_ = focalLength; 
+	viewport_.focalLength(focalLength);
+	viewport_.update(position_, rotationMatrix_); 
+}
+
 void Camera::move(float dx, float dy, float dz) {
 	Vec3 delta = u() * dx + v() * dy + w() * (-1.0f) * dz;
 	position_ += delta;
 	lookAt_ += delta;
 	update();
-}
-
-void Camera::truck(float distance) {
-	move(distance, 0.f, 0.f);
-}
-
-void Camera::pedestal(float distance) {
-	move(0.f, distance, 0.f);
-}
-
-void Camera::dolly(float distance) {
-	move(0.f, 0.f, distance);
 }
 
 void Camera::rotate(float panRadians, float tiltRadians, float rollRadians) {
@@ -79,18 +94,6 @@ void Camera::rotate(float panRadians, float tiltRadians, float rollRadians) {
 
 	updateLookAtFromRotation();
 	update();
-}
-
-void Camera::pan(float angleRadians) {
-	rotate(angleRadians, 0.f, 0.f);
-}
-
-void Camera::tilt(float angleRadians) {
-	rotate(0.f, angleRadians, 0.f);
-}
-
-void Camera::roll(float angleRadians) {
-	rotate(0.f, 0.f, angleRadians);
 }
 
 void Camera::orbit(float panRadians, float tiltRadians, const Vec3& orbitAxis) {

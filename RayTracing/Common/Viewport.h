@@ -1,17 +1,23 @@
 #pragma once
 
-#include "Mat3.h"
+#include "Math/Mat3.h"
 #include "AspectHeight.h"
+
+#include "error.h"
 
 CRT_BEGIN
 
 class Viewport {
 public:
 	Viewport(float aspectRatio = 1.0f, float height = 2.0f, float focalLength = 1.0f)
-		: aspectHeight_(aspectRatio, height), focalLength_(focalLength) {}
+		: aspectHeight_(aspectRatio, height), 
+		focalLength_(focalLength), 
+		lowerLeftCorner_(), horizontal_(), vertical_() { CRT_ENSURE(FLT_IS_POS(focalLength), "Focal length is not positive"); }
 
 	Viewport(const AspectHeight& aspectHeight, float focalLength = 1.0f)
-		: aspectHeight_(aspectHeight), focalLength_(focalLength) {}
+		: aspectHeight_(aspectHeight), 
+		focalLength_(focalLength), 
+		lowerLeftCorner_(), horizontal_(), vertical_() { CRT_ENSURE(FLT_IS_POS(focalLength), "Focal length is not positive"); }
 
 	float aspectRatio() const { return aspectHeight_.ratio; }
 	float height() const { return aspectHeight_.height; }
@@ -23,9 +29,9 @@ public:
 	const Vec3& horizontal() const { return horizontal_; }
 	const Vec3& vertical() const { return vertical_; }
 
-	void aspectRatio(float aspectRatio) { aspectHeight_.ratio = aspectRatio; }
-	void height(float height) { aspectHeight_.height = height; }
-	void focalLength(float focalLength) { focalLength_ = focalLength; }
+	void aspectRatio(float aspectRatio) { CRT_ENSURE(FLT_IS_POS(aspectRatio), "Aspect ratio is not positive"); aspectHeight_.ratio = aspectRatio; }
+	void height(float height) { CRT_ENSURE(FLT_IS_POS(height), "Height is not positive"); aspectHeight_.height = height; }
+	void focalLength(float focalLength) { CRT_ENSURE(FLT_IS_POS(focalLength), "Focal length is not positive"); focalLength_ = focalLength; }
 
 	void update(const Vec3& cameraPosition, const Mat3& rotation);
 

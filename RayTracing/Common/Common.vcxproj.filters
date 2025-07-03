@@ -21,28 +21,40 @@
     <ClCompile Include="Color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Hit.cpp">
+    <ClCompile Include="Math\Hit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mat3.cpp">
+    <ClCompile Include="Math\Mat3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PPMFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Ray.cpp">
+    <ClCompile Include="Math\Triangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Triangle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Vec3.cpp">
+    <ClCompile Include="Math\Vec3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Viewport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AspectHeight.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="error.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Render.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,31 +74,43 @@
     <ClInclude Include="crt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Hit.h">
+    <ClInclude Include="Math\Hit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mat3.h">
+    <ClInclude Include="Math\Mat3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PPMFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Ray.h">
+    <ClInclude Include="Math\Ray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resolution.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Triangle.h">
+    <ClInclude Include="Math\Triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utils.h">
+    <ClInclude Include="Math\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vec3.h">
+    <ClInclude Include="Math\Vec3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Viewport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Render.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
