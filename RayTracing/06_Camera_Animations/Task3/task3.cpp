@@ -1,9 +1,9 @@
 #include "PPMFile.h"
 #include "Camera.h"
-#include "Triangle.h"
-#include "Hit.h"
+#include "Math/Triangle.h"
+#include "Math/Hit.h"
 
-#include "utils.h"
+#include "Math/utils.h"
 
 #include "../common.h"
 

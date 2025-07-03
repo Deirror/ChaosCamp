@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "Vec3.h"
-#include "Triangle.h"
+#include "Math/Vec3.h"
+#include "Math/Triangle.h"
 
 namespace gen {
     inline void createPyramid7(
