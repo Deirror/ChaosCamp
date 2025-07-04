@@ -2,7 +2,7 @@
 
 CRT_BEGIN
 
-void ImageBuffer::save(const std::string& filename, PPMMode ppmMode = PPMMode::P3) const {
+void ImageBuffer::save(const std::string& filename, PPMMode ppmMode) const {
 	PPMFile ppmFile(filename, resolution_, ppmMode);
 
 	switch (ppmFile.ppmMode()) {

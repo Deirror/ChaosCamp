@@ -2,11 +2,11 @@
 
 #include <thread>
 
-#include "Math/Hit.h"
+#include "Shade.h"
 
 CRT_BEGIN
 
-static void rayTrace(const Scene& scene, ImageBuffer& imageBuffer, const std::vector<Triangle>& triangles, const std::vector<Color>& colors, unsigned int startRow, unsigned int endRow) {
+static void traceRays(const Scene& scene, ImageBuffer& imageBuffer, const std::vector<Triangle>& triangles, unsigned int startRow, unsigned int endRow) {
 	Resolution res = scene.settings().resolution;
 	const Camera& camera = scene.camera();
 
@@ -20,14 +20,13 @@ static void rayTrace(const Scene& scene, ImageBuffer& imageBuffer, const std::ve
 			crt::HitRecord hitRecord;
 
 			for (const auto& triangle : triangles) {
-				if (crt::intersectTriangle(ray, triangle, hitRecord)) {
+				if (triangle.intersect(ray, hitRecord)) {
 					closestT = std::min(closestT, hitRecord.t);
 				}
 			}
 
 			if (closestT != FLT_MAX) {
-				unsigned int idx = static_cast<unsigned int>(hitRecord.triangle - &triangles[0]);
-				imageBuffer.set(x, y, colors.at(idx));
+				imageBuffer.set(x, y, crt::shade(hitRecord, scene));
 			}
 			else {
 				imageBuffer.set(x, y, scene.settings().backgroundColor);
@@ -52,23 +51,13 @@ ImageBuffer Render::render(const Scene& scene) const {
 }
 
 void Render::renderLinear(const Scene& scene, ImageBuffer& imageBuffer) const {
-	std::vector<Triangle> triangles = scene.getTriangles();
-	std::vector<Color> colors;
+	std::vector<Triangle> triangles = scene.triangles();
 
-	for (int i = 0; i < triangles.size(); ++i) {
-		colors.push_back(getRandomColor());
-	}
-
-	rayTrace(scene, imageBuffer, triangles, colors, 0, scene.settings().resolution.height());
+	traceRays(scene, imageBuffer, triangles, 0, scene.settings().resolution.height());
 }
 
 void Render::renderParallel(const Scene& scene, ImageBuffer& imageBuffer) const {
-	std::vector<Triangle> triangles = scene.getTriangles();
-	std::vector<Color> colors;
-
-	for (int i = 0; i < triangles.size(); ++i) {
-		colors.push_back(getRandomColor());
-	}
+	std::vector<Triangle> triangles = scene.triangles();
 
 	const Resolution res = scene.settings().resolution;
 
@@ -79,11 +68,10 @@ void Render::renderParallel(const Scene& scene, ImageBuffer& imageBuffer) const 
 	for (unsigned int i = 0; i < threadCount; ++i) {
 		unsigned int startRow = i * bandHeight;
 		unsigned int endRow = (i == threadCount - 1) ? res.height() : (i + 1) * bandHeight;
-		threads.emplace_back(rayTrace,
+		threads.emplace_back(traceRays,
 			std::cref(scene),
 			std::ref(imageBuffer),
 			std::cref(triangles),
-			std::cref(colors),
 			startRow,
 			endRow);
 	}

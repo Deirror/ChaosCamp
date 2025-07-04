@@ -21,9 +21,6 @@
     <ClCompile Include="Color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Math\Hit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Math\Mat3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -60,6 +57,9 @@
     <ClCompile Include="ImageBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Shade.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="third-party\json.hpp">
@@ -77,7 +77,7 @@
     <ClInclude Include="crt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Math\Hit.h">
+    <ClInclude Include="Math\HitRecord.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Math\Mat3.h">
@@ -117,6 +117,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ImageBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shade.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

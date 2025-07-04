@@ -25,6 +25,12 @@ struct JsonKey {
 		static constexpr char const* POSITION = "position";
 	};
 
+	static constexpr char const* LIGHTS = "lights";
+	struct Lights {
+		static constexpr char const* INTENSITY = "intensity";
+		static constexpr char const* POSITION = "position";
+	};
+
 	static constexpr char const* OBJECTS = "objects";
 	struct Objects {
 		static constexpr char const* VERTICES = "vertices";
@@ -75,12 +81,16 @@ void from_json(const nlohmann::json& j, Mesh& mesh) {
 		CRT_ERROR("Invalid Mesh JSON");
 	}
 
-	if (!j.contains("vertices") || !j.contains("triangles")) {
-		CRT_ERROR("Mesh JSON missing vertices or triangles");
+	if (!j.contains(JsonKey::Objects::VERTICES)) { 
+		CRT_ERROR("Mesh vertices not found in JSON data");
 	}
 
-	const auto& verticesJson = j["vertices"];
-	const auto& trianglesJson = j["triangles"];
+	if (!j.contains(JsonKey::Objects::TRIANGLES)) {
+		CRT_ERROR("Mesh triangles not found in JSON data");
+	}
+
+	const auto& verticesJson = j[JsonKey::Objects::VERTICES];
+	const auto& trianglesJson = j[JsonKey::Objects::TRIANGLES];
 
 	for (int i = 0; i < verticesJson.size(); i += 3) {
 		Vec3 v{
@@ -99,6 +109,22 @@ void from_json(const nlohmann::json& j, Mesh& mesh) {
 		};
 		mesh.addTriangle(tri);
 	}
+}
+
+void from_json(const nlohmann::json& j, Light& light) {
+	if (!j.is_object()) {
+		CRT_ERROR("Invalid Light JSON");
+	}
+
+	if (!j.contains(JsonKey::Lights::INTENSITY)) {
+		CRT_ERROR("Light intensity not found in JSON data");
+	}
+	light.intensity(j[JsonKey::Lights::INTENSITY].get<float>());
+
+	if (!j.contains(JsonKey::Lights::POSITION)) {
+		CRT_ERROR("Light position not found in JSON data");
+	}
+	light.position(j[JsonKey::Lights::POSITION].get<Vec3>());
 }
 
 void from_json(const nlohmann::json& j, Mat3& matrix) {
@@ -153,6 +179,18 @@ void JsonParser::parseCamera(Camera& camera) {
 		CRT_ERROR("Camera position not found in JSON data");
 	}
 	camera.fromSceneFile(matrix, cameraJson[JsonKey::Camera::POSITION].get<Vec3>());
+}
+
+void JsonParser::parseLights(std::vector<Light>& light) {
+	if (!jsonData_.contains(JsonKey::LIGHTS)) {
+		CRT_ERROR("Lights not found in JSON data");
+	}
+	const auto& lightsJson = jsonData_[JsonKey::LIGHTS];
+
+	for (const auto& lightJson : lightsJson) {
+		Light l = lightJson.get<Light>();
+		light.push_back(l);
+	}
 }
 
 void JsonParser::parseMeshes(std::vector<Mesh>& meshes) {

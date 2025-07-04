@@ -25,7 +25,6 @@
     <ClCompile Include="error.h" />
     <ClCompile Include="ImageBuffer.cpp" />
     <ClCompile Include="JsonParser.cpp" />
-    <ClCompile Include="Math\Hit.cpp" />
     <ClCompile Include="Math\Mat3.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="PPMFile.cpp" />
@@ -33,6 +32,7 @@
     <ClCompile Include="Math\Vec3.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Shade.cpp" />
     <ClCompile Include="Viewport.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -41,7 +41,8 @@
     <ClInclude Include="crt.h" />
     <ClInclude Include="ImageBuffer.h" />
     <ClInclude Include="JsonParser.h" />
-    <ClInclude Include="Math\Hit.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="Math\HitRecord.h" />
     <ClInclude Include="Math\Mat3.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="PPMFile.h" />
@@ -49,6 +50,7 @@
     <ClInclude Include="Render.h" />
     <ClInclude Include="Resolution.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Shade.h" />
     <ClInclude Include="third-party\json.hpp" />
     <ClInclude Include="third-party\json_fwd.hpp" />
     <ClInclude Include="Math\Triangle.h" />

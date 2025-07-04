@@ -9,12 +9,13 @@ void Scene::fromFile(const std::string& filename) {
 	
 	parser.parseSettings(settings_);
 	parser.parseCamera(camera_);
+	parser.parseLights(lights_);
 	parser.parseMeshes(meshes_);
 
 	camera_.resolution(settings_.resolution);
 }
 
-std::vector<Triangle> Scene::getTriangles() const {
+std::vector<Triangle> Scene::triangles() const {
 	std::vector<Triangle> triangles;
 	for (const auto& mesh : meshes_) {
 		const std::vector<Triangle>& meshTriangles = mesh.getTriangles();

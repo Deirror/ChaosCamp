@@ -19,7 +19,7 @@ public:
 
     void set(unsigned short x, unsigned short y, Color color);
 
-    void save(const std::string& filename, PPMMode ppmMode) const;
+    void save(const std::string& filename, PPMMode ppmMode = PPMMode::P3) const;
     
     void dumpASCII(PPMFile& ppmFile) const;
     void dumpBinary(PPMFile& ppmFile) const;

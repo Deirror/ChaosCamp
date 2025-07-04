@@ -8,6 +8,7 @@ CRT_BEGIN
 class Settings;
 class Camera;
 class Mesh; 
+class Light;
 
 class Color;
 class Vec3;
@@ -26,6 +27,8 @@ public:
 	void parseSettings(Settings& settings);
 	void parseCamera(Camera& camera);
 
+	void parseLights(std::vector<Light>& light);
+
 	void parseMeshes(std::vector<Mesh>& meshes);
 
 private:
@@ -39,5 +42,6 @@ void from_json(const nlohmann::json& j, crt::Color& color);
 void from_json(const nlohmann::json& j, crt::Resolution& res);
 void from_json(const nlohmann::json& j, crt::TriangleIndices& indices);
 void from_json(const nlohmann::json& j, crt::Mesh& mesh);
+void from_json(const nlohmann::json& j, crt::Light& light);
 void from_json(const nlohmann::json& j, crt::Mat3& mat);
 

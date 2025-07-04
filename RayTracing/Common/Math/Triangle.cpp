@@ -21,4 +21,49 @@ bool Triangle::isWindingAntiClockwise() const {
 	return (cross(v1_ - v0_, v2_ - v0_).z() > -math::EPSILON_ZERO);
 }
 
+bool Triangle::intersect(const Ray& ray, HitRecord& hitRecord, bool cullBackFace) const {
+	Vec3 normal = this->normal();
+
+	if (cullBackFace) {
+		if (dot(ray.direction(), normal) > -math::EPSILON_ZERO) {
+			return false; 
+		}
+	}
+
+	float rayPlaneDist = dot(normal, v0() - ray.origin());
+	float rayProjection = dot(ray.direction(), normal);
+
+	float t = rayPlaneDist / rayProjection;
+	if (t < math::EPSILON_RAY) {
+		return false;
+	}
+
+	Vec3 point = ray.at(t);
+
+	Vec3 e0 = v1() - v0();
+	Vec3 v0p = point - v0();
+	if (dot(normal, cross(e0, v0p)) < -math::EPSILON_ZERO) {
+		return false; 
+	}
+
+	Vec3 e1 = v2() - v1();
+	Vec3 v1p = point - v1();
+	if (dot(normal, cross(e1, v1p)) < -math::EPSILON_ZERO) {
+		return false; 
+	}
+
+	Vec3 e2 = v0() - v2();
+	Vec3 v2p = point - v2();
+	if (dot(normal, cross(e2, v2p)) < -math::EPSILON_ZERO) {
+		return false; 
+	}
+
+	hitRecord.t = t;
+	hitRecord.point = point;
+	hitRecord.normal = normal;
+	hitRecord.triangle = this;
+
+	return true;
+}
+
 CRT_END

@@ -1,6 +1,8 @@
 #pragma once
 
+#include "Vec3.h"
 #include "Ray.h"
+#include "HitRecord.h"
 
 CRT_BEGIN
 
@@ -22,6 +24,8 @@ public:
 	float area_squared() const;
 
 	bool isWindingAntiClockwise() const;
+
+	bool intersect(const Ray& ray, HitRecord& hitRecord, bool cullBackFace = true) const;
 
 private:
 	Vec3 v0_, v1_, v2_;

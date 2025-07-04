@@ -22,6 +22,14 @@ namespace math {
 		return (value < min) ? min : (value > max) ? max : value;
 	}
 
+	inline float max(float a, float b) {
+		return (a > b) ? a : b;
+	}
+
+	inline float min(float a, float b) {
+		return (a < b) ? a : b;
+	}
+
 	#define FLT_IS_ZERO(x) (std::abs(x) < crt::math::EPSILON_ZERO)
 	#define FLT_NOT_ZERO(x) (std::abs(x) > crt::math::EPSILON_ZERO)
 
