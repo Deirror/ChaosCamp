@@ -15,12 +15,12 @@ void Scene::fromFile(const std::string& filename) {
 }
 
 std::vector<Triangle> Scene::getTriangles() const {
-		std::vector<Triangle> triangles;
-		for (const auto& mesh : meshes_) {
-			const std::vector<Triangle>& meshTriangles = mesh.getTriangles();
-			triangles.insert(triangles.end(), meshTriangles.begin(), meshTriangles.end());
-		}
-		return triangles;
+	std::vector<Triangle> triangles;
+	for (const auto& mesh : meshes_) {
+		const std::vector<Triangle>& meshTriangles = mesh.getTriangles();
+		triangles.insert(triangles.end(), meshTriangles.begin(), meshTriangles.end());
 	}
+	return triangles;
+}
 
 CRT_END

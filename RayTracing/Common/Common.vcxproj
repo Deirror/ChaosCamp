@@ -23,6 +23,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="error.h" />
+    <ClCompile Include="ImageBuffer.cpp" />
     <ClCompile Include="JsonParser.cpp" />
     <ClCompile Include="Math\Hit.cpp" />
     <ClCompile Include="Math\Mat3.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="crt.h" />
+    <ClInclude Include="ImageBuffer.h" />
     <ClInclude Include="JsonParser.h" />
     <ClInclude Include="Math\Hit.h" />
     <ClInclude Include="Math\Mat3.h" />
