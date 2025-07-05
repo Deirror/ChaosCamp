@@ -8,6 +8,8 @@ namespace math {
 	constexpr float EPSILON_RAY = 1e-4f;
 	constexpr float EPSILON_ZERO = 1e-6f;
 
+	constexpr float ZERO = 0.0f;
+
 	constexpr float PI = 3.14159265358979323846f;
 
 	inline float to_radians(float degrees) {
@@ -30,8 +32,12 @@ namespace math {
 		return (a < b) ? a : b;
 	}
 
-	#define FLT_IS_ZERO(x) (std::abs(x) < crt::math::EPSILON_ZERO)
-	#define FLT_NOT_ZERO(x) (std::abs(x) > crt::math::EPSILON_ZERO)
+	inline float abs(float value) {
+		return (value < 0.0f) ? -value : value;
+	}
+
+	#define FLT_IS_ZERO(x) (abs(x) < crt::math::EPSILON_ZERO)
+	#define FLT_NOT_ZERO(x) (abs(x) > crt::math::EPSILON_ZERO)
 
 	#define FLT_IS_NEG(x) (x < -crt::math::EPSILON_ZERO)
 	#define FLT_IS_POS(x) (x > crt::math::EPSILON_ZERO)

@@ -3,8 +3,16 @@
 CRT_BEGIN 
 
 Color shade(const HitRecord& hitRecord, const Scene& scene) {
-	Vec3 albedo(0.5f, 0.1f, 0.6f);
+	unsigned int materialIndex = scene.meshes()[hitRecord.meshIndex].materialIndex();
+	Material material = scene.materials()[materialIndex];
+	Color albedo = material.albedo();
+	Vec3 albedoVec = { albedo.r / 255.f, albedo.g / 255.f, albedo.b / 255.f };
 	Vec3 accumulatedLight(0.f, 0.f, 0.f);
+
+	Vec3 normal = hitRecord.triangle->normal();
+	if (material.smoothShading()) {
+		normal = hitRecord.normal;
+	}
 
 	for (const auto& light : scene.lights()) {
 		Vec3 lightDir = light.position() - hitRecord.point;
@@ -13,14 +21,15 @@ Color shade(const HitRecord& hitRecord, const Scene& scene) {
 		float sphereRadius = lightDir.length();
 		float sphereArea = 4.f * math::PI * sphereRadius * sphereRadius;
 
-		float cosLaw = math::max(0.f, dot(hitRecord.normal, lightDirNormalized));
+		float cosLaw = math::max(0.f, dot(normal, lightDirNormalized));
 
-		float bias = math::EPSILON_RAY + 1e-3 * (1 - dot(hitRecord.normal, lightDirNormalized));
-		Ray shadowRay(hitRecord.point + hitRecord.normal * bias, lightDirNormalized);
+		float bias = math::EPSILON_RAY + float(1e-3) * (1 - dot(normal, lightDirNormalized));
+		Ray shadowRay(hitRecord.point + normal * bias, lightDirNormalized);
 		bool isShadowed = false;
 		HitRecord shadowHit;
 
-		for (const auto& tri : scene.triangles()) {
+		for (const auto& sceneTriangle : scene.triangles()) {
+			const auto& tri = sceneTriangle.triangle;
 			if (&tri == hitRecord.triangle) continue;
 
 			if (tri.intersect(shadowRay, shadowHit, false)) {
@@ -33,7 +42,7 @@ Color shade(const HitRecord& hitRecord, const Scene& scene) {
 
 		if (isShadowed) continue;
 
-		Vec3 lightContribution = (light.intensity() / sphereArea) * cosLaw * albedo;
+		Vec3 lightContribution = (light.intensity() / sphereArea) * cosLaw * albedoVec;
 		accumulatedLight += lightContribution;
 	}
 

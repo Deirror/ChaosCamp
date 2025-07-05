@@ -23,7 +23,7 @@ public:
 	Vec3 position() const { return position_; }
 
 private:
-	float intensity_;
+	float intensity_ = 0.f;
 	Vec3 position_;
 };
 

@@ -26,7 +26,6 @@ Vec3& Vec3::operator*=(float scalar) {
 }
 
 Vec3& Vec3::operator/=(float scalar) {
-	CRT_ENSURE(FLT_NOT_ZERO(scalar), "Division by zero");
 	return *this *= 1.0f / scalar;
 }
 
@@ -58,7 +57,6 @@ Vec3 operator*(const Vec3& other, float scalar) {
 }
 
 Vec3 operator/(const Vec3& other, float scalar) {
-	CRT_ENSURE(FLT_NOT_ZERO(scalar), "Division by zero");
 	return (1.0f / scalar) * other;
 }
 
@@ -77,7 +75,6 @@ Vec3 cross(const Vec3& lhs, const Vec3& rhs) {
 
 Vec3 Vec3::normalized() const {
 	float len = length();
-	CRT_ENSURE(FLT_IS_POS(len), "Negative vector length");
 	return *this / len;
 }
 

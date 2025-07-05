@@ -1,25 +1,42 @@
 #include "Scene.h"
 
-#include "JsonParser.h"
+#include "json/JsonParser.h"
 
 CRT_BEGIN
 
-void Scene::fromFile(const std::string& filename) {
+void Scene::fromJsonFile(const std::string& filename, const ParseOptions& options) {
 	JsonParser parser(filename);
 	
-	parser.parseSettings(settings_);
-	parser.parseCamera(camera_);
-	parser.parseLights(lights_);
-	parser.parseMeshes(meshes_);
+	if (options.hasOption(JsonKey::SETTINGS)) {
+		parser.parseSettings(settings_);
+		camera_.resolution(settings_.resolution);
+	}
 
-	camera_.resolution(settings_.resolution);
+	if (options.hasOption(JsonKey::CAMERA)) {
+		parser.parseCamera(camera_);
+	}
+
+	if (options.hasOption(JsonKey::OBJECTS)) {
+		parser.parseMeshes(meshes_);
+	}
+
+	if (options.hasOption(JsonKey::LIGHTS)) {
+		parser.parseLights(lights_);
+	}
+
+	if (options.hasOption(JsonKey::MATERIALS)) {
+		parser.parseMaterials(materials_);
+	}
 }
 
-std::vector<Triangle> Scene::triangles() const {
-	std::vector<Triangle> triangles;
+std::vector<SceneTriangle> Scene::triangles() const {
+	std::vector<SceneTriangle> triangles;
+	unsigned int meshIndex = 0;
 	for (const auto& mesh : meshes_) {
-		const std::vector<Triangle>& meshTriangles = mesh.getTriangles();
-		triangles.insert(triangles.end(), meshTriangles.begin(), meshTriangles.end());
+		for (const auto& triangle : mesh.getTriangles()) {
+			triangles.emplace_back(triangle, meshIndex);
+		}
+		meshIndex++;
 	}
 	return triangles;
 }

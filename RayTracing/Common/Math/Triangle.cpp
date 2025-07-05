@@ -2,9 +2,6 @@
 
 CRT_BEGIN
 
-Triangle::Triangle(Vec3 v0, Vec3 v1, Vec3 v2)
-	: v0_(v0), v1_(v1), v2_(v2) {}
-
 Vec3 Triangle::normal() const {
 	return cross(v1_ - v0_, v2_ - v0_).normalized();
 }
@@ -52,15 +49,28 @@ bool Triangle::intersect(const Ray& ray, HitRecord& hitRecord, bool cullBackFace
 		return false; 
 	}
 
-	Vec3 e2 = v0() - v2();
+	Vec3 e2 = v2() - v0();
 	Vec3 v2p = point - v2();
-	if (dot(normal, cross(e2, v2p)) < -math::EPSILON_ZERO) {
+	if (dot(normal, cross(e2 * (-1.f), v2p)) < -math::EPSILON_ZERO) {
 		return false; 
 	}
 
+	float areaABC = cross(e0, e2).length();
+	if (areaABC < math::EPSILON_ZERO) { 
+		return false; 
+	}
+
+	float areaPAB = cross(e0, v0p).length();
+	float areaPCA = cross(v0p, e2).length();
+
+	float u = areaPCA / areaABC;
+	float v = areaPAB / areaABC;
+	float w = 1.f - u - v;
+
 	hitRecord.t = t;
 	hitRecord.point = point;
-	hitRecord.normal = normal;
+	hitRecord.normal = (n0() * w + n1() * u + n2() * v).normalized();
+	hitRecord.barycentricCoords = Vec3(u, v, w);
 	hitRecord.triangle = this;
 
 	return true;

@@ -48,7 +48,7 @@
     <ClCompile Include="error.h">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JsonParser.cpp">
+    <ClCompile Include="json\JsonParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Render.cpp">
@@ -58,6 +58,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Shade.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="json\ParseOptions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -110,7 +116,7 @@
     <ClInclude Include="Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="JsonParser.h">
+    <ClInclude Include="json\JsonParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Render.h">
@@ -123,6 +129,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Shade.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="json\JsonKey.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="json\ParseOptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
