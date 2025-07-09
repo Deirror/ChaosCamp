@@ -9,7 +9,8 @@ Color shade(const HitRecord& hitRecord, const Scene& scene) {
 	Vec3 albedoVec = { albedo.r / 255.f, albedo.g / 255.f, albedo.b / 255.f };
 	Vec3 accumulatedLight(0.f, 0.f, 0.f);
 
-	Vec3 normal = hitRecord.triangle->normal();
+	const Triangle triangle = scene.triangle(hitRecord.triangleIndex);
+	Vec3 normal = triangle.normal();
 	if (material.smoothShading()) {
 		normal = hitRecord.normal;
 	}
@@ -19,18 +20,18 @@ Color shade(const HitRecord& hitRecord, const Scene& scene) {
 		Vec3 lightDirNormalized = lightDir.normalized();
 
 		float sphereRadius = lightDir.length();
-		float sphereArea = 4.f * math::PI * sphereRadius * sphereRadius;
+		float sphereArea = math::PI4 * sphereRadius * sphereRadius;
 
 		float cosLaw = math::max(0.f, dot(normal, lightDirNormalized));
 
-		float bias = math::EPSILON_RAY + float(1e-3) * (1 - dot(normal, lightDirNormalized));
+		float bias = math::EPSILON_RAY + math::SLOPE_BIAS * (1.f - dot(normal, lightDirNormalized));
 		Ray shadowRay(hitRecord.point + normal * bias, lightDirNormalized);
 		bool isShadowed = false;
 		HitRecord shadowHit;
 
 		for (const auto& sceneTriangle : scene.triangles()) {
-			const auto& tri = sceneTriangle.triangle;
-			if (&tri == hitRecord.triangle) continue;
+			const auto& tri = scene.triangle(sceneTriangle.triangleIndex);
+			if (&tri == &triangle) continue;
 
 			if (tri.intersect(shadowRay, shadowHit, false)) {
 				if (shadowHit.t < sphereRadius - math::EPSILON_ZERO) {

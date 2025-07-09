@@ -4,6 +4,11 @@
 
 CRT_BEGIN
 
+Scene::Scene(const std::string& filename, const ParseOptions& options) { 
+	fromJsonFile(filename, options); 
+	buildTriangles();
+}
+
 void Scene::fromJsonFile(const std::string& filename, const ParseOptions& options) {
 	JsonParser parser(filename);
 	
@@ -30,15 +35,32 @@ void Scene::fromJsonFile(const std::string& filename, const ParseOptions& option
 }
 
 std::vector<SceneTriangle> Scene::triangles() const {
-	std::vector<SceneTriangle> triangles;
-	unsigned int meshIndex = 0;
+	std::vector<SceneTriangle> triangles(totalTrianglesCount());
+	unsigned int meshIdx = 0, sceneTriIdx = 0;
 	for (const auto& mesh : meshes_) {
-		for (const auto& triangle : mesh.getTriangles()) {
-			triangles.emplace_back(triangle, meshIndex);
+		for (unsigned int triIdx = 0; triIdx < mesh.triangleCount(); ++triIdx) {
+			triangles[sceneTriIdx] = { sceneTriIdx, meshIdx };
+			++sceneTriIdx;
 		}
-		meshIndex++;
+		++meshIdx;
 	}
 	return triangles;
+}
+
+unsigned int Scene::totalTrianglesCount() const {
+	unsigned int trianglesCount = 0;
+	for (const auto& mesh : meshes_) {
+		trianglesCount += mesh.triangleCount();
+	}
+	return trianglesCount;
+}
+
+void Scene::buildTriangles() {
+	triangles_.reserve(totalTrianglesCount());
+	for (const auto& mesh : meshes_) {
+		const auto& meshTriangles = mesh.getTriangles();
+		triangles_.insert(triangles_.end(), meshTriangles.begin(), meshTriangles.end());
+	}
 }
 
 CRT_END

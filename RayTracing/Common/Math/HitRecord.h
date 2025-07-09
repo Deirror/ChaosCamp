@@ -5,16 +5,16 @@
 
 CRT_BEGIN
 
-class Triangle;
+class Mesh;
 
 struct HitRecord {
 	float t = FLT_MAX;
 	Vec3 point;
 	Vec3 normal;
 	Vec3 barycentricCoords;
-	const Triangle* triangle;
+	unsigned int triangleIndex = 0;
 	unsigned int meshIndex = 0;
-	MaterialType materialType = MaterialType::DIFFUSE;
+	MaterialType materialType = MaterialType::Diffuse;
 };
 
 CRT_END

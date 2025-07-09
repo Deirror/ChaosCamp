@@ -82,7 +82,7 @@ void from_json(const nlohmann::json& j, Mesh& mesh) {
 			trianglesJson[i + 1].get<float>(),
 			trianglesJson[i + 2].get<float>()
 		};
-		mesh.addTriangle(tri);
+		mesh.addTriangleIndices(tri);
 	}
 
 	mesh.materialIndex(j[JsonKey::Objects::MATERIAL_INDEX].get<unsigned int>());

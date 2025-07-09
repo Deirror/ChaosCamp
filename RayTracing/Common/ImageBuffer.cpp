@@ -43,7 +43,8 @@ void ImageBuffer::dumpBinary(PPMFile& ppmFile) const {
 		buffer.push_back(color.b);
 	}
 
-	ppmFile.write(reinterpret_cast<const char*>(buffer.data()), buffer.size());
+	unsigned int size = static_cast<unsigned int>(buffer.size());
+	ppmFile.write(reinterpret_cast<const char*>(buffer.data()), size);
 }
 
 void ImageBuffer::set(unsigned short x, unsigned short y, Color color) { 

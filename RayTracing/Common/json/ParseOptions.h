@@ -8,7 +8,7 @@
 
 CRT_BEGIN
 
-inline std::unordered_set<std::string> validParseOptions { 
+inline std::unordered_set<std::string> ValidParseOptions { 
 	JsonKey::CAMERA, JsonKey::OBJECTS, JsonKey::SETTINGS,
 	JsonKey::MATERIALS, JsonKey::LIGHTS
 };
@@ -28,7 +28,7 @@ public:
 	std::unordered_set<std::string> options() const { return options_; }
 
 private:
-	bool validateOption(const std::string& option) const { return validParseOptions.count(option) > 0; }
+	bool validateOption(const std::string& option) const { return ValidParseOptions.count(option) > 0; }
 
 private:
 	std::unordered_set<std::string> options_;

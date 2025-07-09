@@ -24,8 +24,8 @@ public:
     void dumpASCII(PPMFile& ppmFile) const;
     void dumpBinary(PPMFile& ppmFile) const;
 
-    int width() const { return resolution_.width(); }
-    int height() const { return resolution_.height(); }
+    unsigned short width() const { return resolution_.width(); }
+    unsigned short height() const { return resolution_.height(); }
 
     Color at(unsigned short x, unsigned short y) const;
 
@@ -34,7 +34,6 @@ public:
 private:
     Resolution resolution_;
     std::vector<Color> pixels_;
-
 };
 
 CRT_END

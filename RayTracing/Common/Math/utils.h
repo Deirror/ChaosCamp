@@ -5,19 +5,22 @@
 CRT_BEGIN
 
 namespace math {
-	constexpr float EPSILON_RAY = 1e-4f;
-	constexpr float EPSILON_ZERO = 1e-6f;
+	inline constexpr float EPSILON_RAY = 1e-4f;
+	inline constexpr float EPSILON_ZERO = 1e-6f;
 
-	constexpr float ZERO = 0.0f;
-
-	constexpr float PI = 3.14159265358979323846f;
+	inline constexpr float PI = 3.14159265358979323846f;
+	inline constexpr float PI2 = 2.f * PI;
+	inline constexpr float PI4 = 4.f * PI;
+		
+	inline constexpr float PI_RAD = PI / 180.f;
+	inline constexpr float SLOPE_BIAS = 1e-3f;
 
 	inline float to_radians(float degrees) {
-		return degrees * (PI / 180.0f);
+		return degrees * PI_RAD;
 	}
 
 	inline float to_degrees(float radians) {
-		return radians / (PI / 180.0f);
+		return radians / PI_RAD;
 	}
 
 	inline float clamp(float value, float min, float max) {

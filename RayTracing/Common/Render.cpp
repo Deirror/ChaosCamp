@@ -8,7 +8,7 @@ CRT_BEGIN
 
 static HitRecord findHit(const Ray& ray, const Scene& scene, const std::vector<SceneTriangle>& sceneTriangles, unsigned short depth = 0, unsigned short maxDepth = 3) {
 	if (depth++ > maxDepth) {
-		return HitRecord(FLT_MAX, Vec3(), Vec3(), Vec3(), nullptr, 0);
+		return HitRecord(FLT_MAX, Vec3(), Vec3(), Vec3(), 0);
 	}
 
 	float closestT = FLT_MAX;
@@ -16,32 +16,34 @@ static HitRecord findHit(const Ray& ray, const Scene& scene, const std::vector<S
 
 	for (const auto& sceneTriangle : sceneTriangles) {
 		crt::HitRecord tempHit;
-		if (sceneTriangle.triangle.intersect(ray, tempHit) && tempHit.t < closestT) {
+		const Triangle& triangle = scene.triangle(sceneTriangle.triangleIndex);
+		if (triangle.intersect(ray, tempHit) && tempHit.t < closestT) {
 			closestT = tempHit.t;
 			finalHitRecord = tempHit;
 			finalHitRecord.meshIndex = sceneTriangle.meshIndex;
+			finalHitRecord.triangleIndex = sceneTriangle.triangleIndex;
 		}
 	}
 
 	if (closestT == FLT_MAX) {
-		return HitRecord(FLT_MAX, Vec3(), Vec3(), Vec3(), nullptr, 0);
+		return HitRecord(FLT_MAX, Vec3(), Vec3(), Vec3(), 0);
 	}
 
 	unsigned int materialIndex = scene.meshes()[finalHitRecord.meshIndex].materialIndex();
 	MaterialType materialType = scene.materials()[materialIndex].materialType();
 
 	switch (materialType) {
-	case MaterialType::DIFFUSE:
+	case MaterialType::Diffuse:
 		break;
-	case MaterialType::REFLECTIVE:
+	case MaterialType::Reflective:
 		Vec3 projection = dot(ray.direction(), finalHitRecord.normal) * finalHitRecord.normal;
 		Vec3 reflectDir = ray.direction() - 2.f * projection;
 
-		float bias = math::EPSILON_RAY + float(1e-3) * (1 - dot(finalHitRecord.normal, reflectDir.normalized()));
+		float bias = math::EPSILON_RAY + math::SLOPE_BIAS * (1 - dot(finalHitRecord.normal, reflectDir.normalized()));
 		Ray reflectRay(finalHitRecord.point + finalHitRecord.normal * bias, reflectDir.normalized());
 
 		HitRecord reflectHitRecord = findHit(reflectRay, scene, sceneTriangles, depth);
-		reflectHitRecord.materialType = MaterialType::REFLECTIVE;
+		reflectHitRecord.materialType = MaterialType::Reflective;
 
 		return reflectHitRecord;
 	}
@@ -69,7 +71,7 @@ static void traceRays(const Scene& scene, ImageBuffer& imageBuffer, unsigned int
 			else {
 				Color albedo(255, 255, 255);
 				switch (hitRecord.materialType) {
-				case MaterialType::REFLECTIVE:
+				case MaterialType::Reflective:
 					unsigned int materialIndex = scene.meshes()[hitRecord.meshIndex].materialIndex();
 					albedo = scene.materials()[materialIndex].albedo();
 					break;

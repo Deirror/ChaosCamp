@@ -18,14 +18,14 @@ struct Settings {
 };
 
 struct SceneTriangle {
-	Triangle triangle;
+	unsigned int triangleIndex;
 	unsigned int meshIndex;
 };
 
 class Scene {
 public:
 	Scene() = default;
-	Scene(const std::string& filename, const ParseOptions& options = {}) { fromJsonFile(filename, options); }
+	Scene(const std::string& filename, const ParseOptions& options = {});
 
 	Scene(const Scene&) = delete;
 	Scene& operator=(const Scene&) = delete;
@@ -41,10 +41,18 @@ public:
 	const Settings& settings() const { return settings_; }
 	const Camera& camera() const { return camera_; }
 
+	const Triangle& triangle(unsigned int index) const { return triangles_[index]; }
+	unsigned int totalTrianglesCount() const;
+
+private:
+	void buildTriangles();
+
 private:
 	std::vector<Mesh> meshes_;
 	std::vector<Light> lights_;
 	std::vector<Material> materials_;
+
+	std::vector<Triangle> triangles_;
 
 	Camera camera_;
 	Settings settings_;

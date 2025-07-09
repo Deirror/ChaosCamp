@@ -4,11 +4,6 @@
 
 CRT_BEGIN
 
-enum class LightType {
-	Point,
-	Directional
-};
-
 class Light {
 public:
 	Light() = default;

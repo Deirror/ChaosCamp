@@ -8,9 +8,9 @@
 CRT_BEGIN
 
 enum class MaterialType {
-	DIFFUSE,
-	REFLECTIVE,
-	REFRACTIVE,
+	Diffuse,
+	Reflective,
+	Refractive,
 };
 
 MaterialType fromStringToMaterialType(const std::string& type);
