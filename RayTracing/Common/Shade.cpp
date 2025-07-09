@@ -2,7 +2,7 @@
 
 CRT_BEGIN 
 
-Color shade(const HitRecord& hitRecord, const Scene& scene) {
+Color shade(const HitRecord& hitRecord, const Scene& scene, const std::vector<SceneTriangle>& sceneTriangles) {
 	unsigned int materialIndex = scene.meshes()[hitRecord.meshIndex].materialIndex();
 	Material material = scene.materials()[materialIndex];
 	Color albedo = material.albedo();
@@ -29,7 +29,7 @@ Color shade(const HitRecord& hitRecord, const Scene& scene) {
 		bool isShadowed = false;
 		HitRecord shadowHit;
 
-		for (const auto& sceneTriangle : scene.triangles()) {
+		for (const auto& sceneTriangle : sceneTriangles) {
 			const auto& tri = scene.triangle(sceneTriangle.triangleIndex);
 			if (&tri == &triangle) continue;
 

@@ -51,9 +51,7 @@ static HitRecord findHit(const Ray& ray, const Scene& scene, const std::vector<S
 	return finalHitRecord;
 }
 
-static void traceRays(const Scene& scene, ImageBuffer& imageBuffer, unsigned int startRow, unsigned int endRow) {
-	const std::vector<SceneTriangle>& sceneTriangles = scene.triangles();
-
+static void traceRays(const Scene& scene, const std::vector<SceneTriangle>& sceneTriangles, ImageBuffer& imageBuffer, unsigned int startRow, unsigned int endRow) {
 	Resolution res = scene.settings().resolution;
 	const Camera& camera = scene.camera();
 
@@ -66,7 +64,7 @@ static void traceRays(const Scene& scene, ImageBuffer& imageBuffer, unsigned int
 			HitRecord hitRecord = findHit(ray, scene, sceneTriangles);
 
 			if (hitRecord.t != FLT_MAX) {
-				imageBuffer.set(x, y, shade(hitRecord , scene));
+				imageBuffer.set(x, y, shade(hitRecord, scene, sceneTriangles));
 			}
 			else {
 				Color albedo(255, 255, 255);
@@ -105,11 +103,13 @@ ImageBuffer Render::render(const Scene& scene) const {
 }
 
 void Render::renderLinear(const Scene& scene, ImageBuffer& imageBuffer) const {
-	traceRays(scene, imageBuffer, 0, scene.settings().resolution.height());
+	const std::vector<SceneTriangle>& sceneTriangles = scene.triangles();
+	traceRays(scene, sceneTriangles, imageBuffer, 0, scene.settings().resolution.height());
 }
 
 void Render::renderParallel(const Scene& scene, ImageBuffer& imageBuffer) const {
 	const Resolution res = scene.settings().resolution;
+	const std::vector<SceneTriangle>& sceneTriangles = scene.triangles();
 
 	unsigned int threadCount = std::thread::hardware_concurrency();
 	unsigned int bandHeight = res.height() / threadCount;
@@ -120,6 +120,7 @@ void Render::renderParallel(const Scene& scene, ImageBuffer& imageBuffer) const 
 		unsigned int endRow = (i == threadCount - 1) ? res.height() : (i + 1) * bandHeight;
 		threads.emplace_back(traceRays,
 			std::cref(scene),
+			std::cref(sceneTriangles),
 			std::ref(imageBuffer),
 			startRow,
 			endRow);
