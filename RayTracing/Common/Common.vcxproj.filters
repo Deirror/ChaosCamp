@@ -51,7 +51,7 @@
     <ClCompile Include="json\JsonParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Render.cpp">
+    <ClCompile Include="RayTracer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ImageBuffer.cpp">
@@ -119,7 +119,7 @@
     <ClInclude Include="json\JsonParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Render.h">
+    <ClInclude Include="RayTracer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ImageBuffer.h">

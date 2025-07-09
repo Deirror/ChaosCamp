@@ -32,7 +32,7 @@
     <ClCompile Include="PPMFile.cpp" />
     <ClCompile Include="Math\Triangle.cpp" />
     <ClCompile Include="Math\Vec3.cpp" />
-    <ClCompile Include="Render.cpp" />
+    <ClCompile Include="RayTracer.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shade.cpp" />
     <ClCompile Include="Viewport.cpp" />
@@ -52,7 +52,7 @@
     <ClInclude Include="json\ParseOptions.h" />
     <ClInclude Include="PPMFile.h" />
     <ClInclude Include="Math\Ray.h" />
-    <ClInclude Include="Render.h" />
+    <ClInclude Include="RayTracer.h" />
     <ClInclude Include="Resolution.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shade.h" />
