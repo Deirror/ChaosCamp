@@ -5,9 +5,9 @@ CRT_BEGIN
 void Viewport::update(const Vec3& cameraPosition, const Mat3& rotation) {
     float width = aspectHeight_.height * aspectHeight_.ratio;
 
-    Vec3 u = rotation.row(0);
-    Vec3 v = rotation.row(1);
-    Vec3 w = rotation.row(2);
+    Vec3 u = rotation.row0();
+    Vec3 v = rotation.row1();
+    Vec3 w = rotation.row2();
 
     horizontal_ = width * u;
     vertical_ = -aspectHeight_.height * v;

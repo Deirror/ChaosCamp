@@ -69,7 +69,8 @@ bool Triangle::intersect(const Ray& ray, HitRecord& hitRecord, bool cullBackFace
 
 	hitRecord.t = t;
 	hitRecord.point = point;
-	hitRecord.normal = (n0() * w + n1() * u + n2() * v).normalized();
+	hitRecord.faceNormal = normal;
+	hitRecord.hitNormal = (n0() * w + n1() * u + n2() * v).normalized();
 	hitRecord.barycentricCoords = Vec3(u, v, w);
 
 	return true;

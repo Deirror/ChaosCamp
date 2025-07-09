@@ -8,7 +8,7 @@ CRT_BEGIN
 
 static HitRecord findHit(const Ray& ray, const Scene& scene, const std::vector<SceneTriangle>& sceneTriangles, unsigned short depth = 0, unsigned short maxDepth = 3) {
 	if (depth++ > maxDepth) {
-		return HitRecord(FLT_MAX, Vec3(), Vec3(), Vec3(), 0);
+		return HitRecord();
 	}
 
 	float closestT = FLT_MAX;
@@ -26,7 +26,7 @@ static HitRecord findHit(const Ray& ray, const Scene& scene, const std::vector<S
 	}
 
 	if (closestT == FLT_MAX) {
-		return HitRecord(FLT_MAX, Vec3(), Vec3(), Vec3(), 0);
+		return HitRecord();
 	}
 
 	unsigned int materialIndex = scene.meshes()[finalHitRecord.meshIndex].materialIndex();
@@ -36,11 +36,11 @@ static HitRecord findHit(const Ray& ray, const Scene& scene, const std::vector<S
 	case MaterialType::Diffuse:
 		break;
 	case MaterialType::Reflective:
-		Vec3 projection = dot(ray.direction(), finalHitRecord.normal) * finalHitRecord.normal;
+		Vec3 projection = dot(ray.direction(), finalHitRecord.hitNormal) * finalHitRecord.hitNormal;
 		Vec3 reflectDir = ray.direction() - 2.f * projection;
 
-		float bias = math::EPSILON_RAY + math::SLOPE_BIAS * (1 - dot(finalHitRecord.normal, reflectDir.normalized()));
-		Ray reflectRay(finalHitRecord.point + finalHitRecord.normal * bias, reflectDir.normalized());
+		float bias = math::EPSILON_RAY + math::SLOPE_BIAS * (1 - dot(finalHitRecord.hitNormal, reflectDir.normalized()));
+		Ray reflectRay(finalHitRecord.point + finalHitRecord.hitNormal * bias, reflectDir.normalized());
 
 		HitRecord reflectHitRecord = findHit(reflectRay, scene, sceneTriangles, depth);
 		reflectHitRecord.materialType = MaterialType::Reflective;
@@ -77,9 +77,9 @@ static void traceRays(const Scene& scene, const std::vector<SceneTriangle>& scen
 
 				Color backgroundColor = scene.settings().backgroundColor;
 				Color finalColor(
-					backgroundColor.r * albedo.r / 255.f, 
-					backgroundColor.g * albedo.g / 255.f,
-					backgroundColor.b * albedo.b / 255.f
+					backgroundColor.r * albedo.r / 255, 
+					backgroundColor.g * albedo.g / 255,
+					backgroundColor.b * albedo.b / 255
 				);
 				imageBuffer.set(x, y, finalColor);
 			}

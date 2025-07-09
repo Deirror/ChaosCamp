@@ -2,8 +2,9 @@
 
 CRT_BEGIN
 
-Triangle Mesh::triangle(size_t index) const {
-	const auto& tri = triangleIndices_.at(index);
+Triangle Mesh::triangle(unsigned int idx) const {
+	CRT_ENSURE(idx < triangleCount(), "Index out of bounds");
+	const auto& tri = triangleIndices_.at(idx);
 	return Triangle(
 		vertices_.at(tri.v0), vertices_.at(tri.v1), vertices_.at(tri.v2),
 		vertexNormals_.at(tri.v0), vertexNormals_.at(tri.v1), vertexNormals_.at(tri.v2)

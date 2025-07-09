@@ -38,23 +38,23 @@ public:
 
 	const Viewport& viewport() const { return viewport_; }
 
-	Vec3 u() const { return rotationMatrix_.row(0); }
-	Vec3 v() const { return rotationMatrix_.row(1); }
-	Vec3 w() const { return rotationMatrix_.row(2); }
+	Vec3 u() const { return rotationMatrix_.row0(); }
+	Vec3 v() const { return rotationMatrix_.row1(); }
+	Vec3 w() const { return rotationMatrix_.row2(); }
 
 	void move(float dx, float dy, float dz);
 
-	void truck(float distance) { move(distance, 0.f, 0.f); }
-	void pedestal(float distance) { move(0.f, distance, 0.f); }
-	void dolly(float distance) { move(0.f, 0.f, distance); }
+	void truck(float dx) { move(dx, 0.f, 0.f); }
+	void pedestal(float dy) { move(0.f, dy, 0.f); }
+	void dolly(float dz) { move(0.f, 0.f, dz); }
 
-	void rotate(float panRadians, float tiltRadians, float rollRadians);
+	void rotate(float panRad, float tiltRad, float rollRad);
 
-	void pan(float angleRadians) { rotate(angleRadians, 0.f, 0.f); }
-	void tilt(float angleRadians) { rotate(0.f, angleRadians, 0.f);  }
-	void roll(float angleRadians) { rotate(0.f, 0.f, angleRadians); }
+	void pan(float angleRad) { rotate(angleRad, 0.f, 0.f); }
+	void tilt(float angleRad) { rotate(0.f, angleRad, 0.f);  }
+	void roll(float angleRad) { rotate(0.f, 0.f, angleRad); }
 
-	void orbit(float panRadians, float tiltRadians, const Vec3& orbitAxis = Vec3(0.f, 1.f, 0.f));
+	void orbit(float panRad, float tiltRad, const Vec3& orbitAxis = Vec3(0.f, 1.f, 0.f));
 
 private:
 	void update();

@@ -30,9 +30,9 @@ void Camera::computeBasis() {
 
 	up_ = v;
 
-	rotationMatrix_.row(0, u);
-	rotationMatrix_.row(1, v);
-	rotationMatrix_.row(2, w);
+	rotationMatrix_.row0(u);
+	rotationMatrix_.row1(v);
+	rotationMatrix_.row2(w);
 }
 
 void Camera::updateLookAtFromRotation() {
@@ -56,8 +56,8 @@ void Camera::fromSceneFile(const Mat3& rotationMatrix, const Vec3& position) {
 void Camera::fromMatrix(const Mat3& rotationMatrix) {
 	rotationMatrix_ = rotationMatrix;
 
-	lookAt_ = rotationMatrix_.row(2) * (-1.f);
-	up_ = rotationMatrix_.row(1);   
+	lookAt_ = rotationMatrix_.row2() * (-1.f);
+	up_ = rotationMatrix_.row1();   
 
 	update();
 }
@@ -76,27 +76,27 @@ void Camera::move(float dx, float dy, float dz) {
 	update();
 }
 
-void Camera::rotate(float panRadians, float tiltRadians, float rollRadians) {
-	if (panRadians != 0.0f) {
-		Mat3 yawRotation = Mat3::rotationAroundAxis(v(), -panRadians);
-		rotationMatrix_ = yawRotation * rotationMatrix_;
+void Camera::rotate(float panRad, float tiltRad, float rollRad) {
+	if (panRad != 0.0f) {
+		Mat3 yaw = Mat3::rotationAroundAxis(v(), -panRad);
+		rotationMatrix_ = yaw * rotationMatrix_;
 	}
 
-	if (tiltRadians != 0.0f) {
-		Mat3 pitchRotation = Mat3::rotationAroundAxis(u(), -tiltRadians);
-		rotationMatrix_ = pitchRotation * rotationMatrix_;
+	if (tiltRad != 0.0f) {
+		Mat3 pitch = Mat3::rotationAroundAxis(u(), -tiltRad);
+		rotationMatrix_ = pitch * rotationMatrix_;
 	}
 
-	if (rollRadians != 0.0f) {
-		Mat3 rollRotation = Mat3::rotationAroundAxis(w() * (-1.0f), -rollRadians);
-		rotationMatrix_ = rollRotation * rotationMatrix_;
+	if (rollRad != 0.0f) {
+		Mat3 roll = Mat3::rotationAroundAxis(w() * (-1.0f), -rollRad);
+		rotationMatrix_ = roll * rotationMatrix_;
 	}
 
 	updateLookAtFromRotation();
 	update();
 }
 
-void Camera::orbit(float panRadians, float tiltRadians, const Vec3& orbitAxis) {
+void Camera::orbit(float panRad, float tiltRad, const Vec3& orbitAxis) {
 	Vec3 offset = position_ - lookAt_;
 	float radius = offset.length();
 	if (radius < math::EPSILON_ZERO) return;
@@ -104,13 +104,13 @@ void Camera::orbit(float panRadians, float tiltRadians, const Vec3& orbitAxis) {
 	Vec3 direction = offset / radius;
 	Vec3 right = cross(up_, direction).normalized();
 
-	Mat3 pitchRotation = Mat3::rotationAroundAxis(right, tiltRadians);
-	offset = pitchRotation * offset;
-	up_ = pitchRotation * up_;
+	Mat3 pitch = Mat3::rotationAroundAxis(right, tiltRad);
+	offset = pitch * offset;
+	up_ = pitch * up_;
 
-	Mat3 yawRotation = Mat3::rotationAroundAxis(orbitAxis, panRadians);
-	offset = yawRotation * offset;
-	up_ = yawRotation * up_;
+	Mat3 yaw = Mat3::rotationAroundAxis(orbitAxis, panRad);
+	offset = yaw * offset;
+	up_ = yaw * up_;
 
 	position_ = lookAt_ + offset;
 	up_ = up_.normalized();
