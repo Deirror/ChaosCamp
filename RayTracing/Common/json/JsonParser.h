@@ -27,7 +27,7 @@ public:
 	void parseSettings(Settings& settings);
 	void parseCamera(Camera& camera);
 
-	void parseLights(std::vector<Light>& light);
+	void parseLights(std::vector<Light>& lights);
 	void parseMeshes(std::vector<Mesh>& meshes);
 
 	void parseMaterials(std::vector<Material>& materials);

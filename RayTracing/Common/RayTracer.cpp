@@ -1,4 +1,4 @@
-#include "Render.h"
+#include "RayTracer.h"
 
 #include <thread>
 
@@ -87,7 +87,7 @@ static void traceRays(const Scene& scene, const std::vector<SceneTriangle>& scen
 	}
 }
 
-ImageBuffer Render::render(const Scene& scene) const {
+ImageBuffer RayTracer::render(const Scene& scene) const {
 	ImageBuffer buffer(scene.settings().resolution);
 
 	switch (renderMode_) {
@@ -102,12 +102,12 @@ ImageBuffer Render::render(const Scene& scene) const {
 	return buffer;
 }
 
-void Render::renderLinear(const Scene& scene, ImageBuffer& imageBuffer) const {
+void RayTracer::renderLinear(const Scene& scene, ImageBuffer& imageBuffer) const {
 	const std::vector<SceneTriangle>& sceneTriangles = scene.triangles();
 	traceRays(scene, sceneTriangles, imageBuffer, 0, scene.settings().resolution.height());
 }
 
-void Render::renderParallel(const Scene& scene, ImageBuffer& imageBuffer) const {
+void RayTracer::renderParallel(const Scene& scene, ImageBuffer& imageBuffer) const {
 	const Resolution res = scene.settings().resolution;
 	const std::vector<SceneTriangle>& sceneTriangles = scene.triangles();
 

@@ -12,10 +12,10 @@ enum class RenderMode {
 	Parallel
 };
 
-class Render {
+class RayTracer {
 public:
-	Render() = default;
-	Render(RenderMode renderMode) : renderMode_(renderMode) {}
+	RayTracer() = default;
+	RayTracer(RenderMode renderMode) : renderMode_(renderMode) {}
 
 	ImageBuffer render(const Scene& scene) const;
 

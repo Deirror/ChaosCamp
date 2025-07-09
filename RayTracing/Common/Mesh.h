@@ -20,9 +20,12 @@ public:
 	unsigned int materialIndex() const { return materialIndex_; }
 
 	void addVertices(const Vec3& vertex) { vertices_.push_back(vertex); }
-	void addTriangleIndices(const TriangleIndices& vertex) { triangleIndices_.push_back(vertex); }
+	void emplaceVertices(float x, float y, float z) { vertices_.emplace_back(x, y, z); }
 
-	Triangle getTriangle(size_t index) const;
+	void addTriangleIndices(const TriangleIndices& triangleIndices) { triangleIndices_.push_back(triangleIndices); }
+	void emplaceTriangleIndices(unsigned int v0, unsigned int v1, unsigned int v2) { triangleIndices_.emplace_back(v0, v1, v2); }
+
+	Triangle triangle(size_t index) const;
 	std::vector<Triangle> getTriangles() const;
 
 	unsigned int triangleCount() const { return static_cast<unsigned int>(triangleIndices_.size()); }

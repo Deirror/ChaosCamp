@@ -2,7 +2,7 @@
 
 CRT_BEGIN
 
-Triangle Mesh::getTriangle(size_t index) const {
+Triangle Mesh::triangle(size_t index) const {
 	const auto& tri = triangleIndices_.at(index);
 	return Triangle(
 		vertices_.at(tri.v0), vertices_.at(tri.v1), vertices_.at(tri.v2),

@@ -13,6 +13,7 @@ void from_json(const nlohmann::json& j, Vec3& vec) {
 	if (!j.is_array() || j.size() != 3) {
 		CRT_ERROR("Invalid Vec3 format");
 	}
+
 	vec.x(j[0].get<float>());
 	vec.y(j[1].get<float>());
 	vec.z(j[2].get<float>());
@@ -65,24 +66,22 @@ void from_json(const nlohmann::json& j, Mesh& mesh) {
 	}
 
 	const auto& verticesJson = j[JsonKey::Objects::VERTICES];
-	const auto& trianglesJson = j[JsonKey::Objects::TRIANGLES];
+	const auto& trianglesIndicesJson = j[JsonKey::Objects::TRIANGLES];
 
 	for (int i = 0; i < verticesJson.size(); i += 3) {
-		Vec3 v{
+		mesh.emplaceVertices(
 			verticesJson[i].get<float>(),
 			verticesJson[i + 1].get<float>(),
 			verticesJson[i + 2].get<float>()
-		};
-		mesh.addVertices(v);
+		);
 	}
 
-	for (int i = 0; i < trianglesJson.size(); i += 3) {
-		TriangleIndices tri{
-			trianglesJson[i].get<float>(),
-			trianglesJson[i + 1].get<float>(),
-			trianglesJson[i + 2].get<float>()
-		};
-		mesh.addTriangleIndices(tri);
+	for (int i = 0; i < trianglesIndicesJson.size(); i += 3) {
+		mesh.emplaceTriangleIndices(
+			trianglesIndicesJson[i].get<unsigned int>(),
+			trianglesIndicesJson[i + 1].get<unsigned int>(),
+			trianglesIndicesJson[i + 2].get<unsigned int>()
+		);
 	}
 
 	mesh.materialIndex(j[JsonKey::Objects::MATERIAL_INDEX].get<unsigned int>());
@@ -117,6 +116,7 @@ void from_json(const nlohmann::json& j, Material& material) {
 	if (!j.contains(JsonKey::Material::ALBEDO)) {
 		CRT_ERROR("Material albedo not found in JSON data");
 	}
+
 	Color color = j[JsonKey::Material::ALBEDO].get<Color>();
 	material.albedo(color);
 
@@ -180,15 +180,15 @@ void JsonParser::parseCamera(Camera& camera) {
 	camera.fromSceneFile(matrix, cameraJson[JsonKey::Camera::POSITION].get<Vec3>());
 }
 
-void JsonParser::parseLights(std::vector<Light>& light) {
+void JsonParser::parseLights(std::vector<Light>& lights) {
 	if (!jsonData_.contains(JsonKey::LIGHTS)) {
 		CRT_ERROR("Lights not found in JSON data");
 	}
 	const auto& lightsJson = jsonData_[JsonKey::LIGHTS];
 
 	for (const auto& lightJson : lightsJson) {
-		Light l = lightJson.get<Light>();
-		light.push_back(l);
+		Light light = lightJson.get<Light>();
+		lights.emplace_back(std::move(light));
 	}
 }
 
@@ -202,7 +202,7 @@ void JsonParser::parseMeshes(std::vector<Mesh>& meshes) {
 	for (const auto& meshJson : objectsJson) {
 		Mesh mesh = meshJson.get<Mesh>();
 		mesh.computeVertexNormals();
-		meshes.push_back(mesh);
+		meshes.emplace_back(std::move(mesh));
 	}
 }
 
@@ -215,7 +215,7 @@ void JsonParser::parseMaterials(std::vector<Material>& materials) {
 
 	for (const auto& materialJson : materialsJson) {
 		Material material = materialJson.get<Material>();
-		materials.push_back(material);
+		materials.emplace_back(std::move(material));
 	}
 }
 
