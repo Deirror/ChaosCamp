@@ -15,55 +15,58 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="camera\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Color.cpp">
+    <ClCompile Include="image\Color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Math\Mat3.cpp">
+    <ClCompile Include="math\Mat3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PPMFile.cpp">
+    <ClCompile Include="image\PPMFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Math\Triangle.cpp">
+    <ClCompile Include="math\Triangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Math\Vec3.cpp">
+    <ClCompile Include="math\Vec3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Viewport.cpp">
+    <ClCompile Include="camera\Viewport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AspectHeight.h">
+    <ClCompile Include="dimensions\AspectHeight.h">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
+    <ClCompile Include="scene\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
+    <ClCompile Include="scene\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="error.h">
+    <ClCompile Include="core\error.h">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="json\JsonParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RayTracer.cpp">
+    <ClCompile Include="render\RayTracer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ImageBuffer.cpp">
+    <ClCompile Include="image\ImageBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Shade.cpp">
+    <ClCompile Include="render\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
+    <ClCompile Include="scene\Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="json\ParseOptions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="render\Intersection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -74,70 +77,76 @@
     <ClInclude Include="third-party\json_fwd.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="camera\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Color.h">
+    <ClInclude Include="image\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="crt.h">
+    <ClInclude Include="core\crt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Math\HitRecord.h">
+    <ClInclude Include="render\HitRecord.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Math\Mat3.h">
+    <ClInclude Include="math\Mat3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PPMFile.h">
+    <ClInclude Include="image\PPMFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Math\Ray.h">
+    <ClInclude Include="math\Ray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Resolution.h">
+    <ClInclude Include="dimensions\Resolution.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Math\Triangle.h">
+    <ClInclude Include="math\Triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Math\utils.h">
+    <ClInclude Include="math\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Math\Vec3.h">
+    <ClInclude Include="math\Vec3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Viewport.h">
+    <ClInclude Include="camera\Viewport.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
+    <ClInclude Include="scene\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
+    <ClInclude Include="scene\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="json\JsonParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RayTracer.h">
+    <ClInclude Include="render\RayTracer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ImageBuffer.h">
+    <ClInclude Include="image\ImageBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Light.h">
+    <ClInclude Include="scene\Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Shade.h">
+    <ClInclude Include="render\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
+    <ClInclude Include="scene\Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="json\JsonKey.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="json\ParseOptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="render\Intersection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="render\PathRay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

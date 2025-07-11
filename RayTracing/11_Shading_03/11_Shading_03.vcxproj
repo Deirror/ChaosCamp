@@ -18,83 +18,35 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="dimensions\AspectHeight.h" />
-    <ClCompile Include="camera\Camera.cpp" />
-    <ClCompile Include="image\Color.cpp" />
-    <ClCompile Include="core\error.h" />
-    <ClCompile Include="image\ImageBuffer.cpp" />
-    <ClCompile Include="render\Intersection.cpp" />
-    <ClCompile Include="json\JsonParser.cpp" />
-    <ClCompile Include="scene\Material.cpp" />
-    <ClCompile Include="math\Mat3.cpp" />
-    <ClCompile Include="scene\Mesh.cpp" />
-    <ClCompile Include="json\ParseOptions.cpp" />
-    <ClCompile Include="image\PPMFile.cpp" />
-    <ClCompile Include="math\Triangle.cpp" />
-    <ClCompile Include="math\Vec3.cpp" />
-    <ClCompile Include="render\RayTracer.cpp" />
-    <ClCompile Include="scene\Scene.cpp" />
-    <ClCompile Include="render\Shader.cpp" />
-    <ClCompile Include="camera\Viewport.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="camera\Camera.h" />
-    <ClInclude Include="image\Color.h" />
-    <ClInclude Include="core\crt.h" />
-    <ClInclude Include="image\ImageBuffer.h" />
-    <ClInclude Include="render\PathRay.h" />
-    <ClInclude Include="render\Intersection.h" />
-    <ClInclude Include="json\JsonKey.h" />
-    <ClInclude Include="json\JsonParser.h" />
-    <ClInclude Include="scene\Light.h" />
-    <ClInclude Include="scene\Material.h" />
-    <ClInclude Include="render\HitRecord.h" />
-    <ClInclude Include="math\Mat3.h" />
-    <ClInclude Include="scene\Mesh.h" />
-    <ClInclude Include="json\ParseOptions.h" />
-    <ClInclude Include="image\PPMFile.h" />
-    <ClInclude Include="math\Ray.h" />
-    <ClInclude Include="render\RayTracer.h" />
-    <ClInclude Include="dimensions\Resolution.h" />
-    <ClInclude Include="scene\Scene.h" />
-    <ClInclude Include="render\Shader.h" />
-    <ClInclude Include="third-party\json.hpp" />
-    <ClInclude Include="third-party\json_fwd.hpp" />
-    <ClInclude Include="math\Triangle.h" />
-    <ClInclude Include="math\utils.h" />
-    <ClInclude Include="math\Vec3.h" />
-    <ClInclude Include="camera\Viewport.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{eb839f39-3296-4a46-87d0-797657d503cc}</ProjectGuid>
-    <RootNamespace>Common</RootNamespace>
+    <ProjectGuid>{4cb18844-caa7-4565-9cbc-d53e988916a5}</ProjectGuid>
+    <RootNamespace>My11Shading03</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -122,14 +74,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
-      <SubSystem>
-      </SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -139,14 +88,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
-      <SubSystem>
-      </SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -156,17 +102,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)Common</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>
-      </SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -176,22 +118,38 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)Common</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>
-      </SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.vcxproj">
+      <Project>{eb839f39-3296-4a46-87d0-797657d503cc}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Task1\task1.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scenes\scene0.crtscene" />
+    <None Include="Scenes\scene1.crtscene" />
+    <None Include="Scenes\scene2.crtscene" />
+    <None Include="Scenes\scene3.crtscene" />
+    <None Include="Scenes\scene4.crtscene" />
+    <None Include="Scenes\scene5.crtscene" />
+    <None Include="Scenes\scene6.crtscene" />
+    <None Include="Scenes\scene7.crtscene" />
+    <None Include="Scenes\scene8.crtscene" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

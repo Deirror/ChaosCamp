@@ -2,8 +2,8 @@
 
 #include <fstream>
 
-#include "error.h"
-#include "Scene.h"
+#include "core/error.h"
+#include "scene/Scene.h"
 
 #include "JsonKey.h"
 
@@ -116,18 +116,19 @@ void from_json(const nlohmann::json& j, Material& material) {
 
 	material.materialType(crt::fromStringToMaterialType(j[JsonKey::Material::TYPE].get<std::string>()));
 
-	if (!j.contains(JsonKey::Material::ALBEDO)) {
-		CRT_ERROR("Material albedo not found in JSON data");
+	if (j.contains(JsonKey::Material::ALBEDO)) {
+		material.albedo(j[JsonKey::Material::ALBEDO].get<Vec3>());
 	}
-
-	Color color = j[JsonKey::Material::ALBEDO].get<Color>();
-	material.albedo(color);
 
 	if (!j.contains(JsonKey::Material::SMOOTH_SHADING)) {
 		CRT_ERROR("Material smooth shading not found in JSON data");
 	}
 
 	material.smoothShading(j[JsonKey::Material::SMOOTH_SHADING].get<bool>());
+
+	if (j.contains(JsonKey::Material::IOR)) {
+		material.ior(j[JsonKey::Material::IOR].get<float>());
+	}
 }
 
 void from_json(const nlohmann::json& j, Mat3& matrix) {

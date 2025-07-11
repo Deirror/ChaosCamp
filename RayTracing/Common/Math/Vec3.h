@@ -9,7 +9,7 @@ CRT_BEGIN
 
 class Vec3 {
 public:
-	Vec3() : x_(0.f), y_(0.f), z_(0.f) {};
+	Vec3() = default;
 	Vec3(float x, float y, float z) : x_(x), y_(y), z_(z) {}
 
 	float x() const { return x_; }
@@ -43,7 +43,7 @@ public:
 	friend Vec3 cross(const Vec3& lhs, const Vec3& rhs);
 
 private:
-	float x_, y_, z_;
+	float x_ = 0.f, y_ = 0.f, z_ = 0.f;
 };
 
 CRT_END

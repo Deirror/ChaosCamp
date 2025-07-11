@@ -1,6 +1,6 @@
 #include "Vec3.h"
 
-#include "error.h"
+#include "core/error.h"
 
 CRT_BEGIN
 

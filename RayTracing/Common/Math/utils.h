@@ -1,6 +1,6 @@
 #pragma once
 
-#include "crt.h"
+#include "core/crt.h"
 
 CRT_BEGIN
 
@@ -15,16 +15,20 @@ namespace math {
 	inline constexpr float PI_RAD = PI / 180.f;
 	inline constexpr float SLOPE_BIAS = 1e-3f;
 
-	inline float to_radians(float degrees) {
+	inline float radians(float degrees) {
 		return degrees * PI_RAD;
 	}
 
-	inline float to_degrees(float radians) {
+	inline float degrees(float radians) {
 		return radians / PI_RAD;
 	}
 
 	inline float clamp(float value, float min, float max) {
 		return (value < min) ? min : (value > max) ? max : value;
+	}
+
+	inline float bias(float dot) {
+		return math::EPSILON_RAY + math::SLOPE_BIAS * (1.f - dot);
 	}
 
 	inline float max(float a, float b) {

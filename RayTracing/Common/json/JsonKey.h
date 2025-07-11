@@ -1,6 +1,6 @@
 #pragma once
 
-#include "crt.h"
+#include "core/crt.h"
 
 CRT_BEGIN
 
@@ -39,6 +39,7 @@ struct JsonKey {
 		static constexpr char const* TYPE = "type";
 		static constexpr char const* ALBEDO = "albedo";
 		static constexpr char const* SMOOTH_SHADING = "smooth_shading";
+		static constexpr char const* IOR = "ior";
 	};
 };
 
