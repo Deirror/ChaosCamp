@@ -6,7 +6,7 @@ void task1() {
 	options.withOption(crt::JsonKey::MATERIALS).
 			withOption(crt::JsonKey::LIGHTS);
 
-	crt::Scene scene("Scenes/scene4.crtscene", options);
+	crt::Scene scene("Scenes/scene8.crtscene", options);
 
 	crt::RayTracer rayTracer(&scene, crt::RenderMode::Parallel);
 	crt::ImageBuffer buffer = rayTracer.render();

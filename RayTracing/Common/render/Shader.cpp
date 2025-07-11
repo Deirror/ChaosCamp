@@ -108,8 +108,7 @@ Color Shader::shadeReflective(PathRay& pathRay, const HitRecord& hitRecord) cons
 	return fromVec3ToColor(color * albedo);
 }
 
-Color Shader::shadeRefractive(PathRay& pathRay, const HitRecord& hitRecord) const {
-	const Material& material = scene_->material(hitRecord.materialIndex);
+Color Shader::shadeRefractive(PathRay& pathRay, const HitRecord& hitRecord) const { const Material& material = scene_->material(hitRecord.materialIndex);
 	const Vec3& albedo = material.albedo();
 	const float materialIor = material.ior();
 
@@ -119,7 +118,7 @@ Color Shader::shadeRefractive(PathRay& pathRay, const HitRecord& hitRecord) cons
 	Vec3 incident = pathRay.direction().normalized();
 	float cosIN = dot(incident, normal);
 
-	float currIor = pathRay.ior();   
+	float currIor = 1.f;
 	float nextIor = materialIor;
 	bool isLeaving = (cosIN > 0.f);
 
@@ -167,14 +166,16 @@ Color Shader::shadeRefractive(PathRay& pathRay, const HitRecord& hitRecord) cons
 	HitRecord refractionHit = rayTracer_->traceRay(refractionRay);
 	Color refractionColor = shade(refractionRay, refractionHit);
 
-	float fresnel = 0.5f * (1.f + std::powf(dot(incident, normal), 5));
+	float R0 = (currIor - nextIor) / (currIor + nextIor);
+	R0 = R0 * R0;
+
+	float fresnel = R0 + (1.f - R0) * std::powf(1.f - cosIN, 5);
 
 	return fromVec3ToColor(
 		(fresnel * fromColorToVec3(reflectionColor) +
 			(1.0f - fresnel) * fromColorToVec3(refractionColor)) * albedo
 	);
 }
-
 
 Color Shader::shadeConstant(PathRay& pathRay, const HitRecord& hitRecord) const {
 	const Material& material = scene_->material(hitRecord.materialIndex);
