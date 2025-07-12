@@ -65,8 +65,13 @@ void from_json(const nlohmann::json& j, Mesh& mesh) {
 		CRT_ERROR("Mesh material index not found in JSON data");
 	}
 
+	if (!j.contains(JsonKey::Objects::UVS)) {
+		CRT_ERROR("Mesh uvs not found in JSON data");
+	}
+
 	const auto& verticesJson = j[JsonKey::Objects::VERTICES];
 	const auto& trianglesIndicesJson = j[JsonKey::Objects::TRIANGLES];
+	const auto& uvsJson = j[JsonKey::Objects::UVS];
 
 	for (int i = 0; i < verticesJson.size(); i += 3) {
 		mesh.emplaceVertex(
@@ -81,6 +86,14 @@ void from_json(const nlohmann::json& j, Mesh& mesh) {
 			trianglesIndicesJson[i].get<unsigned int>(),
 			trianglesIndicesJson[i + 1].get<unsigned int>(),
 			trianglesIndicesJson[i + 2].get<unsigned int>()
+		);
+	}
+
+	for (int i = 0; i < uvsJson.size(); i += 3) {
+		mesh.emplaceUv(
+			uvsJson[i].get<float>(),
+			uvsJson[i + 1].get<float>(),
+			uvsJson[i + 2].get<float>()
 		);
 	}
 
@@ -114,10 +127,11 @@ void from_json(const nlohmann::json& j, Material& material) {
 		CRT_ERROR("Material type not found in JSON data");
 	}
 
-	material.materialType(crt::fromStringToMaterialType(j[JsonKey::Material::TYPE].get<std::string>()));
+	MaterialType type = crt::fromStringToMaterialType(j[JsonKey::Material::TYPE].get<std::string>());
+	material.materialType(type);
 
 	if (j.contains(JsonKey::Material::ALBEDO)) {
-		material.albedo(j[JsonKey::Material::ALBEDO].get<Vec3>());
+		material.albedoTextureName(j[JsonKey::Material::ALBEDO].get<std::string>());
 	}
 
 	if (!j.contains(JsonKey::Material::SMOOTH_SHADING)) {
@@ -126,8 +140,83 @@ void from_json(const nlohmann::json& j, Material& material) {
 
 	material.smoothShading(j[JsonKey::Material::SMOOTH_SHADING].get<bool>());
 
-	if (j.contains(JsonKey::Material::IOR)) {
+	if (j.contains(JsonKey::Material::IOR) && type == MaterialType::Refractive) {
 		material.ior(j[JsonKey::Material::IOR].get<float>());
+	}
+}
+
+void from_json(const nlohmann::json& j, crt::Texture& texture) {
+	if (!j.is_object()) {
+		CRT_ERROR("Invalid Texture JSON");
+	}
+
+	if (!j.contains(JsonKey::Texture::NAME)) {
+		CRT_ERROR("Texture name not found in JSON data");
+	}
+
+	texture.name(j[JsonKey::Texture::NAME].get<std::string>());
+
+	if (!j.contains(JsonKey::Texture::TYPE)) {
+		CRT_ERROR("Texture type not found in JSON data");
+	}
+
+	TextureType type = fromStringToTextureType(j[JsonKey::Texture::TYPE].get<std::string>());
+	texture.textureType(type);
+
+	switch (type) {
+	case TextureType::Albedo: {
+		if (!j.contains(JsonKey::Texture::ALBEDO)) {
+			CRT_ERROR("Texture albedo not found in JSON data");
+		}
+		AlbedoTextureData data = { j[JsonKey::Texture::ALBEDO].get<Vec3>() };
+		texture.albedoTextureData(data);
+		break;
+	}
+	case TextureType::Edges: {
+		if (!j.contains(JsonKey::Texture::EDGE_COLOR)) {
+			CRT_ERROR("Texture edge color not found in JSON data");
+		}
+		if (!j.contains(JsonKey::Texture::INNER_COLOR)) {
+			CRT_ERROR("Texture inner color not found in JSON data");
+		}
+		if (!j.contains(JsonKey::Texture::EDGE_WIDTH)) {
+			CRT_ERROR("Texture edge width not found in JSON data");
+		}
+		EdgesTextureData data = {
+			j[JsonKey::Texture::EDGE_COLOR].get<Vec3>(),
+			j[JsonKey::Texture::INNER_COLOR].get<Vec3>(),
+			j[JsonKey::Texture::EDGE_WIDTH].get<float>()
+		};
+		texture.edgesTextureData(data);
+		break;
+	}
+	case TextureType::Checker: {
+		if (!j.contains(JsonKey::Texture::COLOR_A)) {
+			CRT_ERROR("Texture color A not found in JSON data");
+		}
+		if (!j.contains(JsonKey::Texture::COLOR_B)) {
+			CRT_ERROR("Texture color B not found in JSON data");
+		}
+		if (!j.contains(JsonKey::Texture::SQUARE_SIZE)) {
+			CRT_ERROR("Texture square size not found in JSON data");
+		}
+		CheckerTextureData data = {
+			j[JsonKey::Texture::COLOR_A].get<Vec3>(),
+			j[JsonKey::Texture::COLOR_B].get<Vec3>(),
+			j[JsonKey::Texture::SQUARE_SIZE].get<float>()
+		};
+		texture.checkerTextureData(data);
+		break;
+	}
+	case TextureType::Bitmap: {
+		if (!j.contains(JsonKey::Texture::FILE_PATH)) {
+			CRT_ERROR("Texture file path not found in JSON data");
+		}
+		std::string filepath = j[JsonKey::Texture::FILE_PATH].get<std::string>();
+		BitmapTextureData data{ filepath };
+		texture.bitmapTextureData(data);
+		break;
+	}
 	}
 }
 
@@ -197,7 +286,7 @@ void JsonParser::parseLights(std::vector<Light>& lights) {
 	const auto& lightsJson = jsonData_[JsonKey::LIGHTS];
 	for (const auto& lightJson : lightsJson) {
 		Light light = lightJson.get<Light>();
-		lights.emplace_back(std::move(light));
+		lights.push_back(light);
 	}
 }
 
@@ -223,6 +312,18 @@ void JsonParser::parseMaterials(std::vector<Material>& materials) {
 	for (const auto& materialJson : materialsJson) {
 		Material material = materialJson.get<Material>();
 		materials.emplace_back(std::move(material));
+	}
+}
+
+void JsonParser::parseTextures(std::vector<Texture>& textures) {
+	if (!jsonData_.contains(JsonKey::TEXTURES)) {
+		CRT_ERROR("Textures not found in JSON data");
+	}
+
+	const auto& texturesJson = jsonData_[JsonKey::TEXTURES];
+	for (const auto& textureJson : texturesJson) {
+		Texture texture = textureJson.get<Texture>();
+		textures.emplace_back(std::move(texture));
 	}
 }
 

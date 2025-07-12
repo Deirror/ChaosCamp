@@ -11,7 +11,7 @@ CRT_BEGIN
 
 inline std::unordered_set<std::string> ValidParseOptions { 
 	JsonKey::CAMERA, JsonKey::OBJECTS, JsonKey::SETTINGS,
-	JsonKey::MATERIALS, JsonKey::LIGHTS
+	JsonKey::MATERIALS, JsonKey::LIGHTS, JsonKey::TEXTURES
 };
 
 class ParseOptions {

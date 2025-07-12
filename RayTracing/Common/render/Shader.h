@@ -31,6 +31,8 @@ private:
 	Color shadeRefractive(PathRay& pathRay, const HitRecord& hitRecord) const;
 	Color shadeConstant(PathRay& pathRay, const HitRecord& hitRecord) const;
 
+	Vec3 sample(const HitRecord& hitRecord) const;
+
 private:
 	const Scene* scene_ = nullptr;
 	const RayTracer* rayTracer_ = nullptr;

@@ -14,6 +14,7 @@ class Vec3;
 class Resolution;
 class Mat3;
 class Material;
+class Texture;
 
 struct TriangleIndices;
 struct Settings;
@@ -31,6 +32,7 @@ public:
 	void parseMeshes(std::vector<Mesh>& meshes);
 
 	void parseMaterials(std::vector<Material>& materials);
+	void parseTextures(std::vector<Texture>& textures);
 
 private:
 	nlohmann::json jsonData_;
@@ -45,5 +47,6 @@ void from_json(const nlohmann::json& j, crt::TriangleIndices& indices);
 void from_json(const nlohmann::json& j, crt::Mesh& mesh);
 void from_json(const nlohmann::json& j, crt::Light& light);
 void from_json(const nlohmann::json& j, crt::Material& material);
+void from_json(const nlohmann::json& j, crt::Texture& texture);
 void from_json(const nlohmann::json& j, crt::Mat3& mat);
 

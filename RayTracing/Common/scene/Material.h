@@ -20,14 +20,14 @@ MaterialType fromStringToMaterialType(const std::string& type);
 class Material {
 public:
 	Material() = default;
-	Material(MaterialType materialType, const Vec3& albedo, bool smoothShading = false, float ior = 1.f)
-		: materialType_(materialType), albedo_(albedo), smoothShading_(smoothShading), ior_(ior) {}
+	Material(MaterialType materialType, const std::string& albedoTextureName, bool smoothShading = false, float ior = 1.f)
+		: materialType_(materialType), albedoTextureName_(albedoTextureName), smoothShading_(smoothShading), ior_(ior) {}
 
 	MaterialType materialType() const { return materialType_; }
 	void materialType(MaterialType materialType) { materialType_ = materialType; }
 
-	const Vec3& albedo() const { return albedo_; }
-	void albedo(const Vec3& albedo) { albedo_ = albedo; }
+	const std::string& albedoTextureName() const { return albedoTextureName_; }
+	void albedoTextureName(const std::string& albedoTextureName) { albedoTextureName_ = albedoTextureName; }
 	
 	bool smoothShading() const { return smoothShading_; }
 	void smoothShading(bool smoothShading) { smoothShading_ = smoothShading; }
@@ -37,7 +37,7 @@ public:
 
 private:
 	MaterialType materialType_ = MaterialType::Air;
-	Vec3 albedo_ = Vec3(1.f, 1.f, 1.f);
+	std::string albedoTextureName_;
 	bool smoothShading_ = false;
 
 	float ior_ = 1.f;

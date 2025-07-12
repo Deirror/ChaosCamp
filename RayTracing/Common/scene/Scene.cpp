@@ -7,6 +7,7 @@ CRT_BEGIN
 Scene::Scene(const std::string& filepath, const ParseOptions& options) { 
 	fromJsonFile(filepath, options); 
 	buildTriangles();
+	buildAlbedoTextures();
 }
 
 void Scene::fromJsonFile(const std::string& filepath, const ParseOptions& options) {
@@ -32,6 +33,10 @@ void Scene::fromJsonFile(const std::string& filepath, const ParseOptions& option
 	if (options.hasOption(JsonKey::MATERIALS)) {
 		parser.parseMaterials(materials_);
 	}
+
+	if (options.hasOption(JsonKey::TEXTURES)) {
+		parser.parseTextures(textures_);
+	}
 }
 
 unsigned int Scene::totalTrianglesCount() const {
@@ -40,6 +45,19 @@ unsigned int Scene::totalTrianglesCount() const {
 		trianglesCount += mesh.triangleCount();
 	}
 	return trianglesCount;
+}
+
+unsigned int Scene::textureIndex(const std::string& albedoTextureName) const {
+	CRT_ENSURE(albedoTextures_.count(albedoTextureName) > 0, "Unknown albedo texture name passed");
+	return albedoTextures_.at(albedoTextureName);
+}
+
+unsigned int Scene::meshTriangleIndex(unsigned int meshIndex, unsigned int triangleIndex) const {
+	unsigned int offset = 0;
+	for (unsigned int i = 0; i < meshIndex; ++i) {
+		offset += meshes_[i].triangleCount();
+	}
+	return triangleIndex - offset;
 }
 
 void Scene::buildTriangles() {
@@ -61,6 +79,14 @@ void Scene::buildTriangles() {
 		}
 
 		++meshIdx;
+	}
+}
+
+void Scene::buildAlbedoTextures() {
+	unsigned int idx = 0;
+	for (const auto& texture : textures_) {
+		albedoTextures_[texture.name()] = idx;
+		++idx;
 	}
 }
 

@@ -5,6 +5,7 @@
 #include "Intersection.h"
 #include "RayTracer.h"
 #include "PathRay.h"
+#include "Albedo.h"
 
 CRT_BEGIN 
 
@@ -44,7 +45,8 @@ Color Shader::shade(PathRay& pathRay, const HitRecord& hitRecord) const {
 
 Color Shader::shadeDiffuse(PathRay& pathRay, const HitRecord& hitRecord) const {
 	const Material& material = scene_->material(hitRecord.materialIndex);
-	const Vec3& albedo = material.albedo();
+	const Texture& texture = scene_->texture(scene_->textureIndex(material.albedoTextureName()));
+	Vec3 albedo = sample(hitRecord);
 
 	const Triangle triangle = scene_->triangle(hitRecord.triangleIndex);
 	const Vec3& normal = material.smoothShading() ? hitRecord.hitNormal : triangle.normal();
@@ -88,7 +90,8 @@ Color Shader::shadeDiffuse(PathRay& pathRay, const HitRecord& hitRecord) const {
 
 Color Shader::shadeReflective(PathRay& pathRay, const HitRecord& hitRecord) const {
 	const Material& material = scene_->material(hitRecord.materialIndex);
-	const Vec3& albedo = material.albedo();
+	const Texture& texture = scene_->texture(scene_->textureIndex(material.albedoTextureName()));
+	Vec3 albedo = sample(hitRecord);
 
 	const Triangle triangle = scene_->triangle(hitRecord.triangleIndex);
 	const Vec3& normal = material.smoothShading() ? hitRecord.hitNormal : triangle.normal();
@@ -108,8 +111,10 @@ Color Shader::shadeReflective(PathRay& pathRay, const HitRecord& hitRecord) cons
 	return fromVec3ToColor(color * albedo);
 }
 
-Color Shader::shadeRefractive(PathRay& pathRay, const HitRecord& hitRecord) const { const Material& material = scene_->material(hitRecord.materialIndex);
-	const Vec3& albedo = material.albedo();
+Color Shader::shadeRefractive(PathRay& pathRay, const HitRecord& hitRecord) const { 
+	const Material& material = scene_->material(hitRecord.materialIndex);
+	const Texture& texture = scene_->texture(scene_->textureIndex(material.albedoTextureName()));
+	Vec3 albedo = sample(hitRecord);
 	const float materialIor = material.ior();
 
 	const Triangle triangle = scene_->triangle(hitRecord.triangleIndex);
@@ -178,8 +183,13 @@ Color Shader::shadeRefractive(PathRay& pathRay, const HitRecord& hitRecord) cons
 }
 
 Color Shader::shadeConstant(PathRay& pathRay, const HitRecord& hitRecord) const {
-	const Material& material = scene_->material(hitRecord.materialIndex);
-	return fromVec3ToColor(material.albedo() * 255.f);
+	return fromVec3ToColor(sample(hitRecord) * 255.f);
+}
+
+Vec3 Shader::sample(const HitRecord& hitRecord) const {
+	const Texture& texture = scene_->texture(hitRecord.textureIndex);
+
+	return albedo(texture, hitRecord);
 }
 
 CRT_END

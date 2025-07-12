@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="render\Albedo.cpp" />
+    <ClCompile Include="image\BitmapBuffer.cpp" />
     <ClCompile Include="dimensions\AspectHeight.h" />
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="image\Color.cpp" />
@@ -37,8 +39,12 @@
     <ClCompile Include="scene\Scene.cpp" />
     <ClCompile Include="render\Shader.cpp" />
     <ClCompile Include="camera\Viewport.cpp" />
+    <ClCompile Include="scene\Texture.cpp" />
+    <ClCompile Include="third-party\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="render\Albedo.h" />
+    <ClInclude Include="image\BitmapBuffer.h" />
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="image\Color.h" />
     <ClInclude Include="core\crt.h" />
@@ -59,12 +65,14 @@
     <ClInclude Include="dimensions\Resolution.h" />
     <ClInclude Include="scene\Scene.h" />
     <ClInclude Include="render\Shader.h" />
+    <ClInclude Include="scene\Texture.h" />
     <ClInclude Include="third-party\json.hpp" />
     <ClInclude Include="third-party\json_fwd.hpp" />
     <ClInclude Include="math\Triangle.h" />
     <ClInclude Include="math\utils.h" />
     <ClInclude Include="math\Vec3.h" />
     <ClInclude Include="camera\Viewport.h" />
+    <ClInclude Include="third-party\stb_image.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

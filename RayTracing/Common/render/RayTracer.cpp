@@ -30,7 +30,7 @@ void RayTracer::traceRays(ImageBuffer& imageBuffer, unsigned int startRow, unsig
 		for (unsigned int x = 0; x < res.width(); ++x) {
 			float s = static_cast<float>(x) / (res.width() - 1);
 			float t = static_cast<float>(y) / (res.height() - 1);
-			crt::Ray ray = camera.getRay(s, t);
+			Ray ray = camera.getRay(s, t);
 			
 			HitRecord hitRecord = traceRay(ray);
 
@@ -57,6 +57,17 @@ HitRecord RayTracer::traceRay(const Ray& ray) const {
 			finalHitRecord.meshIndex = sceneTriangle.meshIndex;
 			finalHitRecord.triangleIndex = sceneTriangle.triangleIndex;
 			finalHitRecord.materialIndex = scene_->mesh(sceneTriangle.meshIndex).materialIndex();
+			finalHitRecord.textureIndex = scene_->textureIndex(scene_->material(finalHitRecord.materialIndex).albedoTextureName());
+
+			unsigned int meshTriangleIdx = scene_->meshTriangleIndex(sceneTriangle.meshIndex, sceneTriangle.triangleIndex);
+			const Mesh& mesh = scene_->mesh(sceneTriangle.meshIndex);
+			const TriangleIndices& triIndices = mesh.triangleIndices(meshTriangleIdx);
+			const Vec3& v0uv = mesh.uv(triIndices.v0);
+			const Vec3& v1uv = mesh.uv(triIndices.v1);
+			const Vec3& v2uv = mesh.uv(triIndices.v2);
+			finalHitRecord.puv = v1uv * finalHitRecord.barycentricCoords.x() +
+								v2uv * finalHitRecord.barycentricCoords.y() +
+								v0uv * finalHitRecord.barycentricCoords.z();
 		}
 	}
 
