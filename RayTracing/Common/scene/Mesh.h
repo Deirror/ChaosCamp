@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "math/Triangle.h"
+#include "accelerations/AABB.h"
 #include "core/error.h"
 
 CRT_BEGIN
@@ -21,7 +22,7 @@ public:
 		: materialIndex_(materialIndex), 
 		vertices_(vertices), 
 		triangleIndices_(triangleIndices),
-		uvs_(uvs) { computeVertexNormals(); }
+		uvs_(uvs) { computeVertexNormals(); buildAABB(); }
 
 	void materialIndex(unsigned int materialIndex) { materialIndex_ = materialIndex; }
 	unsigned int materialIndex() const { return materialIndex_; }
@@ -40,9 +41,13 @@ public:
 	const TriangleIndices& triangleIndices(unsigned int idx) const { CRT_ENSURE(idx < triangleIndices_.size(), "Index out of bounds"); return triangleIndices_[idx]; }
 	const Vec3& uv(unsigned int idx) const { CRT_ENSURE(idx < uvs_.size(), "Index out of bounds"); return uvs_[idx]; }
 
-	unsigned int triangleCount() const { return static_cast<unsigned int>(triangleIndices_.size()); }
+	unsigned int uvsCount() const { return static_cast<unsigned int>(uvs_.size()); }
+	unsigned int trianglesCount() const { return static_cast<unsigned int>(triangleIndices_.size()); }
 
 	void computeVertexNormals();
+	void buildAABB();
+
+	const AABB& aabb() const { return aabb_; }
 
 private:
 	unsigned int materialIndex_ = 0; 
@@ -52,6 +57,8 @@ private:
 	std::vector<Vec3> uvs_;
 
 	std::vector<Vec3> vertexNormals_;
+
+	AABB aabb_;
 };
 
 CRT_END

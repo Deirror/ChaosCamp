@@ -12,6 +12,7 @@ struct JsonKey {
 		struct Image {
 			static constexpr char const* WIDTH = "width";
 			static constexpr char const* HEIGHT = "height";
+			static constexpr char const* BUCKET_SIZE = "bucket_size"; 
 		};
 	};
 

@@ -30,8 +30,16 @@ void from_json(const nlohmann::json& j, Color& color) {
 }
 
 void from_json(const nlohmann::json& j, Resolution& res) {
-	if (!j.is_object() || j.size() != 2) {
+	if (!j.is_object()) {
 		CRT_ERROR("Invalid Resolution format");
+	}
+
+	if (!j.contains(JsonKey::Settings::Image::WIDTH)) {
+		CRT_ERROR("Resolution width not found in JSON data");
+	}
+
+	if (!j.contains(JsonKey::Settings::Image::HEIGHT)) {
+		CRT_ERROR("Resolution height not found in JSON data");
 	}
 
 	res.width(j[JsonKey::Settings::Image::WIDTH].get<unsigned short>());
@@ -65,13 +73,8 @@ void from_json(const nlohmann::json& j, Mesh& mesh) {
 		CRT_ERROR("Mesh material index not found in JSON data");
 	}
 
-	if (!j.contains(JsonKey::Objects::UVS)) {
-		CRT_ERROR("Mesh uvs not found in JSON data");
-	}
-
 	const auto& verticesJson = j[JsonKey::Objects::VERTICES];
 	const auto& trianglesIndicesJson = j[JsonKey::Objects::TRIANGLES];
-	const auto& uvsJson = j[JsonKey::Objects::UVS];
 
 	for (int i = 0; i < verticesJson.size(); i += 3) {
 		mesh.emplaceVertex(
@@ -89,12 +92,15 @@ void from_json(const nlohmann::json& j, Mesh& mesh) {
 		);
 	}
 
-	for (int i = 0; i < uvsJson.size(); i += 3) {
-		mesh.emplaceUv(
-			uvsJson[i].get<float>(),
-			uvsJson[i + 1].get<float>(),
-			uvsJson[i + 2].get<float>()
-		);
+	if (j.contains(JsonKey::Objects::UVS)) {
+		const auto& uvsJson = j[JsonKey::Objects::UVS];
+		for (int i = 0; i < uvsJson.size(); i += 3) {
+			mesh.emplaceUv(
+				uvsJson[i].get<float>(),
+				uvsJson[i + 1].get<float>(),
+				uvsJson[i + 2].get<float>()
+			);
+		}
 	}
 
 	mesh.materialIndex(j[JsonKey::Objects::MATERIAL_INDEX].get<unsigned int>());
@@ -250,13 +256,30 @@ void JsonParser::parseSettings(Settings& settings) {
 		CRT_ERROR("Background color not found in JSON data");
 	}
 
-	settings.backgroundColor = settingsJson[JsonKey::Settings::BACKGROUND_COLOR].get<Color>();
+	settings.backgroundColor = settingsJson[JsonKey::Settings::BACKGROUND_COLOR].get<Vec3>();
 
 	if (!settingsJson.contains(JsonKey::Settings::IMAGE_SETTINGS)) {
 		CRT_ERROR("Image settings not found in JSON data");
 	}
 
-	settings.resolution = settingsJson[JsonKey::Settings::IMAGE_SETTINGS].get<Resolution>();
+	const auto& imageSettingsJson = settingsJson[JsonKey::Settings::IMAGE_SETTINGS];
+
+	if (!imageSettingsJson.contains(JsonKey::Settings::Image::WIDTH)) {
+		CRT_ERROR("Image width not found in JSON data");
+	}
+
+	if (!imageSettingsJson.contains(JsonKey::Settings::Image::HEIGHT)) {
+		CRT_ERROR("Image height not found in JSON data");
+	}
+
+	unsigned short width = imageSettingsJson[JsonKey::Settings::Image::WIDTH].get<unsigned short>();
+	unsigned short height  = imageSettingsJson[JsonKey::Settings::Image::HEIGHT].get<unsigned short>();
+
+	settings.imageSettings.resolution = Resolution(width, height);
+
+	if (imageSettingsJson.contains(JsonKey::Settings::Image::BUCKET_SIZE)) {
+		settings.imageSettings.bucketSize = imageSettingsJson[JsonKey::Settings::Image::BUCKET_SIZE].get<unsigned short>();
+	}
 }
 
 void JsonParser::parseCamera(Camera& camera) {
@@ -298,7 +321,10 @@ void JsonParser::parseMeshes(std::vector<Mesh>& meshes) {
 	const auto& objectsJson = jsonData_[JsonKey::OBJECTS];
 	for (const auto& meshJson : objectsJson) {
 		Mesh mesh = meshJson.get<Mesh>();
+
 		mesh.computeVertexNormals();
+		mesh.buildAABB();
+
 		meshes.emplace_back(std::move(mesh));
 	}
 }

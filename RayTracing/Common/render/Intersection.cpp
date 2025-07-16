@@ -1,6 +1,7 @@
 #include "Intersection.h"
 
 #include "math/Triangle.h"
+#include "accelerations/AABB.h"
 #include "math/Ray.h"
 
 #include "HitRecord.h"
@@ -62,6 +63,28 @@ bool intersect(const Triangle& triangle, const Ray& ray, HitRecord& hitRecord, b
 	hitRecord.hitNormal = (triangle.n0() * w + triangle.n1() * u + triangle.n2() * v).normalized();
 	hitRecord.barycentricCoords = Vec3(u, v, w);
 
+	return true;
+}
+
+bool intersect(const AABB& aabb, const Ray& ray) {
+	float tMin = math::EPSILON_ZERO;
+	float tMax = FLT_MAX;
+
+	for (int i = 0; i < 3; ++i) {
+		float invD = 1.f / ray.direction()[i];
+
+		float t0 = (aabb.min()[i] - ray.origin()[i]) * invD;
+		float t1 = (aabb.max()[i] - ray.origin()[i]) * invD;
+
+		if (invD < 0.f) { 
+			std::swap(t0, t1);
+		}
+
+		tMin = std::max(tMin, t0);
+		tMax = std::min(tMax, t1);
+
+		if (tMax < tMin) return false;
+	}
 	return true;
 }
 

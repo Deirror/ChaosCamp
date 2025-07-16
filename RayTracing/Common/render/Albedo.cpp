@@ -29,8 +29,8 @@ Vec3 albedo(const Texture& texture, const HitRecord& hitRecord) {
 	case TextureType::Checker: {
 		const CheckerTextureData& data = texture.checkerTextureData();
 
-		unsigned int x = static_cast<int>(std::floor(hitRecord.puv.x() / data.squareSize));
-		unsigned int y = static_cast<int>(std::floor(hitRecord.puv.y() / data.squareSize));
+		unsigned int x = static_cast<unsigned int>(std::floor(hitRecord.puv.x() / data.squareSize));
+		unsigned int y = static_cast<unsigned int>(std::floor(hitRecord.puv.y() / data.squareSize));
 
 		bool useA = (x + y) % 2 == 0;
 		color = useA ? data.colorA : data.colorB;
@@ -39,8 +39,8 @@ Vec3 albedo(const Texture& texture, const HitRecord& hitRecord) {
 
 	case TextureType::Bitmap: {
 		const BitmapTextureData& data = texture.bitmapTextureData();
-		unsigned int rowIdx = hitRecord.puv.x() * data.buffer.resolution().width();
-		unsigned int colIdx = hitRecord.puv.y() * data.buffer.resolution().height();
+		unsigned int rowIdx = static_cast<unsigned int>(hitRecord.puv.x() * data.buffer.resolution().width());
+		unsigned int colIdx = static_cast<unsigned int>(hitRecord.puv.y() * data.buffer.resolution().height());
 		color = data.buffer.at(rowIdx, colIdx);
 		break;
 	}

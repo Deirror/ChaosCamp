@@ -21,6 +21,9 @@ public:
 	float z() const { return z_; }
 	void z(float z) { z_ = z; }
 
+	float operator[](unsigned int idx) const;
+	float& operator[](unsigned int idx);
+
 	Vec3& operator+=(const Vec3& other);
 	Vec3& operator-=(const Vec3& other);
 
@@ -31,6 +34,9 @@ public:
 	float length() const { return std::sqrt(length_squared()); }
 
 	Vec3 normalized() const;
+
+	static Vec3 min(const Vec3& lhs, const Vec3& rhs);
+	static Vec3 max(const Vec3& lhs, const Vec3& rhs);
 
 	friend Vec3 operator+(const Vec3& lhs, const Vec3& rhs);
 	friend Vec3 operator-(const Vec3& lhs, const Vec3& rhs);

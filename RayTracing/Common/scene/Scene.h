@@ -14,9 +14,14 @@
 
 CRT_BEGIN
 
-struct Settings {
-	Color backgroundColor;
+struct ImageSettings {
 	Resolution resolution;
+	unsigned short bucketSize = 0;
+};
+
+struct Settings {
+	Vec3 backgroundColor;
+	ImageSettings imageSettings;
 };
 
 struct SceneTriangle {
@@ -56,9 +61,11 @@ public:
 	const Camera& camera() const { return camera_; }
 
 	unsigned int totalTrianglesCount() const;
+	unsigned int totalUvsCount() const;
 
 	unsigned int textureIndex(const std::string& albedoTextureName) const;
-	unsigned int meshTriangleIndex(unsigned int meshIndex, unsigned int triangleIndex) const;
+	unsigned int meshLocalTriangleIndex(unsigned int meshIndex, unsigned int triangleIndex) const;
+	unsigned int meshGlobalTriangleIndex(unsigned int meshIndex, unsigned int triangleIndex) const;
 
 private:
 	void buildTriangles();

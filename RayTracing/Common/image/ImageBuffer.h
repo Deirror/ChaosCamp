@@ -12,6 +12,7 @@ CRT_BEGIN
 
 class ImageBuffer {
 public:
+    ImageBuffer() = default;
     ImageBuffer(unsigned short width, unsigned short height)
         : resolution_(width, height), pixels_(width * height) {}
 

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="accelerations\AABB.cpp" />
     <ClCompile Include="render\Albedo.cpp" />
     <ClCompile Include="image\BitmapBuffer.cpp" />
     <ClCompile Include="dimensions\AspectHeight.h" />
@@ -41,8 +42,11 @@
     <ClCompile Include="camera\Viewport.cpp" />
     <ClCompile Include="scene\Texture.cpp" />
     <ClCompile Include="third-party\stb_image.cpp" />
+    <ClCompile Include="core\profile\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="accelerations\AABB.h" />
+    <ClInclude Include="dimensions\Interval.h" />
     <ClInclude Include="render\Albedo.h" />
     <ClInclude Include="image\BitmapBuffer.h" />
     <ClInclude Include="camera\Camera.h" />
@@ -73,6 +77,7 @@
     <ClInclude Include="math\Vec3.h" />
     <ClInclude Include="camera\Viewport.h" />
     <ClInclude Include="third-party\stb_image.h" />
+    <ClInclude Include="core\profile\Timer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

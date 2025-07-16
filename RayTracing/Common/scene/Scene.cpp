@@ -15,7 +15,7 @@ void Scene::fromJsonFile(const std::string& filepath, const ParseOptions& option
 	
 	if (options.hasOption(JsonKey::SETTINGS)) {
 		parser.parseSettings(settings_);
-		camera_.resolution(settings_.resolution);
+		camera_.resolution(settings_.imageSettings.resolution);
 	}
 
 	if (options.hasOption(JsonKey::CAMERA)) {
@@ -42,9 +42,17 @@ void Scene::fromJsonFile(const std::string& filepath, const ParseOptions& option
 unsigned int Scene::totalTrianglesCount() const {
 	unsigned int trianglesCount = 0;
 	for (const auto& mesh : meshes_) {
-		trianglesCount += mesh.triangleCount();
+		trianglesCount += mesh.trianglesCount();
 	}
 	return trianglesCount;
+}
+
+unsigned int Scene::totalUvsCount() const {
+	unsigned int uvsCount = 0;
+	for (const auto& mesh : meshes_) {
+		uvsCount += mesh.uvsCount();
+	}
+	return uvsCount;
 }
 
 unsigned int Scene::textureIndex(const std::string& albedoTextureName) const {
@@ -52,12 +60,20 @@ unsigned int Scene::textureIndex(const std::string& albedoTextureName) const {
 	return albedoTextures_.at(albedoTextureName);
 }
 
-unsigned int Scene::meshTriangleIndex(unsigned int meshIndex, unsigned int triangleIndex) const {
+unsigned int Scene::meshLocalTriangleIndex(unsigned int meshIndex, unsigned int triangleIndex) const {
 	unsigned int offset = 0;
 	for (unsigned int i = 0; i < meshIndex; ++i) {
-		offset += meshes_[i].triangleCount();
+		offset += meshes_[i].trianglesCount();
 	}
 	return triangleIndex - offset;
+}
+
+unsigned int Scene::meshGlobalTriangleIndex(unsigned int meshIndex, unsigned int triangleIndex) const {
+	unsigned int offset = 0;
+	for (unsigned int i = 0; i < meshIndex; ++i) {
+		offset += meshes_[i].trianglesCount();
+	}
+	return triangleIndex + offset;
 }
 
 void Scene::buildTriangles() {

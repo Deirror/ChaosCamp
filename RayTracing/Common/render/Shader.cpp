@@ -17,7 +17,7 @@ Shader::Shader(const Scene* scene, const RayTracer* rayTracer, unsigned short ma
 
 Color Shader::shade(PathRay& pathRay, const HitRecord& hitRecord) const {
 	if (maxDepth_ < pathRay.depth() || hitRecord.t >= FLT_MAX) {
-		return scene_->settings().backgroundColor;
+		return fromVec3ToColor(scene_->settings().backgroundColor * 255.f);
 	}
 	++pathRay;
 
@@ -65,7 +65,7 @@ Color Shader::shadeDiffuse(PathRay& pathRay, const HitRecord& hitRecord) const {
 
 			Ray shadowRay(hitRecord.point + normal * math::bias(dot(normal, lightDirNormalized)), lightDirNormalized, RayType::Shadow);
 
-			HitRecord shadowHitRecord = rayTracer_->traceRay(shadowRay);
+			HitRecord shadowHitRecord = rayTracer_->traceRayFunc()(shadowRay);
 
 			float maxT = (light.position() - shadowRay.origin()).length();
 			
@@ -105,7 +105,7 @@ Color Shader::shadeReflective(PathRay& pathRay, const HitRecord& hitRecord) cons
 	pathRay.direction(reflectRay.direction());
 	pathRay.rayType(RayType::Reflective);
 
-	HitRecord reflectHitRecord = rayTracer_->traceRay(pathRay);
+	HitRecord reflectHitRecord = rayTracer_->traceRayFunc()(pathRay);
 	Vec3 color = fromColorToVec3(shade(pathRay, reflectHitRecord));
 
 	return fromVec3ToColor(color * albedo);
@@ -141,7 +141,7 @@ Color Shader::shadeRefractive(PathRay& pathRay, const HitRecord& hitRecord) cons
 	reflectionRay.rayType(RayType::Reflective);
 	reflectionRay.ior(currIor);  
 
-	HitRecord reflectionHit = rayTracer_->traceRay(reflectionRay);
+	HitRecord reflectionHit = rayTracer_->traceRayFunc()(reflectionRay);
 	Color reflectionColor = shade(reflectionRay, reflectionHit);
 
 	cosIN = -dot(incident, normal);  
@@ -168,7 +168,7 @@ Color Shader::shadeRefractive(PathRay& pathRay, const HitRecord& hitRecord) cons
 	refractionRay.rayType(RayType::Refractive);
 	refractionRay.ior(nextIor);  
 
-	HitRecord refractionHit = rayTracer_->traceRay(refractionRay);
+	HitRecord refractionHit = rayTracer_->traceRayFunc()(refractionRay);
 	Color refractionColor = shade(refractionRay, refractionHit);
 
 	float R0 = (currIor - nextIor) / (currIor + nextIor);

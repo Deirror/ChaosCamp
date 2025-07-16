@@ -4,6 +4,24 @@
 
 CRT_BEGIN
 
+float Vec3::operator[](unsigned int idx) const {
+	switch (idx) {
+	case 0: return x_;
+	case 1: return y_;
+	case 2: return z_;
+	}
+	CRT_ERROR("Index out of bounds");
+}
+
+float& Vec3::operator[](unsigned int idx) {
+	switch (idx) {
+	case 0: return x_;
+	case 1: return y_;
+	case 2: return z_;
+	}
+	CRT_ERROR("Index out of bounds");
+}
+
 Vec3& Vec3::operator+=(const Vec3& other) {
 	x_ += other.x_;
 	y_ += other.y_;
@@ -76,6 +94,22 @@ Vec3 cross(const Vec3& lhs, const Vec3& rhs) {
 Vec3 Vec3::normalized() const {
 	float len = length();
 	return *this / len;
+}
+
+Vec3 Vec3::min(const Vec3& lhs, const Vec3& rhs) {
+	return Vec3(
+		lhs.x() < rhs.x() ? lhs.x() : rhs.x(),
+		lhs.y() < rhs.y() ? lhs.y() : rhs.y(),
+		lhs.z() < rhs.z() ? lhs.z() : rhs.z()
+	);
+}
+
+Vec3 Vec3::max(const Vec3& lhs, const Vec3& rhs) {
+	return Vec3(
+		lhs.x() > rhs.x() ? lhs.x() : rhs.x(),
+		lhs.y() > rhs.y() ? lhs.y() : rhs.y(),
+		lhs.z() > rhs.z() ? lhs.z() : rhs.z()
+	);
 }
 
 CRT_END;

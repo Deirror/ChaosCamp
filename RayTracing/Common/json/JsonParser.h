@@ -17,6 +17,7 @@ class Material;
 class Texture;
 
 struct TriangleIndices;
+struct ImageSettings;
 struct Settings;
 
 class JsonParser {

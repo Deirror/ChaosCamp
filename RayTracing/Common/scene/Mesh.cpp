@@ -35,4 +35,12 @@ void Mesh::computeVertexNormals() {
 	}
 }
 
+void Mesh::buildAABB() {
+	AABB box;
+	for (const Vec3& vertex : vertices_) {
+		box.expandToInclude(vertex);
+	}
+	aabb_ = box;
+}
+
 CRT_END
