@@ -71,17 +71,17 @@ bool intersect(const AABB& aabb, const Ray& ray) {
 	float tMax = FLT_MAX;
 
 	for (int i = 0; i < 3; ++i) {
-		float invD = 1.f / ray.direction()[i];
+		float invDir = 1.f / ray.direction()[i];
 
-		float t0 = (aabb.min()[i] - ray.origin()[i]) * invD;
-		float t1 = (aabb.max()[i] - ray.origin()[i]) * invD;
+		float t0 = (aabb.min()[i] - ray.origin()[i]) * invDir;
+		float t1 = (aabb.max()[i] - ray.origin()[i]) * invDir;
 
-		if (invD < 0.f) { 
+		if (invDir < 0.f) { 
 			std::swap(t0, t1);
 		}
 
-		tMin = std::max(tMin, t0);
-		tMax = std::min(tMax, t1);
+		tMin = math::max(tMin, t0);
+		tMax = math::min(tMax, t1);
 
 		if (tMax < tMin) return false;
 	}
