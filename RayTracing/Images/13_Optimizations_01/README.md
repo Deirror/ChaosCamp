@@ -1,4 +1,4 @@
-***CPU*** - *AMD Ryzen 7 5800h*
+***CPU*** - *AMD Ryzen 7 5800H*
 
 | ***Render Mode*** | ***Optimizations*** | ***Time*** |
 | --- | --- | --- |
