@@ -1,7 +1,7 @@
 ***CPU*** - *AMD Ryzen 7 5800h*
 
 | ***Render Mode*** | ***Optimizations*** | ***Time*** |
-| --- | --- |
+| --- | --- | --- |
 | `Linear` | No | 594851 ms |
 | `Region Grids` | No | 185743 ms |
 | `Region Bands` | No | 117266 ms |
