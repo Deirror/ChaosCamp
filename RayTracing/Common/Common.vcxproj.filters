@@ -36,7 +36,7 @@
     <ClCompile Include="camera\Viewport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dimensions\AspectHeight.h">
+    <ClCompile Include="dimension\AspectHeight.h">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="scene\Scene.cpp">
@@ -84,7 +84,10 @@
     <ClCompile Include="core\profile\Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="accelerations\AABB.cpp">
+    <ClCompile Include="acceleration\AABB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="acceleration\KDTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -116,7 +119,7 @@
     <ClInclude Include="math\Ray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dimensions\Resolution.h">
+    <ClInclude Include="dimension\Resolution.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="math\Triangle.h">
@@ -182,10 +185,13 @@
     <ClInclude Include="core\profile\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dimensions\Interval.h">
+    <ClInclude Include="dimension\Interval.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="accelerations\AABB.h">
+    <ClInclude Include="acceleration\AABB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="acceleration\KDTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

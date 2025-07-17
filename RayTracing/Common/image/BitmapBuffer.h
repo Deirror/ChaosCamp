@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-#include "dimensions/Resolution.h"
+#include "dimension/Resolution.h"
 #include "math/Vec3.h"
 
 CRT_BEGIN

@@ -4,7 +4,7 @@
 
 #include "scene/Scene.h"
 #include "image/ImageBuffer.h"
-#include "dimensions/Interval.h"
+#include "dimension/Interval.h"
 
 #include "HitRecord.h"
 #include "Shader.h"
@@ -20,7 +20,8 @@ enum class RenderMode {
 
 enum class AccelerationType {
 	Linear,
-	AABB
+	AABB,
+	KDTree
 };
 
 using TraceRayFunc = std::function<HitRecord(const Ray&)>;
@@ -56,6 +57,7 @@ private:
 
 	HitRecord traceRayLinear(const Ray& ray) const;
 	HitRecord traceRayAABB(const Ray& ray) const;
+	HitRecord traceRayKDTree(const Ray& ray) const;
 
 private:
 	const Scene* scene_ = nullptr;

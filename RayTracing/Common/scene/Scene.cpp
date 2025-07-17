@@ -4,10 +4,12 @@
 
 CRT_BEGIN
 
-Scene::Scene(const std::string& filepath, const ParseOptions& options) { 
+Scene::Scene(const std::string& filepath, const ParseOptions& options) {
 	fromJsonFile(filepath, options); 
 	buildTriangles();
 	buildAlbedoTextures();
+	buildSceneAABB();
+	kdTree_.build(sceneAABB_, triangles_);
 }
 
 void Scene::fromJsonFile(const std::string& filepath, const ParseOptions& options) {
@@ -104,6 +106,14 @@ void Scene::buildAlbedoTextures() {
 		albedoTextures_[texture.name()] = idx;
 		++idx;
 	}
+}
+
+void Scene::buildSceneAABB() {
+	AABB aabb;
+	for (const auto& mesh : meshes_) {
+		aabb.expandToInclude(mesh.aabb());
+	}
+	sceneAABB_ = aabb;
 }
 
 CRT_END

@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 
+#include "acceleration/KDTree.h"
 #include "json/ParseOptions.h"
 #include "image/Color.h"
 #include "camera/Camera.h"
@@ -57,6 +58,9 @@ public:
 	const std::vector<Texture>& textures() const { return textures_; }
 	const Texture& texture(unsigned int idx) const { CRT_ENSURE(idx < textures_.size(), "Index out of bounds"); return textures_[idx]; }
 
+	const KDTree& kdTree() const { return kdTree_; }
+	const AABB& sceneAABB() const { return sceneAABB_; }
+	
 	const Settings& settings() const { return settings_; }
 	const Camera& camera() const { return camera_; }
 
@@ -70,6 +74,7 @@ public:
 private:
 	void buildTriangles();
 	void buildAlbedoTextures();
+	void buildSceneAABB();
 
 private:
 	std::vector<Mesh> meshes_;
@@ -81,6 +86,9 @@ private:
 	std::vector<SceneTriangle> sceneTriangles_;
 
 	std::unordered_map<std::string, unsigned int> albedoTextures_;
+
+	AABB sceneAABB_;
+	KDTree kdTree_;
 
 	Camera camera_;
 	Settings settings_;

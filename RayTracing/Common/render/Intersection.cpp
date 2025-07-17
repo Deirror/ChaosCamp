@@ -1,7 +1,7 @@
 #include "Intersection.h"
 
 #include "math/Triangle.h"
-#include "accelerations/AABB.h"
+#include "acceleration/AABB.h"
 #include "math/Ray.h"
 
 #include "HitRecord.h"
@@ -86,6 +86,12 @@ bool intersect(const AABB& aabb, const Ray& ray) {
 		if (tMax < tMin) return false;
 	}
 	return true;
+}
+
+bool intersect(const AABB& lhs, const AABB& rhs) {
+	return (lhs.max().x() >= rhs.min().x() && lhs.min().x() <= rhs.max().x()) &&
+		(lhs.max().y() >= rhs.min().y() && lhs.min().y() <= rhs.max().y()) &&
+		(lhs.max().z() >= rhs.min().z() && lhs.min().z() <= rhs.max().z());
 }
 
 CRT_END

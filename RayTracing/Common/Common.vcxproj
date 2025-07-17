@@ -19,10 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="accelerations\AABB.cpp" />
+    <ClCompile Include="acceleration\AABB.cpp" />
+    <ClCompile Include="acceleration\KDTree.cpp" />
     <ClCompile Include="render\Albedo.cpp" />
     <ClCompile Include="image\BitmapBuffer.cpp" />
-    <ClCompile Include="dimensions\AspectHeight.h" />
+    <ClCompile Include="dimension\AspectHeight.h" />
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="image\Color.cpp" />
     <ClCompile Include="core\error.h" />
@@ -45,8 +46,9 @@
     <ClCompile Include="core\profile\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="accelerations\AABB.h" />
-    <ClInclude Include="dimensions\Interval.h" />
+    <ClInclude Include="acceleration\AABB.h" />
+    <ClInclude Include="dimension\Interval.h" />
+    <ClInclude Include="acceleration\KDTree.h" />
     <ClInclude Include="render\Albedo.h" />
     <ClInclude Include="image\BitmapBuffer.h" />
     <ClInclude Include="camera\Camera.h" />
@@ -66,7 +68,7 @@
     <ClInclude Include="image\PPMFile.h" />
     <ClInclude Include="math\Ray.h" />
     <ClInclude Include="render\RayTracer.h" />
-    <ClInclude Include="dimensions\Resolution.h" />
+    <ClInclude Include="dimension\Resolution.h" />
     <ClInclude Include="scene\Scene.h" />
     <ClInclude Include="render\Shader.h" />
     <ClInclude Include="scene\Texture.h" />

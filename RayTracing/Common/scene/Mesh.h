@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "math/Triangle.h"
-#include "accelerations/AABB.h"
+#include "acceleration/AABB.h"
 #include "core/error.h"
 
 CRT_BEGIN

@@ -3,7 +3,7 @@
 #include "Math/Mat3.h"
 #include "Math/Ray.h"
 
-#include "dimensions/Resolution.h"
+#include "dimension/Resolution.h"
 
 #include "Viewport.h"
 

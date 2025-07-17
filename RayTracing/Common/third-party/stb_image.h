@@ -199,12 +199,12 @@ RECENT REVISION HISTORY:
 // will fail.
 //
 // Additionally, stb_image will reject image files that have any of their
-// dimensions set to a larger value than the configurable STBI_MAX_DIMENSIONS,
+// dimension set to a larger value than the configurable STBI_MAX_DIMENSIONS,
 // which defaults to 2**24 = 16777216 pixels. Due to the above memory limit,
-// the only way to have an image with such dimensions load correctly
+// the only way to have an image with such dimension load correctly
 // is for it to have a rather extreme aspect ratio. Either way, the
 // assumption here is that such larger images are likely to be malformed
-// or malicious. If you do need to load an image with individual dimensions
+// or malicious. If you do need to load an image with individual dimension
 // larger than that, and it still fits in the overall size limit, you can
 // #define STBI_MAX_DIMENSIONS on your own to be something larger.
 //
@@ -362,7 +362,7 @@ RECENT REVISION HISTORY:
 //    than that size (in either width or height) without further processing.
 //    This is to let programs in the wild set an upper bound to prevent
 //    denial-of-service attacks on untrusted data, as one could generate a
-//    valid image of gigantic dimensions and force stb_image to allocate a
+//    valid image of gigantic dimension and force stb_image to allocate a
 //    huge block of memory and spend disproportionate time decoding it. By
 //    default this is set to (1 << 24), which is 16777216, but that's still
 //    very big.
@@ -490,7 +490,7 @@ extern "C" {
     // free the loaded image -- this is just free()
     STBIDEF void     stbi_image_free(void* retval_from_stbi_load);
 
-    // get image dimensions & components without fully decoding
+    // get image dimension & components without fully decoding
     STBIDEF int      stbi_info_from_memory(stbi_uc const* buffer, int len, int* x, int* y, int* comp);
     STBIDEF int      stbi_info_from_callbacks(stbi_io_callbacks const* clbk, void* user, int* x, int* y, int* comp);
     STBIDEF int      stbi_is_16_bit_from_memory(stbi_uc const* buffer, int len);

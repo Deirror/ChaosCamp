@@ -45,7 +45,6 @@ Color Shader::shade(PathRay& pathRay, const HitRecord& hitRecord) const {
 
 Color Shader::shadeDiffuse(PathRay& pathRay, const HitRecord& hitRecord) const {
 	const Material& material = scene_->material(hitRecord.materialIndex);
-	const Texture& texture = scene_->texture(scene_->textureIndex(material.albedoTextureName()));
 	Vec3 albedo = sample(hitRecord);
 
 	const Triangle triangle = scene_->triangle(hitRecord.triangleIndex);
@@ -90,7 +89,6 @@ Color Shader::shadeDiffuse(PathRay& pathRay, const HitRecord& hitRecord) const {
 
 Color Shader::shadeReflective(PathRay& pathRay, const HitRecord& hitRecord) const {
 	const Material& material = scene_->material(hitRecord.materialIndex);
-	const Texture& texture = scene_->texture(scene_->textureIndex(material.albedoTextureName()));
 	Vec3 albedo = sample(hitRecord);
 
 	const Triangle triangle = scene_->triangle(hitRecord.triangleIndex);
@@ -113,7 +111,6 @@ Color Shader::shadeReflective(PathRay& pathRay, const HitRecord& hitRecord) cons
 
 Color Shader::shadeRefractive(PathRay& pathRay, const HitRecord& hitRecord) const { 
 	const Material& material = scene_->material(hitRecord.materialIndex);
-	const Texture& texture = scene_->texture(scene_->textureIndex(material.albedoTextureName()));
 	Vec3 albedo = sample(hitRecord);
 	const float materialIor = material.ior();
 

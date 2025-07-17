@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-#include "dimensions/Resolution.h"
+#include "dimension/Resolution.h"
 #include "Color.h"
 
 CRT_BEGIN

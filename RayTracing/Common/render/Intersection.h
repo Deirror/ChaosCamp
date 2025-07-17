@@ -12,5 +12,8 @@ struct HitRecord;
 
 bool intersect(const Triangle& triangle, const Ray& ray, HitRecord& hitRecord, bool cullBackFace = true);
 bool intersect(const AABB& aabb, const Ray& ray);
+bool intersect(const AABB& lhs, const AABB& rhs);
+
+// intersect kdtreenode and ray
 
 CRT_END

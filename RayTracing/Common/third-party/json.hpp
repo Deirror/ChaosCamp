@@ -11722,7 +11722,7 @@ class binary_reader
     }
 
     /*!
-    @param[out] dim  an integer vector storing the ND array dimensions
+    @param[out] dim  an integer vector storing the ND array dimension
     @return whether reading ND array size vector is successful
     */
     bool get_ubjson_ndarray_size(std::vector<size_t>& dim)

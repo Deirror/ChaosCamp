@@ -3,7 +3,7 @@
 #include <vector>
 #include <sstream>
 
-#include "dimensions/Resolution.h"
+#include "dimension/Resolution.h"
 
 #include "Color.h"
 #include "PPMFile.h"

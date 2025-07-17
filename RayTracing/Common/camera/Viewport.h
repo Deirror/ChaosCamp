@@ -1,7 +1,7 @@
 #pragma once
 
 #include "math/Mat3.h"
-#include "dimensions/AspectHeight.h"
+#include "dimension/AspectHeight.h"
 
 #include "core/error.h"
 

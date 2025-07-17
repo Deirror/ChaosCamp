@@ -2,6 +2,7 @@
 
 #include <thread>
 #include <queue>
+#include <stack>
 #include <mutex> 
 
 #include "Intersection.h"
@@ -48,6 +49,11 @@ void RayTracer::setTraceRayFunc(AccelerationType accelerationType) {
 	case AccelerationType::AABB:
 		traceRayFunc_ = [this](const Ray& ray) {
 			return traceRayAABB(ray);
+		};
+		break;
+	case AccelerationType::KDTree:
+		traceRayFunc_ = [this](const Ray& ray) {
+			return traceRayKDTree(ray);
 		};
 		break;
 	default:
@@ -121,6 +127,11 @@ HitRecord RayTracer::traceRayAABB(const Ray& ray) const {
 	float closestT = FLT_MAX;
 	HitRecord finalHitRecord;
 
+	const AABB& topLevelAABB = scene_->sceneAABB();
+	if (!intersect(topLevelAABB, ray)) {
+		return finalHitRecord;
+	}
+
 	for (unsigned int meshIdx = 0; meshIdx < scene_->meshes().size(); ++meshIdx) {
 		const auto& mesh = scene_->mesh(meshIdx);
 
@@ -133,6 +144,41 @@ HitRecord RayTracer::traceRayAABB(const Ray& ray) const {
 
 		for (unsigned int i = startTriangle; i < endTriangle; ++i) {
 			closestT = updateHitRecord(ray, scene_->sceneTriangle(i), finalHitRecord, closestT);
+		}
+	}
+
+	return finalHitRecord;
+}
+
+HitRecord RayTracer::traceRayKDTree(const Ray& ray) const {
+	const KDTree& kdTree = scene_->kdTree();
+	const std::vector<KDTreeNode>& nodes = kdTree.nodes();
+
+	float closestT = FLT_MAX;
+	HitRecord finalHitRecord;
+
+	std::stack<unsigned int> nodeIndices;
+	nodeIndices.push(0);
+
+	while (nodeIndices.size() > 0) {
+		unsigned int nodeIdx = nodeIndices.top();
+		nodeIndices.pop();
+
+		const KDTreeNode& node = nodes[nodeIdx];
+		if (intersect(node.aabb, ray)) {
+			if (node.triangleIndices.size() > 0) {
+				for (auto triangleIdx : node.triangleIndices) {
+					closestT = updateHitRecord(ray, scene_->sceneTriangle(triangleIdx), finalHitRecord, closestT);
+				}
+			}
+			else {
+				if (node.left != -1) {
+					nodeIndices.push(node.left);
+				}
+				if (node.right != -1) {
+					nodeIndices.push(node.right);
+				}
+			}
 		}
 	}
 
