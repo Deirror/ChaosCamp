@@ -14,6 +14,4 @@ bool intersect(const Triangle& triangle, const Ray& ray, HitRecord& hitRecord, b
 bool intersect(const AABB& aabb, const Ray& ray);
 bool intersect(const AABB& lhs, const AABB& rhs);
 
-// intersect kdtreenode and ray
-
 CRT_END

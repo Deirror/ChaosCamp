@@ -19,7 +19,7 @@ public:
 	void expandToInclude(const Vec3& point);
 	void expandToInclude(const AABB& box);
 
-	std::pair<AABB, AABB> split(unsigned int axisIdx) const;
+	std::pair<AABB, AABB> split(int axis) const;
 
 private:
 	Vec3 min_ = Vec3(FLT_MAX, FLT_MAX, FLT_MAX);

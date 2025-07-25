@@ -10,12 +10,12 @@ void KDTree::build(const AABB& topLevelAABB, const std::vector<Triangle>& triang
 	triangles_ = &triangles;
 
 	std::vector<unsigned int> triangleIndices(triangles.size());
-	for (unsigned int i = 0; i < triangles.size(); ++i) {
+	for (int i = 0; i < triangles.size(); ++i) {
 		triangleIndices[i] = i;
 	}
 
 	std::vector<AABB> triangleAABBs(triangles.size());
-	for (unsigned int i = 0; i < triangles.size(); ++i) {
+	for (int i = 0; i < triangles.size(); ++i) {
 		AABB aabb;
 
 		aabb.expandToInclude(triangles[i].v0());
@@ -39,14 +39,13 @@ unsigned int KDTree::emplaceNode(const AABB& aabb, int left, int right, std::vec
 	return static_cast<unsigned int>(nodes_.size() - 1);
 }
 
-void KDTree::buildTree(int parent, unsigned short depth, const std::vector<unsigned int>& triangleIndices, const std::vector<AABB>& triangleAABBs) {
+void KDTree::buildTree(int parent, int depth, const std::vector<unsigned int>& triangleIndices, const std::vector<AABB>& triangleAABBs) {
 	if (maxDepth_ < depth || triangleIndices.size() <= boxTriangleCount_) {
-		// nodes_[parent].triangleIndices.insert(nodes_[parent].triangleIndices.end(), triangleIndices.begin(), triangleIndices.end());
 		nodes_[parent].triangleIndices = triangleIndices;
 		return;
 	}
 
-	auto [leftAABB, rightAABB] = nodes_[parent].aabb.split(depth % AXIS_COUNT);
+	auto [leftAABB, rightAABB] = nodes_[parent].aabb.split(depth % kAxisCount);
 
 	KDTreeNode leftNode, rightNode;
 	leftNode.aabb = leftAABB;

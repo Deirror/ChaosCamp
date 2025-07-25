@@ -12,7 +12,7 @@ struct KDTreeNode {
 	KDTreeNode(const AABB& aabb, int left, int right, std::vector<unsigned int>&& triangles)
 		: aabb(aabb), left(left), right(right), triangleIndices(std::move(triangles)) {}
 
-	static constexpr unsigned short DEFAULT_BOX_TRIANGLE_COUNT = 4;
+	static constexpr int kDefaultBoxTriangleCount = 4;
 
 	AABB aabb;
 
@@ -25,8 +25,8 @@ struct KDTreeNode {
 
 class KDTree {
 public:
-	KDTree(unsigned short boxTriangleCount = KDTreeNode::DEFAULT_BOX_TRIANGLE_COUNT,
-		unsigned short maxDepth = DEFAULT_MAX_DEPTH) 
+	KDTree(int boxTriangleCount = KDTreeNode::kDefaultBoxTriangleCount,
+		int maxDepth = kDefaultMaxDepth) 
 		: boxTriangleCount_(boxTriangleCount), maxDepth_(maxDepth) {}
 
 	void build(const AABB& topLevelAABB, const std::vector<Triangle>& triangles);
@@ -34,21 +34,21 @@ public:
 	const std::vector<KDTreeNode>& nodes() const { return nodes_; }
 
 public:
-	static constexpr unsigned short DEFAULT_MAX_DEPTH = 15;
-	static constexpr unsigned short AXIS_COUNT = 3;
+	static constexpr int kDefaultMaxDepth = 10;
+	static constexpr int kAxisCount = 3;
 
 private:
 	unsigned int emplaceNode(KDTreeNode&& node);
 	unsigned int emplaceNode(const AABB& aabb, int left, int right, std::vector<unsigned int>&& triangleIndices);
 
-	void buildTree(int parent, unsigned short depth, const std::vector<unsigned int>& triangleIndices, const std::vector<AABB>& triangleAABBs);
+	void buildTree(int parent, int depth, const std::vector<unsigned int>& triangleIndices, const std::vector<AABB>& triangleAABBs);
 
 private:
 	std::vector<KDTreeNode> nodes_;
 	const std::vector<Triangle>* triangles_ = nullptr;
 
-	unsigned short boxTriangleCount_ = KDTreeNode::DEFAULT_BOX_TRIANGLE_COUNT;
-	unsigned short maxDepth_ = DEFAULT_MAX_DEPTH;
+	int boxTriangleCount_ = KDTreeNode::kDefaultBoxTriangleCount;
+	int maxDepth_ = kDefaultMaxDepth;
 };
 
 CRT_END

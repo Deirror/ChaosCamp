@@ -21,7 +21,7 @@
   <ItemGroup>
     <ClCompile Include="acceleration\AABB.cpp" />
     <ClCompile Include="acceleration\KDTree.cpp" />
-    <ClCompile Include="render\Albedo.cpp" />
+    <ClCompile Include="render\Animation.cpp" />
     <ClCompile Include="image\BitmapBuffer.cpp" />
     <ClCompile Include="dimension\AspectHeight.h" />
     <ClCompile Include="camera\Camera.cpp" />
@@ -34,22 +34,23 @@
     <ClCompile Include="math\Mat3.cpp" />
     <ClCompile Include="scene\Mesh.cpp" />
     <ClCompile Include="json\ParseOptions.cpp" />
-    <ClCompile Include="image\PPMFile.cpp" />
+    <ClCompile Include="image\PPMFWriter.cpp" />
     <ClCompile Include="math\Triangle.cpp" />
     <ClCompile Include="math\Vec3.cpp" />
     <ClCompile Include="render\RayTracer.cpp" />
     <ClCompile Include="scene\Scene.cpp" />
     <ClCompile Include="render\Shader.cpp" />
     <ClCompile Include="camera\Viewport.cpp" />
+    <ClCompile Include="scene\SceneRay.h" />
     <ClCompile Include="scene\Texture.cpp" />
     <ClCompile Include="third-party\stb_image.cpp" />
     <ClCompile Include="core\profile\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="acceleration\AABB.h" />
+    <ClInclude Include="render\Animation.h" />
     <ClInclude Include="dimension\Interval.h" />
     <ClInclude Include="acceleration\KDTree.h" />
-    <ClInclude Include="render\Albedo.h" />
     <ClInclude Include="image\BitmapBuffer.h" />
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="image\Color.h" />
@@ -65,7 +66,7 @@
     <ClInclude Include="math\Mat3.h" />
     <ClInclude Include="scene\Mesh.h" />
     <ClInclude Include="json\ParseOptions.h" />
-    <ClInclude Include="image\PPMFile.h" />
+    <ClInclude Include="image\PPMWriter.h" />
     <ClInclude Include="math\Ray.h" />
     <ClInclude Include="render\RayTracer.h" />
     <ClInclude Include="dimension\Resolution.h" />

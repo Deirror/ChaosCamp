@@ -12,6 +12,7 @@ enum class TextureType {
 	Albedo,
 	Edges,
 	Checker,
+	Zebra,
 	Bitmap
 };
 
@@ -33,6 +34,12 @@ struct CheckerTextureData {
 	float squareSize = 0.f;
 };
 
+struct ZebraTextureData {
+	Vec3 colorA;
+	Vec3 colorB;
+	float lineHeight = 0.f;
+};
+
 struct BitmapTextureData {
 	BitmapTextureData() = default;
 	BitmapTextureData(const std::string& filepath) : filepath(filepath), buffer(filepath) {}
@@ -45,6 +52,7 @@ union TextureData {
 	AlbedoTextureData albedo;
 	EdgesTextureData edges;
 	CheckerTextureData checker;
+	ZebraTextureData zebra;
 
 	TextureData() : checker() {};
 	~TextureData() = default;
@@ -53,7 +61,10 @@ union TextureData {
 class Texture {
 public:
 	Texture() = default;
-	Texture(const std::string& name, TextureType textureType) : name_(name), textureType_(textureType) {}
+	Texture(const std::string& name, TextureType textureType) 
+		: name_(name), textureType_(textureType) {}
+
+	Vec3 albedo(const Vec3& coords = {}) const;
 
 	TextureType textureType() const { return textureType_; }
 	void textureType(TextureType textureType);
@@ -69,6 +80,9 @@ public:
 
 	const CheckerTextureData& checkerTextureData() const;
 	void checkerTextureData(const CheckerTextureData& data);
+
+	const ZebraTextureData& zebraTextureData() const;
+	void zebraTextureData(const ZebraTextureData& data);
 
 	const BitmapTextureData& bitmapTextureData() const;
 	void bitmapTextureData(const BitmapTextureData& data);

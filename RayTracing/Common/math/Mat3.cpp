@@ -31,19 +31,19 @@ Vec3 operator*(const Mat3& mat, const Vec3& vec) {
 }
 
 Mat3::Mat3() {
-	for (unsigned int row = 0; row < 3; ++row) {
-		for (unsigned int col = 0; col < 3; ++col) {
+	for (int row = 0; row < 3; ++row) {
+		for (int col = 0; col < 3; ++col) {
 			m_[row][col] = 0.f;
 		}
 	}
 }
 
-float& Mat3::operator()(unsigned int row, unsigned int col) {
+float& Mat3::operator()(int row, int col) {
 	CRT_ENSURE(row >= 0 && row < 3 && col >= 0 && col < 3, "Index out of bounds");
 	return m_[row][col];
 }
 
-float Mat3::operator()(unsigned int row, unsigned int col) const {
+float Mat3::operator()(int row, int col) const {
 	CRT_ENSURE(row >= 0 && row < 3 && col >= 0 && col < 3, "Index out of bounds");
 	return m_[row][col];
 }
@@ -66,11 +66,11 @@ void Mat3::row2(const Vec3& row2) {
 	m_[2][2] = row2.z();
 }
 
-Mat3 Mat3::rotationAroundAxis(const Vec3& axis, float angleRadians) {
+Mat3 Mat3::rotationAroundAxis(const Vec3& axis, float radians) {
 	Vec3 n = axis.normalized();
 
-	float cosA = cos(angleRadians);
-	float sinA = sin(angleRadians);
+	float cosA = cos(radians);
+	float sinA = sin(radians);
 	float oneMinusCosA = 1.0f - cosA;
 
 	float x = n.x();
@@ -98,7 +98,7 @@ Mat3 Mat3::rotationAroundAxis(const Vec3& axis, float angleRadians) {
 
 Mat3 Mat3::identity() {
 	Mat3 E = Mat3();
-	for (unsigned int i  = 0; i < 3; ++i) {
+	for (int i  = 0; i < 3; ++i) {
 		E(i, i) = 1.f;
 	}
 	return E;

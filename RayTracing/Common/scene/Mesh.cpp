@@ -4,6 +4,21 @@
 
 CRT_BEGIN
 
+void Mesh::emplaceTriangleIndices(int v0, int v1, int v2) { 
+	CRT_ENSURE(v0 >= 0 && v1 >= 0 && v2 >= 0, "Negative vertex is passed");
+	triangleIndices_.emplace_back(v0, v1, v2); 
+}
+
+const TriangleIndices& Mesh::triangleIndices(int index) const {
+	CRT_ENSURE(index >= 0 && index < triangleIndices_.size(), "Index out of bounds"); 
+	return triangleIndices_[index]; 
+}
+
+const Vec3& Mesh::uv(int index) const { 
+	CRT_ENSURE(index >= 0 && index < uvs_.size(), "Index out of bounds"); 
+	return uvs_[index]; 
+}
+
 std::vector<Triangle> Mesh::getTriangles() const {
 	std::vector<Triangle> triangles;
 	for (const auto& indices : triangleIndices_) {

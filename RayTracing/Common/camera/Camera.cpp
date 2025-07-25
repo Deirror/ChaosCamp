@@ -2,10 +2,17 @@
 
 CRT_BEGIN
 
-Camera::Camera(const Vec3& position, const Vec3& lookAt, const Vec3& up, Resolution resolution, float focalLength)
+const float Camera::kDefaultFov = math::radians(90.f);
+const float Camera::kMinFov = math::radians(10.f);
+const float Camera::kMaxFov = math::radians(110.f);
+
+Camera::Camera(const Vec3& position, const Vec3& lookAt, 
+	const Vec3& up, const Resolution& resolution, 
+	float focalLength, float fov)
 	: position_(position),
 	lookAt_(lookAt), up_(up),
 	focalLength_(focalLength),
+	fov_(fov),
 	resolution_(resolution),
 	viewport_(resolution.forViewport()) {
 	update();
@@ -20,7 +27,7 @@ Ray Camera::getRay(float s, float t) const {
 
 void Camera::update() {
 	computeBasis();
-	viewport_.update(position_, rotationMatrix_, focalLength_);
+	viewport_.update(position_, rotationMatrix_, focalLength_, fov_);
 }
 
 void Camera::computeBasis() {
@@ -38,18 +45,20 @@ void Camera::computeBasis() {
 void Camera::updateLookAtFromRotation() {
 	float distanceToLookAt = (lookAt_ - position_).length();
 	if (distanceToLookAt < math::EPSILON_ZERO) return;
+
 	Vec3 forward = w() * (-1.f); 
 	lookAt_ = position_ + forward * distanceToLookAt;
 }
 
-void Camera::resolution(Resolution resolution) {
+void Camera::resolution(const Resolution& resolution) {
 	resolution_ = resolution;
 	viewport_ = Viewport(resolution.forViewport());
-	viewport_.update(position_, rotationMatrix_, focalLength_);
+	viewport_.update(position_, rotationMatrix_, focalLength_, fov_);
 }
 
-void Camera::fromSceneFile(const Mat3& rotationMatrix, const Vec3& position) {
+void Camera::fromSceneFile(const Mat3& rotationMatrix, const Vec3& position, float fov) {
 	position_ = position;
+	fov_ = math::clamp(fov, kMinFov, kMaxFov);
 	fromMatrix(rotationMatrix);
 }
 
@@ -65,7 +74,12 @@ void Camera::fromMatrix(const Mat3& rotationMatrix) {
 void Camera::focalLength(float focalLength) {
 	CRT_ENSURE(FLT_IS_POS(focalLength), "Focal length is not positive"); 
 	focalLength_ = focalLength; 
-	viewport_.update(position_, rotationMatrix_, focalLength); 
+	viewport_.update(position_, rotationMatrix_, focalLength, fov_); 
+}
+
+void Camera::fov(float fov) {
+	fov_ = math::clamp(fov, kMinFov, kMaxFov); 
+	viewport_.update(position_, rotationMatrix_, focalLength_, fov); 
 }
 
 void Camera::move(float dx, float dy, float dz) {

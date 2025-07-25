@@ -10,12 +10,11 @@
 
 CRT_BEGIN
 
-RayTracer::RayTracer(const Scene* scene, RenderMode renderMode, 
-	AccelerationType accelerationType, 
-	unsigned short maxDepth) 
-	: shader_(scene, this, maxDepth), scene_(scene), renderMode_(renderMode) {
+RayTracer::RayTracer(Scene* scene, RenderMode renderMode, AccelerationType accelerationType) 
+	: shader_(scene, this), scene_(scene), renderMode_(renderMode) {
 	CRT_ENSURE(scene != nullptr, "Scene is null pointer");
 	setTraceRayFunc(accelerationType);
+	spp_ = scene_->settings().raySettings.spp;
 }
 
 ImageBuffer RayTracer::render() const {
@@ -42,22 +41,22 @@ ImageBuffer RayTracer::render() const {
 void RayTracer::setTraceRayFunc(AccelerationType accelerationType) {
 	switch (accelerationType) {
 	case AccelerationType::Linear:
-		traceRayFunc_ = [this](const Ray& ray) {
+		traceRayFunc_ = [this](const SceneRay& ray) {
 			return traceRayLinear(ray);
 		};
 		break;
 	case AccelerationType::AABB:
-		traceRayFunc_ = [this](const Ray& ray) {
+		traceRayFunc_ = [this](const SceneRay& ray) {
 			return traceRayAABB(ray);
 		};
 		break;
 	case AccelerationType::KDTree:
-		traceRayFunc_ = [this](const Ray& ray) {
+		traceRayFunc_ = [this](const SceneRay& ray) {
 			return traceRayKDTree(ray);
 		};
 		break;
 	default:
-		traceRayFunc_ = [this](const Ray& ray) {
+		traceRayFunc_ = [this](const SceneRay& ray) {
 			return traceRayLinear(ray);
 		};
 		break;
@@ -65,38 +64,55 @@ void RayTracer::setTraceRayFunc(AccelerationType accelerationType) {
 }
 
 void RayTracer::traceRays(ImageBuffer& imageBuffer, const Interval& interval) const {
-	const Resolution resolution = scene_->settings().imageSettings.resolution;
+	const Resolution& resolution = scene_->settings().imageSettings.resolution;
 	const Camera& camera = scene_->camera();
 
-	for (unsigned int y = interval.start.y; y < interval.end.y; ++y) {
-		for (unsigned int x = interval.start.x; x < interval.end.x; ++x) {
-			float s = static_cast<float>(x) / (resolution.width() - 1);
-			float t = static_cast<float>(y) / (resolution.height() - 1);
-			Ray ray = camera.getRay(s, t);
+	int spp = std::max(1, spp_);
+	bool ssaaOn = (spp_ > 1);
 
-			HitRecord hitRecord = traceRayFunc_(ray);
-			PathRay pathRay(ray);
-			Color color = shader_.shade(pathRay, hitRecord);
-			imageBuffer.set(x, y, color);
+	for (int y = interval.start.y; y < interval.end.y; ++y) {
+		for (int x = interval.start.x; x < interval.end.x; ++x) {
+			Vec3 accumulatedColor;
+
+			for (int s = 0; s < spp; ++s) {
+				float dx = (ssaaOn) ? math::randf() : 0.5f;
+				float dy = (ssaaOn) ? math::randf() : 0.5f;
+
+				float u = (static_cast<float>(x) + dx) / (resolution.width() - 1);
+				float v = (static_cast<float>(y) + dy) / (resolution.height() - 1);
+
+				Ray ray = camera.getRay(u, v);
+				HitRecord hitRecord = traceRayFunc_(ray);
+				PathRay pathRay(ray);
+
+				accumulatedColor += shader_.shade(pathRay, hitRecord);
+			}
+
+			accumulatedColor /= float(spp);
+			Color finalColor = fromVec3ToColor(accumulatedColor * 255.f);
+			imageBuffer.set(x, y, finalColor);
 		}
 	}
 }
 
-float RayTracer::updateHitRecord(const Ray& ray, const SceneTriangle& sceneTriangle, HitRecord& hitRecord, float closestT) const {
+float RayTracer::updateHitRecord(const SceneRay& sceneRay, const SceneTriangle& sceneTriangle, HitRecord& hitRecord, float closestT) const {
 	HitRecord tempHit;
 	const Triangle& triangle = scene_->triangle(sceneTriangle.triangleIndex);
+	
+	bool materialBackFaceCulling = scene_->material(scene_->mesh(sceneTriangle.meshIndex).materialIndex()).backFaceCulling();
+	bool cullBackFace = (sceneRay.type() == RayType::Camera) || materialBackFaceCulling;
 
-	bool cullBackFace = (ray.rayType() == RayType::Camera);
-
-	if (intersect(triangle, ray, tempHit, cullBackFace) && tempHit.t < closestT) {
+	if (intersect(triangle, sceneRay, tempHit, cullBackFace) && tempHit.t < closestT) {
 		closestT = tempHit.t;
 		hitRecord = tempHit;
 		hitRecord.meshIndex = sceneTriangle.meshIndex;
 		hitRecord.triangleIndex = sceneTriangle.triangleIndex;
+
 		hitRecord.materialIndex = scene_->mesh(sceneTriangle.meshIndex).materialIndex();
 		hitRecord.textureIndex = scene_->textureIndex(scene_->material(hitRecord.materialIndex).albedoTextureName());
 
-		if (scene_->totalUvsCount() > 0) {
+		TextureType textureType = scene_->texture(hitRecord.textureIndex).textureType();
+		if (textureType == TextureType::Zebra || textureType == TextureType::Checker || textureType == TextureType::Bitmap) {
 			unsigned int meshTriangleIdx = scene_->meshLocalTriangleIndex(sceneTriangle.meshIndex, sceneTriangle.triangleIndex);
 			const Mesh& mesh = scene_->mesh(sceneTriangle.meshIndex);
 			const TriangleIndices& triIndices = mesh.triangleIndices(meshTriangleIdx);
@@ -112,9 +128,9 @@ float RayTracer::updateHitRecord(const Ray& ray, const SceneTriangle& sceneTrian
 	return closestT;
 }
 
-HitRecord RayTracer::traceRayLinear(const Ray& ray) const {
+HitRecord RayTracer::traceRayLinear(const SceneRay& ray) const {
 	float closestT = FLT_MAX;
-	crt::HitRecord finalHitRecord;
+	HitRecord finalHitRecord;
 
 	for (const auto& sceneTriangle : scene_->sceneTriangles()) {
 		closestT = updateHitRecord(ray, sceneTriangle, finalHitRecord, closestT);
@@ -123,7 +139,7 @@ HitRecord RayTracer::traceRayLinear(const Ray& ray) const {
 	return finalHitRecord;
 }
 
-HitRecord RayTracer::traceRayAABB(const Ray& ray) const {
+HitRecord RayTracer::traceRayAABB(const SceneRay& ray) const {
 	float closestT = FLT_MAX;
 	HitRecord finalHitRecord;
 
@@ -132,25 +148,25 @@ HitRecord RayTracer::traceRayAABB(const Ray& ray) const {
 		return finalHitRecord;
 	}
 
-	for (unsigned int meshIdx = 0; meshIdx < scene_->meshes().size(); ++meshIdx) {
+	for (int meshIdx = 0; meshIdx < scene_->meshes().size(); ++meshIdx) {
 		const auto& mesh = scene_->mesh(meshIdx);
 
 		if (!intersect(mesh.aabb(), ray)) {
 			continue;
 		}
 
-		unsigned int startTriangle = scene_->meshGlobalTriangleIndex(meshIdx, 0);
-		unsigned int endTriangle = startTriangle + mesh.trianglesCount();
+		size_t startTriangle = scene_->meshGlobalTriangleIndex(meshIdx, 0);
+		size_t endTriangle = startTriangle + mesh.trianglesCount();
 
-		for (unsigned int i = startTriangle; i < endTriangle; ++i) {
-			closestT = updateHitRecord(ray, scene_->sceneTriangle(i), finalHitRecord, closestT);
+		for (size_t i = startTriangle; i < endTriangle; ++i) {
+			closestT = updateHitRecord(ray, scene_->sceneTriangle(static_cast<int>(i)), finalHitRecord, closestT);
 		}
 	}
 
 	return finalHitRecord;
 }
 
-HitRecord RayTracer::traceRayKDTree(const Ray& ray) const {
+HitRecord RayTracer::traceRayKDTree(const SceneRay& ray) const {
 	const KDTree& kdTree = scene_->kdTree();
 	const std::vector<KDTreeNode>& nodes = kdTree.nodes();
 
@@ -187,7 +203,7 @@ HitRecord RayTracer::traceRayKDTree(const Ray& ray) const {
 
 void RayTracer::renderLinear(ImageBuffer& imageBuffer) const {
 	CRT_ENSURE(renderMode_ == RenderMode::Linear, "Render mode is not linear");
-	Resolution resolution = scene_->settings().imageSettings.resolution;
+	const Resolution& resolution = scene_->settings().imageSettings.resolution;
 	Interval interval(0, 0, resolution.width(), resolution.height());
 	traceRays(imageBuffer, interval);
 }
@@ -195,23 +211,23 @@ void RayTracer::renderLinear(ImageBuffer& imageBuffer) const {
 void RayTracer::renderRegionGrids(ImageBuffer& imageBuffer) const {
 	CRT_ENSURE(renderMode_ == RenderMode::RegionGrids, "Render mode is not region grids");
 
-	const Resolution resolution = scene_->settings().imageSettings.resolution;
+	const Resolution& resolution = scene_->settings().imageSettings.resolution;
 	unsigned int threadsCount = std::thread::hardware_concurrency();
 
-	unsigned int cols = static_cast<unsigned int>(std::ceil(std::sqrt(threadsCount)));
-	unsigned int rows = static_cast<unsigned int>(std::ceil(float(threadsCount) / cols));
+	int cols = static_cast<int>(std::ceil(std::sqrt(threadsCount)));
+	int rows = static_cast<int>(std::ceil(float(threadsCount) / cols));
 
-	unsigned int regionWidth = resolution.width() / cols;
-	unsigned int regionHeight = resolution.height() / rows;
+	int regionWidth = resolution.width() / cols;
+	int regionHeight = resolution.height() / rows;
 
 	std::vector<Interval> regions;
 
-	for (unsigned int row = 0; row < rows; ++row) {
-		for (unsigned int col = 0; col < cols; ++col) {
-			unsigned int startX = col * regionWidth;
-			unsigned int startY = row * regionHeight;
-			unsigned int width = (col == cols - 1) ? (resolution.width() - startX) : regionWidth;
-			unsigned int height = (row == rows - 1) ? (resolution.height() - startY) : regionHeight;
+	for (int row = 0; row < rows; ++row) {
+		for (int col = 0; col < cols; ++col) {
+			int startX = col * regionWidth;
+			int startY = row * regionHeight;
+			int width = (col == cols - 1) ? (resolution.width() - startX) : regionWidth;
+			int height = (row == rows - 1) ? (resolution.height() - startY) : regionHeight;
 
 			regions.emplace_back(startX, startY, startX + width, startY + height);
 		}
@@ -233,16 +249,16 @@ void RayTracer::renderRegionGrids(ImageBuffer& imageBuffer) const {
 void RayTracer::renderRegionBands(ImageBuffer& imageBuffer) const {
 	CRT_ENSURE(renderMode_ == RenderMode::RegionBands, "Render mode is not region bands");
 
-	const Resolution resolution = scene_->settings().imageSettings.resolution;
+	const Resolution& resolution = scene_->settings().imageSettings.resolution;
 
 	unsigned int threadCount = std::thread::hardware_concurrency();
-	unsigned int bandHeight = resolution.height() / threadCount;
+	int bandHeight = resolution.height() / threadCount;
 
 	std::vector<Interval> bands;
 
 	for (unsigned int i = 0; i < threadCount; ++i) {
-		unsigned int startRow = i * bandHeight;
-		unsigned int endRow = (i == threadCount - 1) ? resolution.height() : (i + 1) * bandHeight;
+		int startRow = i * bandHeight;
+		int endRow = (i == threadCount - 1) ? resolution.height() : (i + 1) * bandHeight;
 
 		bands.emplace_back(0, startRow, resolution.width(), endRow);
 	}
@@ -263,14 +279,15 @@ void RayTracer::renderRegionBands(ImageBuffer& imageBuffer) const {
 void RayTracer::renderBuckets(ImageBuffer& buffer) const {
 	CRT_ENSURE(renderMode_ == RenderMode::Buckets, "Render mode is not buckets");
 
-	const Resolution resolution = scene_->settings().imageSettings.resolution;
-	unsigned short bucketSize = scene_->settings().imageSettings.bucketSize;
+	const Resolution& resolution = scene_->settings().imageSettings.resolution;
+	int bucketSize = scene_->settings().imageSettings.bucketSize;
+	CRT_ENSURE(bucketSize > 0, "Bucket size is invalid");
 
 	std::queue<Interval> workQueue;
 	std::mutex queueMutex;
 
-	for (unsigned short y = 0; y < resolution.height(); y += bucketSize) {
-		for (unsigned short x = 0; x < resolution.width(); x += bucketSize) {
+	for (int y = 0; y < resolution.height(); y += bucketSize) {
+		for (int x = 0; x < resolution.width(); x += bucketSize) {
 			workQueue.emplace(x, y, x + bucketSize, y + bucketSize);
 		}
 	}

@@ -7,26 +7,28 @@ CRT_BEGIN
 class Resolution {
 public:	
 	Resolution() = default;
-	Resolution(unsigned short width, unsigned short height)
-		: width_(width), height_(height) {}
+	Resolution(int width, int height)
+		: width_(width), height_(height) { CRT_ENSURE(width >= 0 && height >= 0, "Negative number is passed"); }
 
 	float aspectRatio() const { return static_cast<float>(width_) / static_cast<float>(height_); }
 
-	unsigned short width() const { return width_; }
-	unsigned short height() const { return height_; }
+	int width() const { return width_; }
+	void width(int width) { CRT_ENSURE(width >= 0, "Width is negative"); width_ = width; }
 
-	void width(unsigned short width) { width_ = width; }
-	void height(unsigned short height) { height_ = height; }
+	int height() const { return height_; }
+	void height(int height) { CRT_ENSURE(height >= 0, "Height is negative"); height_ = height; }
 
-	AspectHeight forViewport(float viewportHeight = 2.0f) const { return { aspectRatio(), viewportHeight }; }
+	AspectHeight forViewport(float viewportHeight = kDefaultViewportHeight) const { return { aspectRatio(), viewportHeight }; }
 
 public:
-	static constexpr unsigned short DEFAULT_WIDTH = 1920;
-	static constexpr unsigned short DEFAULT_HEIGHT= 1080;
+	static constexpr int kDefaultWidth = 1920;
+	static constexpr int kDefaultHeight= 1080;
+	
+	static constexpr float kDefaultViewportHeight = 2.f;
 
 private:
-	unsigned short width_ = DEFAULT_HEIGHT;
-	unsigned short height_ = DEFAULT_HEIGHT;
+	int width_ = kDefaultWidth;
+	int height_ = kDefaultHeight;
 };
 
 CRT_END

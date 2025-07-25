@@ -4,8 +4,8 @@
 
 CRT_BEGIN
 
-float Vec3::operator[](unsigned int idx) const {
-	switch (idx) {
+float Vec3::operator[](int index) const {
+	switch (index) {
 	case 0: return x_;
 	case 1: return y_;
 	case 2: return z_;
@@ -13,8 +13,8 @@ float Vec3::operator[](unsigned int idx) const {
 	CRT_ERROR("Index out of bounds");
 }
 
-float& Vec3::operator[](unsigned int idx) {
-	switch (idx) {
+float& Vec3::operator[](int index) {
+	switch (index) {
 	case 0: return x_;
 	case 1: return y_;
 	case 2: return z_;
@@ -36,15 +36,15 @@ Vec3& Vec3::operator-=(const Vec3& other) {
 	return *this;
 }
 
-Vec3& Vec3::operator*=(float scalar) {
-	x_ *= scalar;
-	y_ *= scalar;
-	z_ *= scalar;
+Vec3& Vec3::operator*=(float s) {
+	x_ *= s;
+	y_ *= s;
+	z_ *= s;
 	return *this;
 }
 
-Vec3& Vec3::operator/=(float scalar) {
-	return *this *= 1.0f / scalar;
+Vec3& Vec3::operator/=(float s) {
+	return *this *= 1.0f / s;
 }
 
 Vec3 operator+(const Vec3& lhs, const Vec3& rhs) {
@@ -65,25 +65,20 @@ Vec3 operator*(const Vec3& lhs, const Vec3& rhs) {
 	return result;
 }
 
-Vec3 operator*(float scalar, const Vec3& other) {
+Vec3 operator*(float s, const Vec3& other) {
 	Vec3 result = other;
-	return result *= scalar;
+	return result *= s;
 }
 
-Vec3 operator*(const Vec3& other, float scalar) {
-	return scalar * other;
+Vec3 operator*(const Vec3& other, float s) {
+	return s * other;
 }
 
-Vec3 operator/(const Vec3& other, float scalar) {
-	return (1.0f / scalar) * other;
+Vec3 operator/(const Vec3& other, float s) {
+	return (1.0f / s) * other;
 }
 
 Vec3 cross(const Vec3& lhs, const Vec3& rhs) {
-	// after solving the determinant of the matrix - triangle method
-	// | i  j  k  |
-	// | x1 y1 z1 |
-	// | x2 y2 z2 |
-	// we get the following formula for the cross product
 	return Vec3(
 		lhs.y() * rhs.z() - lhs.z() * rhs.y(),
 		lhs.z() * rhs.x() - lhs.x() * rhs.z(),
@@ -92,8 +87,11 @@ Vec3 cross(const Vec3& lhs, const Vec3& rhs) {
 }
 
 Vec3 Vec3::normalized() const {
-	float len = length();
-	return *this / len;
+	return *this / length();
+}
+
+void Vec3::normalize() {
+	*this /= length();
 }
 
 Vec3 Vec3::min(const Vec3& lhs, const Vec3& rhs) {
@@ -109,6 +107,14 @@ Vec3 Vec3::max(const Vec3& lhs, const Vec3& rhs) {
 		lhs.x() > rhs.x() ? lhs.x() : rhs.x(),
 		lhs.y() > rhs.y() ? lhs.y() : rhs.y(),
 		lhs.z() > rhs.z() ? lhs.z() : rhs.z()
+	);
+}
+
+Vec3 Vec3::clamp(const Vec3& vec, float min, float max) {
+	return Vec3(
+		math::clamp(vec.x(), min, max),
+		math::clamp(vec.y(), min, max),
+		math::clamp(vec.z(), min, max)
 	);
 }
 

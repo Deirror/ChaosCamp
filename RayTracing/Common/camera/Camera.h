@@ -7,36 +7,40 @@
 
 #include "Viewport.h"
 
-
 CRT_BEGIN
 
 class Camera {
 public:
 	Camera() = default;
-	Camera(const Vec3& position, const Vec3& lookAt, const Vec3& up, Resolution resolution, float focalLength = 1.f);
+	Camera(const Vec3& position, const Vec3& lookAt,
+		const Vec3& up, const Resolution& resolution, 
+		float focalLength = kDefaultFocalLength, float fov = kDefaultFov);
 
 	Ray getRay(float s, float t) const;
 
-	void position(const Vec3& position) { position_ = position; update(); }
 	const Vec3& position() const { return position_; }
+	void position(const Vec3& position) { position_ = position; update(); }
 
-	void lookAt(const Vec3& lookAt) { lookAt_ = lookAt; update(); }
 	const Vec3& lookAt() const { return lookAt_; }
+	void lookAt(const Vec3& lookAt) { lookAt_ = lookAt; update(); }
 
-	void up(const Vec3& up) { up_ = up; update(); }
 	const Vec3& up() const { return up_; }
+	void up(const Vec3& up) { up_ = up; update(); }
 
-	void fromSceneFile(const Mat3& rotationMatrix, const Vec3& position);
+	float focalLength() const { return focalLength_; }
+	void focalLength(float focalLength);
+
+	float fov() const { return fov_; }
+	void fov(float fov);
+
+	const Resolution& resolution() const { return resolution_; }
+	void resolution(const Resolution& resolution);
+
+	void fromSceneFile(const Mat3& rotationMatrix, const Vec3& position, float fov);
 	void fromMatrix(const Mat3& rotationMatrix);
 
-	void focalLength(float focalLength);
-	float focalLength() const { return focalLength_; }
-
-	void resolution(Resolution resolution);
-	Resolution resolution() const { return resolution_; }
-
-	float height() const { return resolution_.height(); }
-	float width() const { return resolution_.width(); }
+	int height() const { return resolution_.height(); }
+	int width() const { return resolution_.width(); }
 
 	const Viewport& viewport() const { return viewport_; }
 
@@ -59,7 +63,11 @@ public:
 	void orbit(float panRad, float tiltRad, const Vec3& orbitAxis = Vec3(0.f, 1.f, 0.f));
 
 public:
-	static constexpr float DEFAULT_FOCAL_LENGTH = 1.f;
+	static constexpr float kDefaultFocalLength = 1.f;
+	static const float kDefaultFov;
+
+	static const float kMinFov;
+	static const float kMaxFov;
 
 private:
 	void update();
@@ -76,7 +84,8 @@ private:
 
 	Resolution resolution_;
 
-	float focalLength_ = DEFAULT_FOCAL_LENGTH;
+	float fov_ = kDefaultFov;
+	float focalLength_ = kDefaultFocalLength;
 	Viewport viewport_;
 };
 

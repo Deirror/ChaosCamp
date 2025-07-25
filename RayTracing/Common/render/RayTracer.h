@@ -3,6 +3,7 @@
 #include <functional>
 
 #include "scene/Scene.h"
+#include "scene/SceneRay.h"
 #include "image/ImageBuffer.h"
 #include "dimension/Interval.h"
 
@@ -11,6 +12,8 @@
 
 CRT_BEGIN
 
+class RayTracer {
+public:
 enum class RenderMode {
 	Linear,
 	RegionBands,
@@ -24,16 +27,19 @@ enum class AccelerationType {
 	KDTree
 };
 
-using TraceRayFunc = std::function<HitRecord(const Ray&)>;
+using TraceRayFunc = std::function<HitRecord(const SceneRay&)>;
 
-class RayTracer {
 public:
-	RayTracer(const Scene* scene, RenderMode renderMode = RenderMode::Linear, AccelerationType accelerationType = AccelerationType::Linear, unsigned short maxDepth = Shader::DEFAULT_MAX_DEPTH);
+	RayTracer(Scene* scene, 
+		RenderMode renderMode = RenderMode::Linear, 
+		AccelerationType accelerationType = AccelerationType::Linear);
 
 	ImageBuffer render() const;
 
 	const Scene* scene() const { return scene_; }
-	void scene(const Scene* scene) { CRT_ENSURE(scene != nullptr, "Scene is null pointer"); scene_ = scene; shader_.scene(scene); }
+	Scene* scene() { return scene_; }
+
+	void scene(Scene* scene) { CRT_ENSURE(scene != nullptr, "Scene is null pointer"); scene_ = scene; shader_.scene(scene); }
 
 	RenderMode renderMode() const { return renderMode_; }
 	void renderMode(RenderMode renderMode) { renderMode_ = renderMode; }
@@ -53,20 +59,21 @@ private:
 
 	void traceRays(ImageBuffer& imageBuffer, const Interval& interval) const;
 
-	float updateHitRecord(const Ray& ray, const SceneTriangle& sceneTriangle, HitRecord& hitRecord, float closestT) const;
+	float updateHitRecord(const SceneRay& ray, const SceneTriangle& sceneTriangle, HitRecord& hitRecord, float closestT) const;
 
-	HitRecord traceRayLinear(const Ray& ray) const;
-	HitRecord traceRayAABB(const Ray& ray) const;
-	HitRecord traceRayKDTree(const Ray& ray) const;
+	HitRecord traceRayLinear(const SceneRay& ray) const;
+	HitRecord traceRayAABB(const SceneRay& ray) const;
+	HitRecord traceRayKDTree(const SceneRay& ray) const;
 
 private:
-	const Scene* scene_ = nullptr;
+	Scene* scene_ = nullptr;
 
 	Shader shader_;
 
 	RenderMode renderMode_ = RenderMode::Linear;
 	AccelerationType accelerationType_ = AccelerationType::Linear;
 
+	int spp_ = 0;
 	TraceRayFunc traceRayFunc_ = nullptr;
 };
 

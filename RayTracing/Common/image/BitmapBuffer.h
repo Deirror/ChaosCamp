@@ -13,21 +13,21 @@ public:
 	BitmapBuffer() = default;
 	explicit BitmapBuffer(const std::string& filepath);
 
-	Resolution resolution() const { return resolution_; }
+	const Resolution& resolution() const { return resolution_; }
 	const std::vector<unsigned char>& data() const { return data_; }
 
-	unsigned short bpp() const { return bpp_; }
+	int bpp() const { return bpp_; }
 
-	Vec3 at(unsigned short x, unsigned short y) const; // for now support for RGB only
+	Vec3 at(int x, int y) const; 
 
 public:
-	static constexpr char DEFAULT_BPP = 3; 
+	static constexpr int kDefaultBpp = 3; 
 
 private:
 	Resolution resolution_;
 	std::vector<unsigned char> data_;
 
-	unsigned short bpp_ = DEFAULT_BPP;
+	int bpp_ = kDefaultBpp;
 };
 
 CRT_END

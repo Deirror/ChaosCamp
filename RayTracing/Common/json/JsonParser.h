@@ -18,6 +18,8 @@ class Texture;
 
 struct TriangleIndices;
 struct ImageSettings;
+struct RaySettings;
+struct KDTreeSettings;
 struct Settings;
 
 class JsonParser {

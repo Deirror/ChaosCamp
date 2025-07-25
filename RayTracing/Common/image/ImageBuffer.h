@@ -6,30 +6,27 @@
 #include "dimension/Resolution.h"
 
 #include "Color.h"
-#include "PPMFile.h"
+#include "PPMWriter.h"
 
 CRT_BEGIN
 
 class ImageBuffer {
 public:
     ImageBuffer() = default;
-    ImageBuffer(unsigned short width, unsigned short height)
-        : resolution_(width, height), pixels_(width * height) {}
-
-    ImageBuffer(Resolution resolution)
+    ImageBuffer(const Resolution& resolution)
         : resolution_(resolution), pixels_(resolution.width() * resolution.height()) {}
 
-    void set(unsigned short x, unsigned short y, Color color);
+    void set(int x, int y, const Color& color);
 
-    void save(const std::string& filename, PPMMode ppmMode = PPMMode::P3) const;
+    void save(const std::string& filepath, PPMWriter::Format format = PPMWriter::Format::P3) const;
     
-    void dumpASCII(PPMFile& ppmFile) const;
-    void dumpBinary(PPMFile& ppmFile) const;
+    void dumpASCII(PPMWriter& file) const;
+    void dumpBinary(PPMWriter& file) const;
 
-    unsigned short width() const { return resolution_.width(); }
-    unsigned short height() const { return resolution_.height(); }
+    int width() const { return resolution_.width(); }
+    int height() const { return resolution_.height(); }
 
-    Color at(unsigned short x, unsigned short y) const;
+    const Color& at(int x, int y) const;
 
     const std::vector<Color>& pixels() const { return pixels_; }
 

@@ -4,6 +4,7 @@
 
 #include "math/Triangle.h"
 #include "acceleration/AABB.h"
+
 #include "core/error.h"
 
 CRT_BEGIN
@@ -24,25 +25,25 @@ public:
 		triangleIndices_(triangleIndices),
 		uvs_(uvs) { computeVertexNormals(); buildAABB(); }
 
-	void materialIndex(unsigned int materialIndex) { materialIndex_ = materialIndex; }
 	unsigned int materialIndex() const { return materialIndex_; }
+	void materialIndex(int materialIndex) { CRT_ENSURE(materialIndex >= 0, "Negative index"); materialIndex_ = materialIndex; }
 
 	void addVertex(const Vec3& vertex) { vertices_.push_back(vertex); }
 	void emplaceVertex(float x, float y, float z) { vertices_.emplace_back(x, y, z); }
 
 	void addTriangleIndices(const TriangleIndices& triangleIndices) { triangleIndices_.push_back(triangleIndices); }
-	void emplaceTriangleIndices(unsigned int v0, unsigned int v1, unsigned int v2) { triangleIndices_.emplace_back(v0, v1, v2); }
+	void emplaceTriangleIndices(int v0, int v1, int v2);
 
 	void addUv(const Vec3& uv) { uvs_.push_back(uv); }
 	void emplaceUv(float x, float y, float z) { uvs_.emplace_back(x, y, z); }
 
 	std::vector<Triangle> getTriangles() const;
 
-	const TriangleIndices& triangleIndices(unsigned int idx) const { CRT_ENSURE(idx < triangleIndices_.size(), "Index out of bounds"); return triangleIndices_[idx]; }
-	const Vec3& uv(unsigned int idx) const { CRT_ENSURE(idx < uvs_.size(), "Index out of bounds"); return uvs_[idx]; }
+	const TriangleIndices& triangleIndices(int index) const;
+	const Vec3& uv(int index) const;
 
-	unsigned int uvsCount() const { return static_cast<unsigned int>(uvs_.size()); }
-	unsigned int trianglesCount() const { return static_cast<unsigned int>(triangleIndices_.size()); }
+	size_t uvsCount() const { return uvs_.size(); }
+	size_t trianglesCount() const { return triangleIndices_.size(); }
 
 	void computeVertexNormals();
 	void buildAABB();

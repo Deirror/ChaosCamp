@@ -24,9 +24,11 @@ void from_json(const nlohmann::json& j, Color& color) {
 		CRT_ERROR("Invalid Color format");
 	}
 
-	color.r = static_cast<unsigned char>(j[0].get<float>() * 255.f);
-	color.g = static_cast<unsigned char>(j[1].get<float>() * 255.f);
-	color.b = static_cast<unsigned char>(j[2].get<float>() * 255.f);
+	Color temp = fromVec3ToColor(j.get<Vec3>() * 255.f);
+
+	color.r = temp.r;
+	color.g = temp.g;
+	color.b = temp.b;
 }
 
 void from_json(const nlohmann::json& j, Resolution& res) {
@@ -42,8 +44,8 @@ void from_json(const nlohmann::json& j, Resolution& res) {
 		CRT_ERROR("Resolution height not found in JSON data");
 	}
 
-	res.width(j[JsonKey::Settings::Image::WIDTH].get<unsigned short>());
-	res.height(j[JsonKey::Settings::Image::HEIGHT].get<unsigned short>());
+	res.width(j[JsonKey::Settings::Image::WIDTH].get<int>());
+	res.height(j[JsonKey::Settings::Image::HEIGHT].get<int>());
 }
 
 void from_json(const nlohmann::json& j, TriangleIndices& indices) {
@@ -51,9 +53,9 @@ void from_json(const nlohmann::json& j, TriangleIndices& indices) {
 		CRT_ERROR("Invalid TriangleIndices format");
 	}
 
-	indices.v0 = j[0].get<unsigned int>();
-	indices.v1 = j[1].get<unsigned int>();
-	indices.v2 = j[2].get<unsigned int>();
+	indices.v0 = j[0].get<int>();
+	indices.v1 = j[1].get<int>();
+	indices.v2 = j[2].get<int>();
 }
 
 void from_json(const nlohmann::json& j, Mesh& mesh) {
@@ -86,9 +88,9 @@ void from_json(const nlohmann::json& j, Mesh& mesh) {
 
 	for (int i = 0; i < trianglesIndicesJson.size(); i += 3) {
 		mesh.emplaceTriangleIndices(
-			trianglesIndicesJson[i].get<unsigned int>(),
-			trianglesIndicesJson[i + 1].get<unsigned int>(),
-			trianglesIndicesJson[i + 2].get<unsigned int>()
+			trianglesIndicesJson[i].get<int>(),
+			trianglesIndicesJson[i + 1].get<int>(),
+			trianglesIndicesJson[i + 2].get<int>()
 		);
 	}
 
@@ -103,7 +105,7 @@ void from_json(const nlohmann::json& j, Mesh& mesh) {
 		}
 	}
 
-	mesh.materialIndex(j[JsonKey::Objects::MATERIAL_INDEX].get<unsigned int>());
+	mesh.materialIndex(j[JsonKey::Objects::MATERIAL_INDEX].get<int>());
 }
 
 void from_json(const nlohmann::json& j, Light& light) {
@@ -149,9 +151,13 @@ void from_json(const nlohmann::json& j, Material& material) {
 	if (j.contains(JsonKey::Material::IOR) && type == MaterialType::Refractive) {
 		material.ior(j[JsonKey::Material::IOR].get<float>());
 	}
+
+	if (j.contains(JsonKey::Material::BACK_FACE_CULLING)) {
+		material.backFaceCulling(j[JsonKey::Material::BACK_FACE_CULLING].get<bool>());
+	}
 }
 
-void from_json(const nlohmann::json& j, crt::Texture& texture) {
+void from_json(const nlohmann::json& j, Texture& texture) {
 	if (!j.is_object()) {
 		CRT_ERROR("Invalid Texture JSON");
 	}
@@ -214,6 +220,24 @@ void from_json(const nlohmann::json& j, crt::Texture& texture) {
 		texture.checkerTextureData(data);
 		break;
 	}
+	case TextureType::Zebra: {
+		if (!j.contains(JsonKey::Texture::COLOR_A)) {
+			CRT_ERROR("Texture color A not found in JSON data");
+		}
+		if (!j.contains(JsonKey::Texture::COLOR_B)) {
+			CRT_ERROR("Texture color B not found in JSON data");
+		}
+		if (!j.contains(JsonKey::Texture::LINE_HEIGHT)) {
+			CRT_ERROR("Texture line height not found in JSON data");
+		}
+		ZebraTextureData data = {
+			j[JsonKey::Texture::COLOR_A].get<Vec3>(),
+			j[JsonKey::Texture::COLOR_B].get<Vec3>(),
+			j[JsonKey::Texture::LINE_HEIGHT].get<float>()
+		};
+		texture.zebraTextureData(data);
+		break;
+	}
 	case TextureType::Bitmap: {
 		if (!j.contains(JsonKey::Texture::FILE_PATH)) {
 			CRT_ERROR("Texture file path not found in JSON data");
@@ -250,13 +274,12 @@ void JsonParser::parseSettings(Settings& settings) {
 	if (!jsonData_.contains(JsonKey::SETTINGS)) {
 		CRT_ERROR("Settings not found in JSON data");
 	}
-
-	const auto& settingsJson = jsonData_[JsonKey::SETTINGS];
-	if (!settingsJson.contains(JsonKey::Settings::BACKGROUND_COLOR)) {
-		CRT_ERROR("Background color not found in JSON data");
+ const auto& settingsJson = jsonData_[JsonKey::SETTINGS];
+	if (!settingsJson.contains(JsonKey::Settings::BACKGROUND_ALBEDO)) {
+		CRT_ERROR("Background albedo not found in JSON data");
 	}
 
-	settings.backgroundColor = settingsJson[JsonKey::Settings::BACKGROUND_COLOR].get<Vec3>();
+	settings.backgroundAlbedoTextureName = settingsJson[JsonKey::Settings::BACKGROUND_ALBEDO].get<std::string>();
 
 	if (!settingsJson.contains(JsonKey::Settings::IMAGE_SETTINGS)) {
 		CRT_ERROR("Image settings not found in JSON data");
@@ -272,13 +295,49 @@ void JsonParser::parseSettings(Settings& settings) {
 		CRT_ERROR("Image height not found in JSON data");
 	}
 
-	unsigned short width = imageSettingsJson[JsonKey::Settings::Image::WIDTH].get<unsigned short>();
-	unsigned short height  = imageSettingsJson[JsonKey::Settings::Image::HEIGHT].get<unsigned short>();
+	int width = imageSettingsJson[JsonKey::Settings::Image::WIDTH].get<int>();
+	int height  = imageSettingsJson[JsonKey::Settings::Image::HEIGHT].get<int>();
 
 	settings.imageSettings.resolution = Resolution(width, height);
 
 	if (imageSettingsJson.contains(JsonKey::Settings::Image::BUCKET_SIZE)) {
-		settings.imageSettings.bucketSize = imageSettingsJson[JsonKey::Settings::Image::BUCKET_SIZE].get<unsigned short>();
+		settings.imageSettings.bucketSize = imageSettingsJson[JsonKey::Settings::Image::BUCKET_SIZE].get<int>();
+	}
+
+	if (settingsJson.contains(JsonKey::Settings::RAY_SETTINGS)) {
+		const auto& raySettingsJson = settingsJson[JsonKey::Settings::RAY_SETTINGS];
+
+		if (raySettingsJson.contains(JsonKey::Settings::Ray::GI_RAYS)) {
+			settings.raySettings.giRays = raySettingsJson[JsonKey::Settings::Ray::GI_RAYS].get<int>();
+		}
+
+		if (raySettingsJson.contains(JsonKey::Settings::Ray::SPP)) {
+			settings.raySettings.spp = raySettingsJson[JsonKey::Settings::Ray::SPP].get<int>();
+		}
+
+		if (raySettingsJson.contains(JsonKey::Settings::Ray::MAX_DEPTH)) {
+			settings.raySettings.maxDepth = raySettingsJson[JsonKey::Settings::Ray::MAX_DEPTH].get<int>();
+		}
+
+		if (raySettingsJson.contains(JsonKey::Settings::Ray::REFLECTIONS)) {
+			settings.raySettings.reflection = raySettingsJson[JsonKey::Settings::Ray::REFLECTIONS].get<bool>();
+		}
+
+		if (raySettingsJson.contains(JsonKey::Settings::Ray::REFRACTIONS)) {
+			settings.raySettings.refraction = raySettingsJson[JsonKey::Settings::Ray::REFRACTIONS].get<bool>();
+		}
+	}
+
+	if (settingsJson.contains(JsonKey::Settings::KDTREE_SETTINGS)) {
+		const auto& kdTreeSettingsJson = settingsJson[JsonKey::Settings::KDTREE_SETTINGS];
+
+		if (kdTreeSettingsJson.contains(JsonKey::Settings::KDTree::MAX_DEPTH)) {
+			settings.kdTreeSettings.maxDepth = kdTreeSettingsJson[JsonKey::Settings::KDTree::MAX_DEPTH].get<int>();
+		}
+
+		if (kdTreeSettingsJson.contains(JsonKey::Settings::KDTree::TRIANGLES_PER_BOX)) {
+			settings.kdTreeSettings.trianglesPerBox = kdTreeSettingsJson[JsonKey::Settings::KDTree::TRIANGLES_PER_BOX].get<int>();
+		}
 	}
 }
 
@@ -298,7 +357,13 @@ void JsonParser::parseCamera(Camera& camera) {
 		CRT_ERROR("Camera position not found in JSON data");
 	}
 
-	camera.fromSceneFile(matrix, cameraJson[JsonKey::Camera::POSITION].get<Vec3>());
+	float fov = math::radians(90.f);
+	if (cameraJson.contains(JsonKey::Camera::FOV_DEG)) {
+		fov = cameraJson[JsonKey::Camera::FOV_DEG].get<float>();
+		fov = math::radians(fov);
+	}
+
+	camera.fromSceneFile(matrix, cameraJson[JsonKey::Camera::POSITION].get<Vec3>(), fov);
 }
 
 void JsonParser::parseLights(std::vector<Light>& lights) {
@@ -354,4 +419,3 @@ void JsonParser::parseTextures(std::vector<Texture>& textures) {
 }
 
 CRT_END
-

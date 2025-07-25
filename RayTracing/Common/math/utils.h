@@ -31,6 +31,10 @@ namespace math {
 		return math::EPSILON_RAY + math::SLOPE_BIAS * (1.f - dot);
 	}
 
+	inline float randf() {
+		return (float)rand() / RAND_MAX;
+	}
+
 	inline float max(float a, float b) {
 		return (a > b) ? a : b;
 	}
@@ -44,13 +48,9 @@ namespace math {
 	}
 
 	#define FLT_IS_ZERO(x) (abs(x) < crt::math::EPSILON_ZERO)
-	#define FLT_NOT_ZERO(x) (abs(x) > crt::math::EPSILON_ZERO)
 
 	#define FLT_IS_NEG(x) (x < -crt::math::EPSILON_ZERO)
 	#define FLT_IS_POS(x) (x > crt::math::EPSILON_ZERO)
-
-	#define INT_IS_NEG(x) (x < NULL)
-	#define INT_IS_POS(x) (x > NULL)
 }
 
 CRT_END

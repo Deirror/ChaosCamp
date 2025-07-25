@@ -1,16 +1,22 @@
 #pragma once
 
+#include "core/crt.h"
+
+CRT_BEGIN
+
 struct Point {
-	unsigned short x, y;
+	int x, y;
 };
 
 struct Interval {
 	Interval() = default;
-	Interval(unsigned short startX, unsigned short startY, unsigned short endX, unsigned short endY)
+	Interval(int startX, int startY, int endX, int endY)
 		: start(startX, startY), end(endX, endY) {}
 
-	Interval(Point start, Point end)
+	Interval(const Point& start, const Point& end)
 		: start(start), end(end) {}
 
 	Point start, end;
 };
+
+CRT_END

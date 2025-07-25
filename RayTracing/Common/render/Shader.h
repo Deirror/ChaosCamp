@@ -10,34 +10,45 @@ class RayTracer;
 class PathRay;
 class Scene;
 
+struct RayEffects {
+	bool reflection = false;
+	bool refraction = false;
+};
+
 class Shader {
 public:
-	Shader(const Scene* scene, const RayTracer* rayTracer, unsigned short maxDepth = DEFAULT_MAX_DEPTH);
+	Shader(const Scene* scene, const RayTracer* rayTracer);
 
 	const Scene* scene() const { return scene_; }
-	void scene(const Scene* scene) { CRT_ENSURE(scene != nullptr, "Scene is null pointer"); scene_ = scene; }
+	void scene(const Scene* scene);
 
-	Color shade(PathRay& pathRay, const HitRecord& hitRecord) const;
-
-	unsigned short maxDepth() const { return maxDepth_; }
-	void maxDepth(unsigned short maxDepth) { maxDepth_ = maxDepth; }
+	Vec3 shade(PathRay& pathRay, const HitRecord& hitRecord) const;
 
 public:
-	static constexpr unsigned short DEFAULT_MAX_DEPTH = 5;
+	static constexpr int kDefaultMaxDepth = 4;
 
 private:
-	Color shadeDiffuse(PathRay& pathRay, const HitRecord& hitRecord) const;
-	Color shadeReflective(PathRay& pathRay, const HitRecord& hitRecord) const;
-	Color shadeRefractive(PathRay& pathRay, const HitRecord& hitRecord) const;
-	Color shadeConstant(PathRay& pathRay, const HitRecord& hitRecord) const;
+	Vec3 shadeDiffuse(PathRay& pathRay, const HitRecord& hitRecord) const;
+	Vec3 shadeDirectIllumination(PathRay& pathRay, const HitRecord& hitRecord) const;
+	Vec3 shadeGlobalIllumination(PathRay& pathRay, const HitRecord& hitRecord) const;
+
+	Vec3 shadeReflective(PathRay& pathRay, const HitRecord& hitRecord) const;
+	Vec3 shadeRefractive(PathRay& pathRay, const HitRecord& hitRecord) const;
+	Vec3 shadeConstant(PathRay& pathRay, const HitRecord& hitRecord) const;
 
 	Vec3 sample(const HitRecord& hitRecord) const;
+	Vec3 sampleRandomHemisphere() const;
+
+	void updateRayParams();
 
 private:
 	const Scene* scene_ = nullptr;
 	const RayTracer* rayTracer_ = nullptr;
 
-	unsigned short maxDepth_ = DEFAULT_MAX_DEPTH;
+	int giRays_ = 0;
+	int maxDepth_ = kDefaultMaxDepth;
+
+	RayEffects rayEffects;
 };
 
 CRT_END

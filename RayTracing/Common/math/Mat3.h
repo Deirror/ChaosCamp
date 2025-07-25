@@ -12,8 +12,8 @@ public:
 	friend Mat3 operator*(const Mat3& lhs, const Mat3& rhs);
 	friend Vec3 operator*(const Mat3& mat, const Vec3& vec);
 
-	float& operator()(unsigned int row, unsigned int col);
-	float operator()(unsigned int row, unsigned int col) const;
+	float& operator()(int row, int col);
+	float operator()(int row, int col) const;
 
 	Vec3 row0() const { return Vec3(m_[0][0], m_[0][1], m_[0][2]); }
 	void row0(const Vec3& row0);
@@ -24,7 +24,7 @@ public:
 	Vec3 row2() const { return Vec3(m_[2][0], m_[2][1], m_[2][2]); }
 	void row2(const Vec3& row2);
 
-	static Mat3 rotationAroundAxis(const Vec3& axis, float angleRadians);
+	static Mat3 rotationAroundAxis(const Vec3& axis, float radians);
 
 	static Mat3 identity();
 

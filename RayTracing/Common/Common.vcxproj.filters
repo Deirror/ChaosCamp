@@ -24,7 +24,7 @@
     <ClCompile Include="math\Mat3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="image\PPMFile.cpp">
+    <ClCompile Include="image\PPMFWriter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="math\Triangle.cpp">
@@ -75,9 +75,6 @@
     <ClCompile Include="image\BitmapBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="render\Albedo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="third-party\stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -88,6 +85,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="acceleration\KDTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\SceneRay.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="render\Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -113,7 +116,7 @@
     <ClInclude Include="math\Mat3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="image\PPMFile.h">
+    <ClInclude Include="image\PPMWriter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="math\Ray.h">
@@ -179,9 +182,6 @@
     <ClInclude Include="third-party\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="render\Albedo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="core\profile\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -192,6 +192,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="acceleration\KDTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="render\Animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

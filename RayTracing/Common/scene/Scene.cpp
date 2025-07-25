@@ -6,9 +6,12 @@ CRT_BEGIN
 
 Scene::Scene(const std::string& filepath, const ParseOptions& options) {
 	fromJsonFile(filepath, options); 
+
 	buildTriangles();
 	buildAlbedoTextures();
 	buildSceneAABB();
+
+	kdTree_ = KDTree(settings_.kdTreeSettings.trianglesPerBox, settings_.kdTreeSettings.maxDepth);
 	kdTree_.build(sceneAABB_, triangles_);
 }
 
@@ -62,17 +65,19 @@ unsigned int Scene::textureIndex(const std::string& albedoTextureName) const {
 	return albedoTextures_.at(albedoTextureName);
 }
 
-unsigned int Scene::meshLocalTriangleIndex(unsigned int meshIndex, unsigned int triangleIndex) const {
+unsigned int Scene::meshLocalTriangleIndex(int meshIndex, int triangleIndex) const {
+	CRT_ENSURE(meshIndex >= 0 && triangleIndex >= 0, "Negative index is passed");
 	unsigned int offset = 0;
-	for (unsigned int i = 0; i < meshIndex; ++i) {
+	for (int i = 0; i < meshIndex; ++i) {
 		offset += meshes_[i].trianglesCount();
 	}
 	return triangleIndex - offset;
 }
 
-unsigned int Scene::meshGlobalTriangleIndex(unsigned int meshIndex, unsigned int triangleIndex) const {
+unsigned int Scene::meshGlobalTriangleIndex(int meshIndex, int triangleIndex) const {
+	CRT_ENSURE(meshIndex >= 0 && triangleIndex >= 0, "Negative index is passed");
 	unsigned int offset = 0;
-	for (unsigned int i = 0; i < meshIndex; ++i) {
+	for (int i = 0; i < meshIndex; ++i) {
 		offset += meshes_[i].trianglesCount();
 	}
 	return triangleIndex + offset;

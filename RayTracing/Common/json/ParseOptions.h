@@ -16,7 +16,10 @@ inline std::unordered_set<std::string> ValidParseOptions {
 
 class ParseOptions {
 public:
-	ParseOptions() : options_({ JsonKey::CAMERA, JsonKey::OBJECTS, JsonKey::SETTINGS }) {}
+	ParseOptions() : options_({ 
+		JsonKey::CAMERA, JsonKey::OBJECTS, JsonKey::SETTINGS,
+		JsonKey::MATERIALS, JsonKey::TEXTURES	
+	}) {}
 
 	template<typename ...Args>
 	ParseOptions(Args&& ...options);

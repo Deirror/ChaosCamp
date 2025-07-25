@@ -24,7 +24,7 @@ public:
 	void aspectRatio(float aspectRatio) { CRT_ENSURE(FLT_IS_POS(aspectRatio), "Aspect ratio is not positive"); aspectHeight_.ratio = aspectRatio; }
 	void height(float height) { CRT_ENSURE(FLT_IS_POS(height), "Height is not positive"); aspectHeight_.height = height; }
 
-	void update(const Vec3& cameraPosition, const Mat3& rotation, float focalLength);
+	void update(const Vec3& cameraPosition, const Mat3& rotation, float focalLength, float fov);
 
 private:
 	AspectHeight aspectHeight_;
