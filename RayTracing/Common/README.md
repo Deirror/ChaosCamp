@@ -19,3 +19,8 @@ Project Root
 └── third-party/   # Dependencies - nlohmann json, stb_image
 ```
 
+> [!IMPORTANT]
+> Below are listed some notes on my project as a whole
+
+## Architecure
+
