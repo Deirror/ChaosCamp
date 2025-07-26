@@ -3,7 +3,7 @@ Description
 
 The directory consists of three folders - `base`, `effects` and `animations`
 
-### `Base`
+### Base
 
 - Here can be found the starting images which are used for generating the images with the effects and also the animations
 
