@@ -40,7 +40,7 @@ Project Root
 
 ### Comments
 
-- **Lights and mesh's albedo modification**
+- **Light/mesh's albedo modification**
   - Scene class return references to the objects and Animation class modifies them
  
 - **Logging errors**
