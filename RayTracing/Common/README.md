@@ -22,7 +22,7 @@ Project Root
 > [!IMPORTANT]
 > Below are listed some notes on my project as a whole
 
-## Architecure
+## Architecture
 
 - I decided to separate my logics(rendering, camera, math, scene) in folders just to make my project more readable
-- I treat all scene objects(triangles, meshes, textures) as **data-only** store and rendering(intersections) and shading(coloring/albedo) logic is implemented in the `render/` directory 
+- I treat all scene objects(*triangles, meshes, textures*) as **data-only** store and rendering(*intersections*) and shading(*coloring/albedo*) logic is implemented in the `render/` directory 
