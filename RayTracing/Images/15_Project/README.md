@@ -27,5 +27,5 @@ The directory consists of three folders - `base`, `effects` and `animations`
   - accelerations
   - ...
 
-  > [IMPORTANT]
+  > [!NOTE]
   > All clips are generated in 20 fps, besides the video clip with global illumination applied, which is on 30 fps
