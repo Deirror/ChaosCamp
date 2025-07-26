@@ -29,11 +29,23 @@ Project Root
 
 ## Features
 
-I have implemented the following additional functionalities:
+- I have implemented the following additional functionalities:
 
-- **Global Illumination**
-- **Samples per pixel(Anti-Aliasing)**
-- **Modification on lights and meshes' albedos**
-- **Logging errors** *(more info down below)*
-- **Custom texture - Zebra**
-- **Animation class**
+  - **Global Illumination**
+  - **Samples per pixel(Anti-Aliasing)**
+  - **Modification on lights and meshes' albedos**
+  - **Logging errors** *(more info down below)*
+  - **Custom texture - Zebra**
+  - **Animation class**
+
+### Comments
+
+- **Lights and mesh's albedo modification**
+  - Scene class return references to the objects and Animation class modifies them
+ 
+- **Logging errors**
+  - Directly calls `std::abort` and logs error in the terminal
+  - For example, wrong/missing json data, validation of args in constructors or other functions
+
+- **Zebra texture**
+  - Almost identical as **Checker** but with different algorithm for albedo
