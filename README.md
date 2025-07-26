@@ -5,7 +5,13 @@
 Description
 -
 
-// TO DO
+- In the repo, you can find all homework tasks given during the Chaos Ray Tracing course and the final project which is located in `./RayTracing/Common`
+- Also all the rendered images can be found in `./RayTracing/Images` with a README for the project
+
+### Reviewing
+
+- Just do `git clone https://github.com/Deirror/ChaosCamp.git` and run the solution file
+- The first homework(*2_Foundations*) is set as default to be executed. You can just switch in the settings which project to run
 
 Big Thanks
 -
