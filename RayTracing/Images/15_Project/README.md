@@ -3,18 +3,18 @@ Description
 
 The directory consists of three folders - `base`, `effects` and `animations`
 
-## Base
+### Base
 
 - Here can be found the starting images which are used for generating the images with the effects and also the animations
 
-## Effects
+### Effects
 
 - Contains examples of the following effects, using the base images:
   - `fov`(field of view)
   - `spp`(sample per pixel)
   - `gi`(global illumination) 
 
-## Animations
+### Animations
 
 - The most interesting and important work can be found here. There are five videos, which demonstrate all important functionalities in the ray tracing project:
 
@@ -27,5 +27,5 @@ The directory consists of three folders - `base`, `effects` and `animations`
   - accelerations
   - ...
 
-  > [!IMPORTANT]
+  > [IMPORTANT]
   > All clips are generated in 20 fps, besides the video clip with global illumination applied, which is on 30 fps
