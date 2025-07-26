@@ -25,7 +25,7 @@ The directory consists of three folders - `base`, `effects` and `animations`
   - reflections and refractions
   - custom backgrounds and textures
   - accelerations
-  - and more...
+  - ...
 
-  > [!WARNING]
-  > All clips are generated in 20 fps, besides the video clip with global illumination applied, which is on 30 fps
+> [!NOTE]
+> All clips are generated in 20 fps, besides the video clip with global illumination applied, which is on 30 fps
