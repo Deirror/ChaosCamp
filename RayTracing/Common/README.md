@@ -5,6 +5,7 @@ Description
 
 ### Structure
 
+```markdown
 Project Root
 ├── acceleration/
 ├── camera/
@@ -16,3 +17,4 @@ Project Root
 ├── render/
 ├── scene/
 └── third-party/
+```
