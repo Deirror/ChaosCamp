@@ -1,10 +1,9 @@
 Description
-_
+-
 
 A Python script for parsing vertices and triangle indices from .gltf and .bin files
 
-Dependencies
--
+### Dependencies
 
-`trimesh` - used for parsing json and loading the content into a variable
-`numpy` - famous mathemathics python library
+- `trimesh` - used for parsing json and loading the content into a variable
+- `numpy` - famous mathemathics python library
