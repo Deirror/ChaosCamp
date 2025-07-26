@@ -24,5 +24,16 @@ Project Root
 
 ## Architecture
 
-- I decided to separate my logics(rendering, camera, math, scene) in folders just to make my project more readable
-- I treat all scene objects(*triangles, meshes, textures*) as **data-only** store and rendering(*intersections*) and shading(*coloring/albedo*) logic is implemented in the `render/` directory 
+- I decided to separate my logics(*rendering, camera, math, scene*) in folders just to make my project more readable
+- I treat all scene objects(*triangles, meshes, textures*) as **data-only** store and rendering(*intersections*) and shading(*coloring/albedo*) logic is implemented in the `render/` directory
+
+## Features
+
+I have implemented the following additional functionalities:
+
+- **Global Illumination**
+- **Samples per pixel(Anti-Aliasing)**
+- **Modification on lights and meshes' albedos**
+- **Logging errors** *(more info down below)*
+- **Custom texture - Zebra**
+- **Animation class**
