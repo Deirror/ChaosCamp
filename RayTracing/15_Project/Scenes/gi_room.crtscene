@@ -8,8 +8,6 @@
 		},
 		"ray_settings": {
 			"max_depth": 4,
-			"gi_rays":  4,
-			"spp": 10,
 			"reflections": true,
 			"refractions": true
 		},

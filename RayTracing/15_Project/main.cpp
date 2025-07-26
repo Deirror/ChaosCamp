@@ -1,7 +1,9 @@
 namespace task1 {
 	void zebra_dragon_room_animation();
 	void zebra_dragom_room();
+
 	void gi_room();
+	void gi_room_sphere();
 
 	void disco_sphere_animation();
 }

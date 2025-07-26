@@ -171,7 +171,7 @@ Vec3 Shader::shadeGlobalIllumination(PathRay& pathRay, const HitRecord& hitRecor
 		accumulatedLight += shade(reflectPathRay, reflectHitRecord);
 	}
 
-	return accumulatedLight;
+	return Vec3::clamp(accumulatedLight);
 }
 
 Vec3 Shader::shadeReflective(PathRay& pathRay, const HitRecord& hitRecord) const {

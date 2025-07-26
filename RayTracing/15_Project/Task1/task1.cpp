@@ -48,6 +48,18 @@ namespace task1 {
 		buffer.save("gi_room.ppm", crt::PPMWriter::Format::P6);
 	}
 
+	void gi_room_sphere() {
+		crt::ParseOptions options;
+		options.withOption(crt::JsonKey::LIGHTS);
+
+		crt::Scene scene("Scenes/gi_room_sphere.crtscene", options);
+
+		crt::RayTracer rayTracer(&scene, crt::RayTracer::RenderMode::Buckets, crt::RayTracer::RayTracer::AccelerationType::KDTree);
+		crt::Animation animation(rayTracer);
+
+		animation.orbit(crt::math::radians(2.f), 0.f, 180);
+	}
+
 	void disco_sphere_animation() {
 		crt::ParseOptions options;
 		options.withOption(crt::JsonKey::LIGHTS);
