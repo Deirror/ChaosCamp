@@ -1,12 +1,13 @@
-# ChaosCamp
+# Chaos Camp
 
 <img width="1920" height="1080" alt="chaos_camp_thanks" src="https://github.com/user-attachments/assets/88251824-df55-4dd0-a3dc-01ac1697ae13" />
 
 Description
 -
 
-- In the repo, you can find all homework tasks given during the Chaos Ray Tracing course and the final project which is located in `./RayTracing/Common`
-- Also all the rendered images can be found in `./RayTracing/Images` with a README for the project
+- In this repo, can be found homework tasks related to DSA, multithreading and so on.
+- Also, you can find all homework tasks given during the Chaos Ray Tracing course and the final project which is located in `./RayTracing/Common`
+- All the rendered images can be found in `./RayTracing/Images` with a README for the project
 
 ### Reviewing
 
