@@ -33,6 +33,7 @@ Project Root
 
   - **Global Illumination**
   - **Samples per pixel(Anti-Aliasing)**
+  - **Field of view**
   - **Modification on lights and meshes' albedos**
   - **Logging errors** *(more info down below)*
   - **Custom texture - Zebra**
