@@ -5,7 +5,7 @@
 Description
 -
 
-- In this repo, can be found homework tasks related to DSA, multithreading and so on.
+- In this repo, can be found homework tasks related to DSA, multithreading, DirectX and so on.
 - Also, you can find all homework tasks given during the Chaos Ray Tracing course and the final project which is located in `./RayTracing/Common`
 - All the rendered images can be found in `./RayTracing/Images` with a README for the project
 

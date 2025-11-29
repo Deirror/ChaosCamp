@@ -1,0 +1,40 @@
+#include <app_qtgui.h>
+
+namespace dapp {
+
+DeirrorzApp::DeirrorzApp(int& argc, char** argv)
+	: app(argc, argv) {
+
+	mainWindow = std::make_unique<ui::MainWindow>(&engine);
+
+	engine.init(mainWindow->getViewportNativeHandle());
+}
+
+int DeirrorzApp::run() {
+
+	mainWindow->show();
+
+	idleTimer = new QTimer(mainWindow.get());
+	connect(idleTimer, &QTimer::timeout, this, &DeirrorzApp::onIdleTick);
+	idleTimer->start(0);
+
+	fpsTimer = new QTimer(mainWindow.get());
+	connect(fpsTimer, &QTimer::timeout, this, &DeirrorzApp::onUpdateStats);
+	fpsTimer->start(1000);
+
+	return app.exec();
+}
+
+void DeirrorzApp::onUpdateStats() {
+
+	int currFrameIdx = engine.getFrameIdx();
+
+	mainWindow->updateFPS(currFrameIdx);
+}
+
+void DeirrorzApp::onIdleTick() { 
+
+	engine.renderRedAndGreen();
+}
+
+} 
