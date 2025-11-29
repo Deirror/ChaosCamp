@@ -8,7 +8,7 @@ Description
 ### Reviewing 
 
 - The project uses CMake for build system.
-- There is a `gen_vs2022.bat`, which can be run to generate a .sln in the dir ./build_vs. Then you can open the project and switch between the solutions.
+- There is a `gen_vs2022.bat`, which can be run to generate a .sln in the dir `./build_vs`. Then you can open the project and switch between the solutions
 
 > [!NOTE]
-> Change the dir where your Qt binaries are located, by editing the `gen_v2022.bat` - might not be as mine.
+> Change the dir where your Qt binaries and libs are located, by editing the `gen_v2022.bat` - might not be as mine
