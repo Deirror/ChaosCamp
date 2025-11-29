@@ -7,7 +7,7 @@ Description
 
 ### Reviewing 
 
-- The project uses CMake for build system.
+- The project uses CMake for build system
 - There is a `gen_vs2022.bat`, which can be run to generate a .sln in the dir `./build_vs`. Then you can open the project and switch between the solutions
 
 > [!NOTE]
