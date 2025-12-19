@@ -1982,3 +1982,23 @@ struct CD3DX12_RT_FORMAT_ARRAY : public D3D12_RT_FORMAT_ARRAY
     }
 };
 
+//------------------------------------------------------------------------------------------------
+//struct CD3DX12_SERIALIZED_ROOT_SIGNATURE_DESC : public D3D12_SERIALIZED_ROOT_SIGNATURE_DESC
+//{
+//    CD3DX12_SERIALIZED_ROOT_SIGNATURE_DESC() = default;
+//    explicit CD3DX12_SERIALIZED_ROOT_SIGNATURE_DESC(const D3D12_SERIALIZED_ROOT_SIGNATURE_DESC& o) noexcept :
+//        D3D12_SERIALIZED_ROOT_SIGNATURE_DESC(o)
+//    {
+//    }
+//    explicit CD3DX12_SERIALIZED_ROOT_SIGNATURE_DESC( CD3DX12_DEFAULT ) noexcept
+//    {
+//        pSerializedBlob = nullptr;
+//        SerializedBlobSizeInBytes = 0;
+//    }
+//    explicit CD3DX12_SERIALIZED_ROOT_SIGNATURE_DESC( const void* pData, SIZE_T size) noexcept
+//    {
+//        pSerializedBlob = pData;
+//        SerializedBlobSizeInBytes = size;
+//    }
+//};
+//

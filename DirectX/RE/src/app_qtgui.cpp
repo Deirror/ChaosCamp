@@ -28,6 +28,7 @@ int DeirrorzApp::run() {
 void DeirrorzApp::onUpdateStats() {
 
 	int currFrameIdx = engine.getFrameIdx();
+	engine.updateColorChoice();
 
 	mainWindow->updateFPS(currFrameIdx);
 }

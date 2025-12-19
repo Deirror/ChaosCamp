@@ -14,9 +14,17 @@ struct GPUVendorInfo {
 
 class CDXRenderer {
 public:
+    struct FrameData {
+        int frameIdx = 0;
+        int colorIdx = 0;
+        float offsX = 0.f;
+        float offsY = 0.f;
+    };
+
+public:
     void init(HWND handle);
 
-    void render();
+    void render(const FrameData& data);
     void stopRendering() { waitForGPU(); }
 
     void resize(int width, int height);

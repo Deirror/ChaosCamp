@@ -304,4 +304,5 @@ ServiceFabricBackup/
 *.ldf
 *.ndf
 
-# Business Intelligence projects
+# VS Build Dir
+build_vs/

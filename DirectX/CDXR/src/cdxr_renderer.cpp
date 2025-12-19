@@ -242,15 +242,18 @@ void CDXRenderer::createVertexBuffer() {
 
 void CDXRenderer::createRootSignature() {
 
-	D3D12_ROOT_SIGNATURE_DESC rootSignDesc{};
-	rootSignDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	CD3DX12_ROOT_PARAMETER1 rootParam;
+	rootParam.InitAsConstants(3, 0, 0, D3D12_SHADER_VISIBILITY_ALL);
+
+	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignDesc{};
+	rootSignDesc.Init_1_1(1, &rootParam, 0, nullptr,
+		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	ComPtr<ID3DBlob> signature;
 	ComPtr<ID3DBlob> error;
 
-	if (FAILED(D3D12SerializeRootSignature(
+	if (FAILED(D3D12SerializeVersionedRootSignature(
 		&rootSignDesc,
-		D3D_ROOT_SIGNATURE_VERSION_1,
 		&signature,
 		&error))) {
 
@@ -470,7 +473,7 @@ void CDXRenderer::init(HWND handle) {
 	createPipelineState();
 }
 
-void CDXRenderer::render() {
+void CDXRenderer::render(const FrameData& data) {
 
 	beginFrame();
 
@@ -482,6 +485,11 @@ void CDXRenderer::render() {
 
 	cmdList->RSSetViewports(1, &viewport);
 	cmdList->RSSetScissorRects(1, &scissorRect);
+
+	cmdList->SetGraphicsRoot32BitConstant(0, data.frameIdx, 0);
+	cmdList->SetGraphicsRoot32BitConstant(0, data.colorIdx, 1);
+	cmdList->SetGraphicsRoot32BitConstant(0, *reinterpret_cast<const UINT*>(&data.offsX), 2);
+	cmdList->SetGraphicsRoot32BitConstant(0, *reinterpret_cast<const UINT*>(&data.offsY), 3);
 
 	cmdList->DrawInstanced(3, 1, 0, 0);
 

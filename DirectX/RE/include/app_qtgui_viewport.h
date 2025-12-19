@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QWidget>
+#include <QMouseEvent>
 
 namespace dapp::re {
 
@@ -20,6 +21,8 @@ public:
 
 protected:
 	void resizeEvent(QResizeEvent*) override;
+
+	void mousePressEvent(QMouseEvent* event) override;
 
 private:
 	re::RenderEngine* engine = nullptr;

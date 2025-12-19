@@ -10,12 +10,18 @@ void RenderEngine::init(HWND handle) {
 
 void re::RenderEngine::renderRedAndGreen() {
 
-	float frameCoef = static_cast<float>(frameIdx % 1000) / 1000.f;
+	float frameCoef = static_cast<float>(frameData.frameIdx % 1000) / 1000.f;
 
 	setClearColor({ frameCoef, 1.f - frameCoef, 0.f, 1.f });
-	renderer->render(); 
+	renderer->render(frameData);
 		
-	++frameIdx;
+	++frameData.frameIdx;
+}
+
+void RenderEngine::updateOffsFrameData(float offsX, float offsY) {
+
+	frameData.offsX = offsX;
+	frameData.offsY = offsY;
 }
 
 }
