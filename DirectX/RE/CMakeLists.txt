@@ -1,3 +1,5 @@
+set(Qt6_DIR "C:/Qt/6.10.1/msvc2022_64/lib/cmake/Qt6")
+
 find_package(Qt6 REQUIRED COMPONENTS
     Widgets
     Gui
@@ -11,7 +13,7 @@ set(CMAKE_AUTOUIC ON)
 set(RE_SRC
     src/app_qtgui_viewport.cpp
 	"src/app_qtgui.cpp"
-"src/app_qtgui_main_window.cpp"
+    "src/app_qtgui_main_window.cpp"
     src/app_renderer.cpp
     src/app_main.cpp
 )
@@ -19,7 +21,7 @@ set(RE_SRC
 set(RE_HDR
     include/app_qtgui_viewport.h
 	"include/app_qtgui.h"
-  "include/app_qtgui_main_window.h" 
+    "include/app_qtgui_main_window.h" 
     include/app_renderer.h
     include/app_main.h
     include/re_incl.h

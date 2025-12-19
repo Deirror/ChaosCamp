@@ -8,7 +8,7 @@ class RenderEngine {
 public:
 	void init(HWND handle);
 
-	void render() { renderer->render(); }
+	void render() { renderer->render(); ++frameIdx; }
 	void stopRendering() { renderer->stopRendering(); }
 
 	void renderRedAndGreen();

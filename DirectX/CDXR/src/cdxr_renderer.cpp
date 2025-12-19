@@ -1,6 +1,11 @@
 #include "cdxr_renderer.h"
 
 #include <fstream>
+//--------------------------
+#include "TriangleVS.hlsl.h" // To include the file, hit compile on the .hlsl file in the dir.
+#include "Triangle.hlsl.h" // To include the file, hit compile on the .hlsl file in the dir.
+//-----------------
+#include "d3dx12.h"
 
 namespace cdxr {
 
@@ -61,10 +66,8 @@ void CDXRenderer::createCmdInterfaces() {
 		LOG_FATAL("Unable to create Cmd Allocator.");
 	}
 
-	if (FAILED(cmdList->Reset(cmdAlloc.Get(), nullptr))) {
+	cmdList->Close();
 
-		LOG_FATAL("Unable to reset Cmd List.");
-	}
 }
 
 void CDXRenderer::createFence() {
@@ -199,14 +202,131 @@ void CDXRenderer::createRBBHandle() {
 	}
 }
 
+void CDXRenderer::createVertexBuffer() {
+	
+	Vertex triVertices[] = {
+		{ 0.f, 0.5f },
+		{ 0.5f, -0.5f },
+		{ -0.5f, -0.5f }
+	};
+
+	D3D12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+	D3D12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeof(triVertices));
+
+	if (FAILED(device->CreateCommittedResource(
+		&heapProps,
+		D3D12_HEAP_FLAG_NONE,
+		&bufferDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&vertexBuff)))) {
+
+		LOG_FATAL("Unable to create Vertex Buffer.");
+	}
+
+	void* pVertexData = nullptr;
+	if (FAILED(vertexBuff->Map(0 , nullptr, &pVertexData))) {
+
+		LOG_FATAL("Unable to map Vertex Buffer.");
+	}
+
+	memcpy(pVertexData, triVertices, sizeof(triVertices));
+
+	vertexBuff->Unmap(0, nullptr);
+
+	vertexBuffView = D3D12_VERTEX_BUFFER_VIEW{};
+	vertexBuffView.BufferLocation = vertexBuff->GetGPUVirtualAddress();
+	vertexBuffView.StrideInBytes = sizeof(Vertex);   
+	vertexBuffView.SizeInBytes = sizeof(triVertices); 
+}
+
+void CDXRenderer::createRootSignature() {
+
+	D3D12_ROOT_SIGNATURE_DESC rootSignDesc{};
+	rootSignDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+
+	ComPtr<ID3DBlob> signature;
+	ComPtr<ID3DBlob> error;
+
+	if (FAILED(D3D12SerializeRootSignature(
+		&rootSignDesc,
+		D3D_ROOT_SIGNATURE_VERSION_1,
+		&signature,
+		&error))) {
+
+		LOG_FATAL("Unable to serialize Root Signature.");
+	}
+
+	if (FAILED(device->CreateRootSignature(0,
+		signature->GetBufferPointer(),
+		signature->GetBufferSize(),
+		IID_PPV_ARGS(&rootSignature)))) {
+
+		LOG_FATAL("Unable to create Root Signature.");
+	}
+}
+
+void CDXRenderer::createPipelineState() {
+
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc{};
+
+	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+	};
+
+	psoDesc.pRootSignature = rootSignature.Get();
+	psoDesc.PS = { g_triangle, _countof(g_triangle) };
+	psoDesc.VS = { g_trianglevs, _countof(g_trianglevs) };
+	psoDesc.InputLayout = { inputLayout, _countof(inputLayout)};
+	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	psoDesc.DepthStencilState.DepthEnable = false;
+	psoDesc.DepthStencilState.StencilEnable = false;
+	psoDesc.SampleMask = UINT_MAX;
+	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	psoDesc.NumRenderTargets = 1;
+	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	psoDesc.SampleDesc.Count = 1;
+	psoDesc.SampleDesc.Quality = 0;
+	
+	if (FAILED(device->CreateGraphicsPipelineState(
+		&psoDesc, IID_PPV_ARGS(&pipelineState)))) {
+
+		LOG_FATAL("Unable to create Graphics Pipeline.");
+	}
+}
+
+void CDXRenderer::createViewport() {
+
+	viewport.TopLeftX = 0.f;
+	viewport.TopLeftY = 0.f;
+	viewport.Width = width;
+	viewport.Height = height;
+	viewport.MinDepth = 0.f;
+	viewport.MaxDepth = 1.f;
+
+	scissorRect.top = 0;
+	scissorRect.left = 0;
+	scissorRect.right = width;
+	scissorRect.bottom = height;
+}
+
 void CDXRenderer::beginFrame() {
+
+	if (FAILED(cmdAlloc->Reset())) {
+
+		LOG_FATAL("Unable to reset Cmd Alloc.");
+	}
+
+	if (FAILED(cmdList->Reset(cmdAlloc.Get(), nullptr))) {
+
+		LOG_FATAL("Unable to reset Cmd List.");
+	}
 
 	transition(buffers[currBuffIdx].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-	cmdList->ClearRenderTargetView(rtvHandles[currBuffIdx], clearColor.data(), 0, nullptr);
 	cmdList->OMSetRenderTargets(1, &rtvHandles[currBuffIdx], false, nullptr);
-
-	transition(buffers[currBuffIdx].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+	cmdList->ClearRenderTargetView(rtvHandles[currBuffIdx], clearColor.data(), 0, nullptr);
 }
 
 void CDXRenderer::copyResult(ID3D12Resource* dstRes, ID3D12Resource* cpyRes) {
@@ -266,15 +386,12 @@ void CDXRenderer::writeImageToFile() {
 
 void CDXRenderer::endFrame() {
 		
-	if (FAILED(cmdAlloc->Reset())) {
+	transition(buffers[currBuffIdx].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 
-		LOG_FATAL("Unable to reset Cmd Alloc.");
-	}
+	close();
+	execute();
 
-	if (FAILED(cmdList->Reset(cmdAlloc.Get(), nullptr))) {
-
-		LOG_FATAL("Unable to reset Cmd List.");
-	}
+	waitForGPU();
 
 	currBuffIdx = swapChain->GetCurrentBackBufferIndex();
 }
@@ -307,7 +424,6 @@ void CDXRenderer::execute() {
 
 	swapChain->Present(0, DXGI_PRESENT_ALLOW_TEARING);
 }
-
 
 void CDXRenderer::waitForGPU() {
 
@@ -346,16 +462,28 @@ void CDXRenderer::init(HWND handle) {
 	createRTVHandles();
 
 	createRBBHandle();
+
+	createVertexBuffer();
+	createViewport();
+
+	createRootSignature();
+	createPipelineState();
 }
 
 void CDXRenderer::render() {
 
 	beginFrame();
 
-	close();
-	execute();
+	cmdList->SetPipelineState(pipelineState.Get());
+	cmdList->SetGraphicsRootSignature(rootSignature.Get());
 
-	waitForGPU();
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	cmdList->IASetVertexBuffers(0, 1, &vertexBuffView);
+
+	cmdList->RSSetViewports(1, &viewport);
+	cmdList->RSSetScissorRects(1, &scissorRect);
+
+	cmdList->DrawInstanced(3, 1, 0, 0);
 
 	endFrame();
 }
@@ -370,9 +498,9 @@ void CDXRenderer::resize(int width, int height) {
 	waitForGPU();
 
 	for (int idx = 0; idx < frameCount; ++idx) {
+
 		buffers[idx].Reset();
 	}
-
 
 	if (FAILED(swapChain->ResizeBuffers(
 		frameCount, width, height,
@@ -389,9 +517,12 @@ void CDXRenderer::resize(int width, int height) {
 	this->height = height;
 
 	currBuffIdx = swapChain->GetCurrentBackBufferIndex();
+
+	createViewport();
 }
 
 void CDXRenderer::setClearColor(const std::array<float, 4>& color) {
+
 	clearColor = color;
 }
 

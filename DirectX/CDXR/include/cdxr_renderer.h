@@ -42,6 +42,13 @@ private:
 
     void createRBBHandle();
 
+    void createVertexBuffer();
+
+    void createRootSignature();
+    void createPipelineState();
+
+    void createViewport();
+
 private:
     void beginFrame();
     void copyResult(ID3D12Resource* dstRes, ID3D12Resource* cpyRes);
@@ -98,6 +105,15 @@ private:
 
 	ComPtr<ID3D12Resource2> rbbHandle;
     D3D12_PLACED_SUBRESOURCE_FOOTPRINT rtFootprint = {};
+
+	ComPtr<ID3D12Resource2> vertexBuff;
+    D3D12_VERTEX_BUFFER_VIEW vertexBuffView = {};
+
+	ComPtr<ID3D12RootSignature> rootSignature;
+	ComPtr<ID3D12PipelineState> pipelineState;
+
+    D3D12_VIEWPORT viewport = {};
+    D3D12_RECT scissorRect = {};
 
 };
 

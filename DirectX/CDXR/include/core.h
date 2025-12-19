@@ -11,3 +11,8 @@
 #include <log.h>
 
 using Microsoft::WRL::ComPtr;
+
+struct Vertex {
+	float x = 0.f;
+	float y = 0.f;
+};
