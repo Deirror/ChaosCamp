@@ -174,6 +174,10 @@ void CDXRenderer::init(HWND handle) {
 	vertexData[1] = { 0.5f, -0.5f, -1.f };
 	vertexData[2] = { -0.5f, -0.5f, -1.f };
 
+	vertexData[3] = { 1.f, 0.5f, -1.5f };
+	vertexData[4] = { 1.5f, -0.5f, -1.5f };
+	vertexData[5] = { -0.5f, -0.5f, -1.5f };
+
 	vb = VertexBufferBuilder::Create(
 		d3d.device.Get(),
 		vertexData.data(),
@@ -234,7 +238,7 @@ void CDXRenderer::render(const FrameData& data) {
 		frame.cmdList->SetGraphicsRoot32BitConstant(0, *reinterpret_cast<const UINT*>(&data.offsX), 2);
 		frame.cmdList->SetGraphicsRoot32BitConstant(0, *reinterpret_cast<const UINT*>(&data.offsY), 3);
 
-		frame.cmdList->DrawInstanced(3, 1, 0, 0);
+		frame.cmdList->DrawInstanced(6, 2, 0, 0);
 	}
 	else {
 
@@ -242,9 +246,9 @@ void CDXRenderer::render(const FrameData& data) {
 		frame.cmdList->SetDescriptorHeaps(_countof(heaps), heaps);
 
 		frame.cmdList->SetComputeRootSignature(rtPipe.globalRootSig.Get());
-		frame.cmdList->SetComputeRootDescriptorTable(
-			0, rtOut.uavHeap->GetGPUDescriptorHandleForHeapStart()
-		);
+
+		frame.cmdList->SetComputeRootDescriptorTable(0, rtOut.srvGpuHandle);
+		frame.cmdList->SetComputeRootDescriptorTable(1, rtOut.uavGpuHandle);
 
 		// Supports for ray-tracing commands.
 		ComPtr<ID3D12GraphicsCommandList4> cmdList4 = QueryAs<ID3D12GraphicsCommandList4>(frame.cmdList.Get());

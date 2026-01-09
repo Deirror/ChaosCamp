@@ -79,7 +79,7 @@ private:
     int width = defaultWidth;
     int height = defaultHeight;
 
-    static constexpr int vertexCount = 3;
+    static constexpr int vertexCount = 6;
     std::array<Vertex, vertexCount> vertexData;
 
     RenderMode mode = RenderMode::Rasterized;

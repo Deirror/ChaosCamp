@@ -1,9 +1,13 @@
-RayTracingAccelerationStructure sceneBVH : register(t0);
+RaytracingAccelerationStructure sceneBVH : register(t0);
 RWTexture2D<float4> texFrame : register(u0);
 
+struct RayPayload {
+    float4 pixelColor;
+};
+
 [shader("raygeneration")]
-void rayGen()
-{
+void rayGen() {
+
     uint2 pixel = DispatchRaysIndex().xy;
     uint2 resolution = DispatchRaysDimensions().xy;
 
@@ -30,7 +34,12 @@ void rayGen()
     payload.pixelColor = float4(0, 0, 0, 1);
 
     TraceRay(
-       sceneBVH, RAY_FLAG_NONE, 0xFF, 0, 1, 0, cameraRay, payload
+        sceneBVH,
+        RAY_FLAG_NONE,
+        0xFF,
+        0, 1, 0,
+        ray,
+        payload
     );
 
     texFrame[pixel] = payload.pixelColor;
@@ -38,10 +47,10 @@ void rayGen()
 
 [shader("miss")]
 void miss(inout RayPayload payload) {
-	payload.pixelColor = float4(0.1, 0.2, 0.2, 1);
+    payload.pixelColor = float4(0.1, 0.2, 0.2, 1);
 }
 
 [shader("closesthit")]
 void closestHit(inout RayPayload payload, BuiltInTriangleIntersectionAttributes attr) {
-	payload.pixelColor = float4(0.7, 0.2, 0.6, 1);
+    payload.pixelColor = float4(0.7, 0.2, 0.6, 1);
 }

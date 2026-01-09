@@ -5,20 +5,36 @@ static UINT AlignedSize(UINT size, UINT alignBytes) {
 	return alignBytes * (size / alignBytes + (size % alignBytes ? 1 : 0));
 }
 
-//void copySBTDataToUploadHeap(
-//	UINT rayGenOffs, UINT missOffs, UINT hitGroupOffs, 
-//	void* rayGenID, void* missID, void* hitGroupID
-//) {
-//
-//	uint8_t* pData = nullptr;
-//	sbtUploadBuff->Map(0, nullptr, reinterpret_cast<void**>(&pData));
-//
-//	memcpy(pData + rayGenOffs, rayGenID, D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES);
-//	memcpy(pData + missOffs, missID, D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES);
-//	memcpy(pData + hitGroupOffs, hitGroupID, D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES);
-//
-//	sbtUploadBuff->Unmap(0, nullptr);
-//}
+void* GetShaderIdentifier(
+	ID3D12StateObjectProperties* props, 
+	const wchar_t* entryPoint
+) {
+
+	void* id = props->GetShaderIdentifier(entryPoint);
+	if (!id) {
+
+		LOG_FATAL("Unable to find identifier.");
+	}
+
+	return id;
+}
+
+void CopySBTDataToUploadHeap(ID3D12Resource* sbtUpload,
+	UINT rayGenOffs, UINT missOffs, UINT hitGroupOffs, 
+	void* rayGenID, void* missID, void* hitGroupID) {
+
+	uint8_t* pData = nullptr;
+	if (FAILED(sbtUpload->Map(0, nullptr, reinterpret_cast<void**>(&pData)))) {
+
+		LOG_FATAL("Unable to map SBT upload.");
+	}
+
+	memcpy(pData + rayGenOffs, rayGenID, D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES);
+	memcpy(pData + missOffs, missID, D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES);
+	memcpy(pData + hitGroupOffs, hitGroupID, D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES);
+
+	sbtUpload->Unmap(0, nullptr);
+}
 
 static void CopySBTDataToDefaultHeap(FrameContext& frame,
 	ID3D12Resource* sbtDefault,	ID3D12Resource* sbtUpload) {
@@ -47,15 +63,18 @@ RayTracingDispatchContext RayTracingDispatchBuilder::Create(
 
 	RayTracingDispatchContext rtDispCtx;
 
-	void* rayGenID = props->GetShaderIdentifier(L"rayGen");
-	if (!rayGenID) {
-
-		LOG_FATAL("Unable to find rayGen identifier.");
-	}
+	void* rayGenID = GetShaderIdentifier(props, L"rayGen");
+	void* missID = GetShaderIdentifier(props, L"miss");
+	void* hitGroupID = GetShaderIdentifier(props, L"HitGroup");
 
 	const UINT shaderIDSize = D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES;
 	const UINT recordSize = AlignedSize(shaderIDSize, D3D12_RAYTRACING_SHADER_RECORD_BYTE_ALIGNMENT);
-	const UINT sbtSize = recordSize; 
+
+	const UINT rayGenOffs = 0;
+	const UINT missOffs = AlignedSize(rayGenOffs + recordSize, D3D12_RAYTRACING_SHADER_RECORD_BYTE_ALIGNMENT);
+	const UINT hitGroupOffs = AlignedSize(missOffs + recordSize, D3D12_RAYTRACING_SHADER_RECORD_BYTE_ALIGNMENT);
+
+	const UINT sbtSize = hitGroupOffs + recordSize;
 
 	rtDispCtx.sbtUpload = CreateSBTBuff(
 		device, 
@@ -71,14 +90,11 @@ RayTracingDispatchContext RayTracingDispatchBuilder::Create(
 		sbtSize
 	);
 
-	uint8_t* pData = nullptr;
-	if (FAILED(rtDispCtx.sbtUpload->Map(0, nullptr, reinterpret_cast<void**>(&pData)))) {
-
-		LOG_FATAL("Unable to map SBT upload.");
-	}
-
-	memcpy(pData, rayGenID, shaderIDSize);
-	rtDispCtx.sbtUpload->Unmap(0, nullptr);
+	CopySBTDataToUploadHeap(
+		rtDispCtx.sbtUpload.Get(),
+		rayGenOffs, missOffs, hitGroupOffs,
+		rayGenID, missID, hitGroupID
+	);
 
 	CopySBTDataToDefaultHeap(frame, 
 		rtDispCtx.sbtDefault.Get(), 
@@ -87,6 +103,9 @@ RayTracingDispatchContext RayTracingDispatchBuilder::Create(
 	rtDispCtx.desc = PrepareDispatchRayDesc(
 		rtDispCtx.sbtDefault.Get(), 
 		recordSize, 
+		rayGenOffs,
+		missOffs,
+		hitGroupOffs,
 		width, 
 		height
 	);
@@ -135,21 +154,30 @@ ComPtr<ID3D12Resource> RayTracingDispatchBuilder::CreateSBTBuff(
 D3D12_DISPATCH_RAYS_DESC RayTracingDispatchBuilder::PrepareDispatchRayDesc(
 	ID3D12Resource* sbtDefault,
 	UINT recordSize, 
+	UINT rayGenOffs, 
+	UINT missOffs, 
+	UINT hitGroupOffs, 
 	UINT width, 
 	UINT height
 ) {
 
 	D3D12_DISPATCH_RAYS_DESC rayDesc = {};
 
-	rayDesc.RayGenerationShaderRecord.StartAddress = sbtDefault->GetGPUVirtualAddress();
+	rayDesc.RayGenerationShaderRecord.StartAddress = sbtDefault->GetGPUVirtualAddress() + rayGenOffs;
 	rayDesc.RayGenerationShaderRecord.SizeInBytes = recordSize;
+
+	rayDesc.MissShaderTable.StartAddress = sbtDefault->GetGPUVirtualAddress() + missOffs;
+	rayDesc.MissShaderTable.SizeInBytes = recordSize;
+	rayDesc.MissShaderTable.StrideInBytes = recordSize;
+
+	rayDesc.HitGroupTable.StartAddress = sbtDefault->GetGPUVirtualAddress() + hitGroupOffs;
+	rayDesc.HitGroupTable.SizeInBytes = recordSize;
+	rayDesc.HitGroupTable.StrideInBytes = recordSize;
 
 	rayDesc.Width = width;
 	rayDesc.Height = height;
 	rayDesc.Depth = 1;
 
-	rayDesc.MissShaderTable = {};
-	rayDesc.HitGroupTable = {};
 	rayDesc.CallableShaderTable = {};
 
 	return rayDesc;

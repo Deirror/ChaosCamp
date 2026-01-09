@@ -102,8 +102,8 @@ D3D12_STATE_SUBOBJECT RayTracingPipelineBuilder::CreateShaderConfigSubobject(
 	D3D12_RAYTRACING_SHADER_CONFIG& shaderCfg
 ) {
 
-	shaderCfg.MaxPayloadSizeInBytes = 0; // no TraceRay => no payload needed
-	shaderCfg.MaxAttributeSizeInBytes = 0; // no hit shaders => no attributes needed
+	shaderCfg.MaxPayloadSizeInBytes = 16; 
+	shaderCfg.MaxAttributeSizeInBytes = 8; 
 
 	D3D12_STATE_SUBOBJECT sub{};
 	sub.Type = D3D12_STATE_SUBOBJECT_TYPE_RAYTRACING_SHADER_CONFIG;
@@ -139,26 +139,69 @@ D3D12_STATE_SUBOBJECT RayTracingPipelineBuilder::CreateGlobalRootSignatureSubobj
 	return rootSignSubobject;
 }
 
+D3D12_STATE_SUBOBJECT RayTracingPipelineBuilder::CreateExportsAssociation(
+	D3D12_SUBOBJECT_TO_EXPORTS_ASSOCIATION& assocDesc,
+	D3D12_STATE_SUBOBJECT* shaderCfg
+) {
+
+	static LPCWSTR exportNames[] = { L"rayGen", L"miss", L"HitGroup" };
+
+	assocDesc.pSubobjectToAssociate = shaderCfg; 
+	assocDesc.NumExports = _countof(exportNames);
+	assocDesc.pExports = exportNames;
+
+	D3D12_STATE_SUBOBJECT assocSubobj{};
+	assocSubobj.Type = D3D12_STATE_SUBOBJECT_TYPE_SUBOBJECT_TO_EXPORTS_ASSOCIATION;
+	assocSubobj.pDesc = &assocDesc;
+
+	return assocSubobj;
+}
+
 RayTracingPipelineContext RayTracingPipelineBuilder::Create(
 	ID3D12Device* device
 ) {
 
 	RayTracingPipelineContext rtPipeCtx;
-
 	rtPipeCtx.globalRootSig = CreateGlobalRootSignature(device);
 
-	std::array<D3D12_STATE_SUBOBJECT, 4> subobjs = {
-		CreateLibSubobject(rtPipeCtx.rayGenLibSubobj, L"rayGen"),
-		//CreateLibSubobject(rtPipeCtx.missLibSubobj, L"miss")
-		//CreateLibSubobject(rtPipeCtx.closestHitLibSubobj, L"closestHit")
-		CreateShaderConfigSubobject(rtPipeCtx.shaderCfg),
-		CreatePipelineConfigSubobject(rtPipeCtx.pipeCfg),
-		CreateGlobalRootSignatureSubobject(rtPipeCtx.globalRootSigDesc, rtPipeCtx.globalRootSig.Get()),
-		//createHitGroupLibSubobject()
-	};
+	D3D12_STATE_SUBOBJECT rayGenLibSubobj = CreateLibSubobject(rtPipeCtx.rayGenLibSubobj, L"rayGen");
+	D3D12_STATE_SUBOBJECT missLibSubobj = CreateLibSubobject(rtPipeCtx.missLibSubobj, L"miss");
+	D3D12_STATE_SUBOBJECT chLibSubobj = CreateLibSubobject(rtPipeCtx.closestHitLibSubobj, L"closestHit");
+
+	D3D12_STATE_SUBOBJECT hitGroupSubobj = CreateHitGroupLibSubobject(rtPipeCtx.hitGroupDesc);
+
+	D3D12_STATE_SUBOBJECT globalRootSigSubobj = CreateGlobalRootSignatureSubobject(
+		rtPipeCtx.globalRootSigDesc, 
+		rtPipeCtx.globalRootSig.Get()
+	);
+
+	D3D12_STATE_SUBOBJECT pipelineConfigSubobj = CreatePipelineConfigSubobject(rtPipeCtx.pipeCfg);
+
+	D3D12_STATE_SUBOBJECT shaderConfigSubobj = CreateShaderConfigSubobject(rtPipeCtx.shaderCfg);
+
+	std::array<D3D12_STATE_SUBOBJECT, 8> subobjs;
+	int idx = 0;
+
+	subobjs[idx++] = rayGenLibSubobj;
+	subobjs[idx++] = missLibSubobj;
+	subobjs[idx++] = chLibSubobj;
+	subobjs[idx++] = hitGroupSubobj;
+	subobjs[idx++] = globalRootSigSubobj;
+
+	const int shaderConfigIndex = idx;
+	subobjs[idx++] = shaderConfigSubobj;
+
+	D3D12_STATE_SUBOBJECT assocSubobj = 
+		CreateExportsAssociation(
+			rtPipeCtx.assocDesc, 
+			&subobjs[shaderConfigIndex]
+		);
+
+	subobjs[idx++] = assocSubobj;
+	subobjs[idx++] = pipelineConfigSubobj;
 
 	rtPipeCtx.stateObj = CreateStateObj(device, subobjs);
-	
+
 	return rtPipeCtx;
 }
 
@@ -166,22 +209,39 @@ ComPtr<ID3D12RootSignature> RayTracingPipelineBuilder::CreateGlobalRootSignature
 	ID3D12Device* device
 ) {
 
-	D3D12_DESCRIPTOR_RANGE range{};
-	range.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
-	range.NumDescriptors = 1;
-	range.BaseShaderRegister = 0; // u0
-	range.RegisterSpace = 0;
-	range.OffsetInDescriptorsFromTableStart = 0;
+	// SRV range for TLAS
+	D3D12_DESCRIPTOR_RANGE srvRange{};
+	srvRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	srvRange.NumDescriptors = 1;
+	srvRange.BaseShaderRegister = 0; // t0
+	srvRange.RegisterSpace = 0;
+	srvRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-	D3D12_ROOT_PARAMETER param{};
-	param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	param.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-	param.DescriptorTable.NumDescriptorRanges = 1;
-	param.DescriptorTable.pDescriptorRanges = &range;
+	// UAV range for output tex
+	D3D12_DESCRIPTOR_RANGE uavRange{};
+	uavRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
+	uavRange.NumDescriptors = 1;
+	uavRange.BaseShaderRegister = 0; // u0
+	uavRange.RegisterSpace = 0;
+	uavRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	D3D12_ROOT_PARAMETER params[2]{};
+
+	// TLAS
+	params[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	params[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	params[0].DescriptorTable.NumDescriptorRanges = 1;
+	params[0].DescriptorTable.pDescriptorRanges = &srvRange;
+
+	// Output UAV
+	params[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	params[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	params[1].DescriptorTable.NumDescriptorRanges = 1;
+	params[1].DescriptorTable.pDescriptorRanges = &uavRange;
 
 	D3D12_ROOT_SIGNATURE_DESC desc{};
-	desc.NumParameters = 1;
-	desc.pParameters = &param;
+	desc.NumParameters = _countof(params);
+	desc.pParameters = params;
 	desc.NumStaticSamplers = 0;
 	desc.pStaticSamplers = nullptr;
 	desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_NONE;
@@ -210,7 +270,7 @@ ComPtr<ID3D12RootSignature> RayTracingPipelineBuilder::CreateGlobalRootSignature
 
 ComPtr<ID3D12StateObject> RayTracingPipelineBuilder::CreateStateObj(
 	ID3D12Device* device,
-	const std::array<D3D12_STATE_SUBOBJECT, 4>& subobjs
+	const std::array<D3D12_STATE_SUBOBJECT, 8>& subobjs
 ) {
 
 	D3D12_STATE_OBJECT_DESC rtPsoDesc{};
@@ -227,16 +287,18 @@ ComPtr<ID3D12StateObject> RayTracingPipelineBuilder::CreateStateObj(
 	return rtStateObj;
 }
 
-//D3D12_STATE_SUBOBJECT createHitGroupLibSubobject() {
-//
-//	hitGroupDesc.HitGroupExport = L"HitGroup";
-//	hitGroupDesc.Type = D3D12_HIT_GROUP_TYPE_TRIANGLES;
-//	hitGroupDesc.ClosestHitShaderImport = L"closestHit";
-//
-//	D3D12_STATE_SUBOBJECT hitGroupSubobject{};
-//	hitGroupSubobject.Type = D3D12_STATE_SUBOBJECT_TYPE_HIT_GROUP;
-//	hitGroupSubobject.pDesc = &hitGroupDesc;
-//
-//	return hitGroupSubobject;
-//}
+D3D12_STATE_SUBOBJECT RayTracingPipelineBuilder::CreateHitGroupLibSubobject(
+	D3D12_HIT_GROUP_DESC& hitGroupDesc
+) {
+
+	hitGroupDesc.HitGroupExport = L"HitGroup";
+	hitGroupDesc.Type = D3D12_HIT_GROUP_TYPE_TRIANGLES;
+	hitGroupDesc.ClosestHitShaderImport = L"closestHit";
+
+	D3D12_STATE_SUBOBJECT hitGroupSubobject{};
+	hitGroupSubobject.Type = D3D12_STATE_SUBOBJECT_TYPE_HIT_GROUP;
+	hitGroupSubobject.pDesc = &hitGroupDesc;
+
+	return hitGroupSubobject;
+}
 

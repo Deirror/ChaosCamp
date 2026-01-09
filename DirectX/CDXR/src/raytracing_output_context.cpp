@@ -8,24 +8,20 @@ RayTracingOutputContext RayTracingOutputBuilder::Create(
 
 	RayTracingOutputContext rtOutCtx;
 
-	rtOutCtx.output = CreateRTOutput(device, width, height);
 	rtOutCtx.uavHeap = CreateUAVHeap(device);
+	rtOutCtx.output = CreateRTOutput(device, rtOutCtx.uavHeap.Get(), width, height);
 
-	D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc{};
-	uavDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
-
-	device->CreateUnorderedAccessView(
-		rtOutCtx.output.Get(),
-		nullptr, &uavDesc,
-		rtOutCtx.uavHeap->GetCPUDescriptorHandleForHeapStart()
-	);
+	UINT inc = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	rtOutCtx.srvGpuHandle = rtOutCtx.uavHeap->GetGPUDescriptorHandleForHeapStart(); // TLAS
+	rtOutCtx.uavGpuHandle = rtOutCtx.srvGpuHandle; // Output
+	rtOutCtx.uavGpuHandle.ptr += inc; 
 
 	return rtOutCtx;
 }
 
 ComPtr<ID3D12Resource> RayTracingOutputBuilder::CreateRTOutput(
 	ID3D12Device* device, 
+	ID3D12DescriptorHeap* uavHeap,
 	UINT width, 
 	UINT height
 ) {
@@ -55,6 +51,20 @@ ComPtr<ID3D12Resource> RayTracingOutputBuilder::CreateRTOutput(
 		LOG_FATAL("Unable to create RayTracing Output.");
 	}
 
+	UINT inc = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = uavHeap->GetCPUDescriptorHandleForHeapStart();
+	cpuHandle.ptr += inc * 1; 
+
+	D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc{};
+	uavDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+
+	device->CreateUnorderedAccessView(
+		rtOutput.Get(),
+		nullptr, &uavDesc,
+		cpuHandle	
+	);
+
 	return rtOutput;
 }
 
@@ -63,7 +73,7 @@ ComPtr<ID3D12DescriptorHeap> RayTracingOutputBuilder::CreateUAVHeap(
 ) {
 
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc{};
-	heapDesc.NumDescriptors = 1;
+	heapDesc.NumDescriptors = 2;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 

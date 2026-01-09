@@ -18,8 +18,6 @@ struct RayTracingDispatchContext {
     ComPtr<ID3D12Resource> sbtUpload;
     ComPtr<ID3D12Resource> sbtDefault;
     D3D12_DISPATCH_RAYS_DESC desc{};
-
-    //D3D12_CPU_DESCRIPTOR_HANDLE srvHeapCPUHandle;
 };
 
 struct RayTracingDispatchBuilder {
@@ -41,6 +39,9 @@ struct RayTracingDispatchBuilder {
     static D3D12_DISPATCH_RAYS_DESC PrepareDispatchRayDesc(
 		ID3D12Resource*,
         UINT recordSize,
+		UINT rayGenOffs, 
+		UINT missOffs, 
+		UINT hitGroupOffs, 
 		UINT width,
 		UINT height
     );
