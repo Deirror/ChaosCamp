@@ -111,7 +111,7 @@ ComPtr<ID3D12PipelineState> RasterPipelineBuilder::CreatePipelineState(ID3D12Dev
 	return pipelineState;
 }
 
-void RasterPipelineContext::Resize(UINT width, UINT height){
+void RasterPipelineContext::Resize(UINT width, UINT height) {
 
 	viewport = RasterPipelineBuilder::CreateViewport(width, height);
 	scissor = RasterPipelineBuilder::CreateRect(width, height);

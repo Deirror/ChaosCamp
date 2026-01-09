@@ -50,7 +50,7 @@ RayTracingDispatchContext RayTracingDispatchBuilder::Create(
 	void* rayGenID = props->GetShaderIdentifier(L"rayGen");
 	if (!rayGenID) {
 
-		LOG_FATAL("rayGen identifier not found");
+		LOG_FATAL("Unable to find rayGen identifier.");
 	}
 
 	const UINT shaderIDSize = D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES;
@@ -74,7 +74,7 @@ RayTracingDispatchContext RayTracingDispatchBuilder::Create(
 	uint8_t* pData = nullptr;
 	if (FAILED(rtDispCtx.sbtUpload->Map(0, nullptr, reinterpret_cast<void**>(&pData)))) {
 
-		LOG_FATAL("SBT upload Map failed");
+		LOG_FATAL("Unable to map SBT upload.");
 	}
 
 	memcpy(pData, rayGenID, shaderIDSize);

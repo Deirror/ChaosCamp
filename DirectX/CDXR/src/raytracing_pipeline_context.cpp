@@ -188,15 +188,21 @@ ComPtr<ID3D12RootSignature> RayTracingPipelineBuilder::CreateGlobalRootSignature
 
 	ComPtr<ID3DBlob> blob, error;
 	if (FAILED(D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1, &blob, &error))) {
-		if (error) LOG_FATAL((const char*)error->GetBufferPointer());
-		LOG_FATAL("SerializeRootSignature failed");
+
+		if (error) {
+
+			LOG_FATAL((const char*)error->GetBufferPointer());
+		}
+
+		LOG_FATAL("Unable to serialize Global Root Signature.");
 	}
 
 	ComPtr<ID3D12RootSignature> globalRootSign;
 	if (FAILED(device->CreateRootSignature(
 		0, blob->GetBufferPointer(), blob->GetBufferSize(),
 		IID_PPV_ARGS(&globalRootSign)))) {
-		LOG_FATAL("CreateRootSignature failed");
+
+		LOG_FATAL("Unable create Global Root Signature.");
 	}
 
 	return globalRootSign;
@@ -215,7 +221,7 @@ ComPtr<ID3D12StateObject> RayTracingPipelineBuilder::CreateStateObj(
 	ComPtr<ID3D12StateObject> rtStateObj;
 	if (FAILED(QueryAs<ID3D12Device5>(device)->CreateStateObject(&rtPsoDesc, IID_PPV_ARGS(&rtStateObj)))) {
 
-		LOG_FATAL("Unable to create RayTraced State Obj");
+		LOG_FATAL("Unable to create RayTraced State Obj.");
 	}
 
 	return rtStateObj;
