@@ -23,6 +23,8 @@ public:
 
 	void updateOffsFrameData(float offsX, float offsY);
 
+	void updateRenderMode();
+
 private:
 	std::unique_ptr<cdxr::CDXRenderer> renderer;
 

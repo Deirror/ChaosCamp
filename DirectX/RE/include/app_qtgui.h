@@ -17,12 +17,16 @@ public:
 
 	int run();
 
+	re::RenderEngine& getEngine() { return engine; }
+
 public slots:
 	void onIdleTick();
 
 	void onQuit() { engine.stopRendering(); }
 
 	void onUpdateStats();
+
+	void onResetTimers();
 
 private:
 	QApplication app;

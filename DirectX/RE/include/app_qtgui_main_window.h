@@ -6,9 +6,9 @@
 //-----------------------------
 #include <app_qtgui_viewport.h> 
 
-namespace dapp::re {
+namespace dapp {
 
-class RenderEngine;
+class DeirrorzApp;
 
 }
 
@@ -18,11 +18,14 @@ class MainWindow : public QMainWindow {
 	Q_OBJECT
 
 public:
-	MainWindow(re::RenderEngine* engine, QWidget* parent = nullptr);
+	MainWindow(DeirrorzApp* app, QWidget* parent = nullptr);
 
 	HWND getViewportNativeHandle() const { return viewport->getNativeHandle(); }
 
 	void updateFPS(int frameIdx);
+
+protected:
+	void keyPressEvent(QKeyEvent* event) override;
 
 private:
 	void createGUI();
@@ -36,10 +39,19 @@ private:
 	QWidget* statusBar;     
 	QLabel* statusFPS;     
 
+	QLabel* leftStatus;
+
+private:
+	static constexpr char const* renderModeName[] = {"Rastering", "RayTracing"};
+
 private:
 	int lastFrameIdx = 0;
 
-};
+	int renderArrIdx = 0;
 
+private:
+	DeirrorzApp* app = nullptr;
+
+};
 
 }

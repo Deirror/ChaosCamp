@@ -1,13 +1,13 @@
 #include <app_qtgui_main_window.h>
 
-#include <app_renderer.h>
+#include <app_qtgui.h>
 
 namespace dapp::ui {
 
-MainWindow::MainWindow(re::RenderEngine* engine, QWidget* parent)
-	: QMainWindow(parent) {
+MainWindow::MainWindow(DeirrorzApp* app, QWidget* parent)
+	: QMainWindow(parent), app(app) {
 
-	viewport = new Viewport(engine, this);
+	viewport = new Viewport(&app->getEngine(), this);
 
 	createGUI();
 }
@@ -19,6 +19,21 @@ void MainWindow::updateFPS(int frameIdx) {
 	lastFrameIdx = frameIdx;
 
 	statusFPS->setText(tr("FPS: %1").arg(fps));
+}
+
+void MainWindow::keyPressEvent(QKeyEvent* event) {
+
+	if (event->key() == Qt::Key::Key_Q) {
+
+		app->getEngine().updateRenderMode();
+		app->onResetTimers();
+
+		lastFrameIdx = 0;
+
+		renderArrIdx = (renderArrIdx + 1) % 2;
+
+		leftStatus->setText(tr("Status: %1").arg(renderModeName[renderArrIdx]));
+	}
 }
 
 void MainWindow::createGUI() {
@@ -37,7 +52,8 @@ void MainWindow::createGUI() {
 	statusLayout = new QHBoxLayout(statusBar);
 	statusLayout->setContentsMargins(8, 4, 8, 4);
 
-	QLabel* leftStatus = new QLabel("Status: Rendering", statusBar);
+	leftStatus = new QLabel("", statusBar);
+	leftStatus->setText(tr("Status: %1").arg(renderModeName[renderArrIdx]));
 
 	statusFPS = new QLabel("FPS: 0", statusBar);
 	statusFPS->setAlignment(Qt::AlignRight | Qt::AlignVCenter);

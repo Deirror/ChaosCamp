@@ -7,16 +7,19 @@
 //---------------
 #include <core.h>
 
+namespace cdxr {
+
 class CDXDebugLayer {
 public:
-    CDXDebugLayer();
-    ~CDXDebugLayer();
+	CDXDebugLayer();
+	~CDXDebugLayer();
 
 private:
 #ifdef _DEBUG
-    ComPtr<ID3D12Debug6> d3d12Debug;
-    ComPtr<IDXGIDebug1> dxgiDebug;
+	ComPtr<ID3D12Debug6> d3d12Debug;
+	ComPtr<IDXGIDebug1> dxgiDebug;
 #endif
 
 };
 
+}

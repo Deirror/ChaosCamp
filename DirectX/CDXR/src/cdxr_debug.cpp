@@ -1,18 +1,20 @@
 #include "cdxr_debug.h"
 
+namespace cdxr {
+
 CDXDebugLayer::CDXDebugLayer() {
 #ifdef _DEBUG
 
-    if (FAILED(D3D12GetDebugInterface(IID_PPV_ARGS(&d3d12Debug)))) {
+	if (FAILED(D3D12GetDebugInterface(IID_PPV_ARGS(&d3d12Debug)))) {
 
-        LOG_FATAL("Unable to get D3D12 Debug Interface.");
-    }
+		LOG_FATAL("Unable to get D3D12 Debug Interface.");
+	}
 
 	d3d12Debug->EnableDebugLayer();
 
 	if (FAILED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&dxgiDebug)))) {
 
-        LOG_FATAL("Unable to get DXGI Debug Interface.");
+		LOG_FATAL("Unable to get DXGI Debug Interface.");
 	}
 
 	dxgiDebug->EnableLeakTrackingForThread();
@@ -23,10 +25,10 @@ CDXDebugLayer::CDXDebugLayer() {
 CDXDebugLayer::~CDXDebugLayer() {
 #ifdef _DEBUG
 
-    if (!dxgiDebug) {
+	if (!dxgiDebug) {
 
-        LOG_FATAL("Cannot report living device objects due to DXGI Debug being nullptr.");
-    }
+		LOG_FATAL("Cannot report living device objects due to DXGI Debug being nullptr.");
+	}
 
 	OutputDebugStringW(L"DXGI Reports living device objects:\n");
 	dxgiDebug->ReportLiveObjects(
@@ -34,4 +36,6 @@ CDXDebugLayer::~CDXDebugLayer() {
 	);
 
 #endif
+}
+
 }

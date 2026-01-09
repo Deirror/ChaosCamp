@@ -24,4 +24,10 @@ void RenderEngine::updateOffsFrameData(float offsX, float offsY) {
 	frameData.offsY = offsY;
 }
 
+void RenderEngine::updateRenderMode() {
+	
+	renderer->updateRenderMode();
+	frameData.frameIdx = 0;
+}
+
 }

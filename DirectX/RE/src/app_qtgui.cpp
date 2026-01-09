@@ -5,7 +5,7 @@ namespace dapp {
 DeirrorzApp::DeirrorzApp(int& argc, char** argv)
 	: app(argc, argv) {
 
-	mainWindow = std::make_unique<ui::MainWindow>(&engine);
+	mainWindow = std::make_unique<ui::MainWindow>(this);
 
 	engine.init(mainWindow->getViewportNativeHandle());
 }
@@ -31,6 +31,15 @@ void DeirrorzApp::onUpdateStats() {
 	engine.updateColorChoice();
 
 	mainWindow->updateFPS(currFrameIdx);
+}
+
+void DeirrorzApp::onResetTimers() {
+
+	idleTimer->stop();
+	fpsTimer->stop();
+
+	idleTimer->start(0);
+	fpsTimer->start(1000);
 }
 
 void DeirrorzApp::onIdleTick() { 
