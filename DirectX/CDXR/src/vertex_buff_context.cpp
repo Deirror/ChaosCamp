@@ -4,57 +4,74 @@
 
 VertexBufferContext VertexBufferBuilder::Create(
     ID3D12Device* device,
+    ID3D12GraphicsCommandList* cmdList,
     void* vertexData, 
     UINT vertexCount, 
     UINT stride
 ) {
 
-	VertexBufferContext vb;
+    VertexBufferContext vb{};
+    vb.sizeBytes = vertexCount * stride;
 
-	vb.buff = CreateVertexBuffer(device, vertexCount * stride);
+// === Create Buffers === //
+    vb.defaultBuff = CreateBuffer(
+        device,
+        vb.sizeBytes,
+        D3D12_RESOURCE_FLAG_NONE,
+        D3D12_RESOURCE_STATE_COMMON,
+        D3D12_HEAP_TYPE_DEFAULT
+    );
 
-	void* mappedData = nullptr;
-	if (FAILED(vb.buff->Map(0, nullptr, &mappedData))) {
-		LOG_FATAL("Unable to map Vertex Buffer.");
-	}
+    vb.uploadBuff = CreateBuffer(
+        device,
+        vb.sizeBytes,
+        D3D12_RESOURCE_FLAG_NONE,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        D3D12_HEAP_TYPE_UPLOAD
+    );
 
-	memcpy(mappedData, vertexData, vertexCount * stride);
+// === Upload Vertex Data === //
+    UploadDataToBuff(
+        vb.uploadBuff.Get(),
+        vertexData,
+        vb.sizeBytes
+    );
 
-	vb.buff->Unmap(0, nullptr);
+// === Copy To Default Heap === //
+    Transition(
+        vb.defaultBuff.Get(),
+        D3D12_RESOURCE_STATE_COMMON,
+        D3D12_RESOURCE_STATE_COPY_DEST,
+        cmdList
+    );
 
-	vb.view = CreateVertexBufferView(vb.buff.Get(), vertexCount, stride);
+    cmdList->CopyBufferRegion(
+        vb.defaultBuff.Get(), 0,
+        vb.uploadBuff.Get(), 0,
+        vb.sizeBytes
+    );
 
-	return vb;
-}
+    Transition(
+        vb.defaultBuff.Get(),
+        D3D12_RESOURCE_STATE_COPY_DEST,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        cmdList
+    );
 
-ComPtr<ID3D12Resource> VertexBufferBuilder::CreateVertexBuffer(
-	ID3D12Device* device,
-	UINT size
-) {
+// === Create Buff View For Input Assembler === //
+    vb.view = CreateVertexBufferView(
+        vb.defaultBuff.Get(),
+        stride,
+        vertexCount
+    );
 
-	ComPtr<ID3D12Resource> vertexBuff;
-
-	D3D12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	D3D12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(size);
-
-	if (FAILED(QueryAs<ID3D12Device1>(device)->CreateCommittedResource(
-		&heapProps,
-		D3D12_HEAP_FLAG_NONE,
-		&bufferDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&vertexBuff)))) {
-
-		LOG_FATAL("Unable to create Vertex Buffer.");
-	}
-
-	return vertexBuff;
+    return vb;
 }
 
 D3D12_VERTEX_BUFFER_VIEW VertexBufferBuilder::CreateVertexBufferView(
 	ID3D12Resource* buff, 
-    UINT vertexCount, 
-    UINT stride
+    UINT stride,
+    UINT vertexCount
 ) {
 
 	D3D12_VERTEX_BUFFER_VIEW vertexBuffView = D3D12_VERTEX_BUFFER_VIEW{};

@@ -1,19 +1,10 @@
 #pragma once
 
-#include <core.h>
 #include <frame_context.h>
 
 struct RayTracingDispatchContext {
-    void Reset() {
-        sbtUpload.Reset();
-        sbtDefault.Reset();
-        desc = {};
-    }
-
-    void UpdateDimensions(UINT width, UINT height) {
-        desc.Width = width;
-        desc.Height = height;
-    }
+    void Reset();
+    void UpdateDimensions(UINT width, UINT height);
 
     ComPtr<ID3D12Resource> sbtUpload;
     ComPtr<ID3D12Resource> sbtDefault;

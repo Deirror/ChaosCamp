@@ -10,6 +10,7 @@
 #include <raytracing_pipeline_context.h>
 #include <raytracing_output_context.h>
 #include <raytracing_dispatch_context.h>
+#include <acceleration_structure_context.h>
 #include <cdxr_debug.h>
 
 // C++ DirectX Rendering
@@ -101,6 +102,8 @@ private:
     RayTracingOutputContext  rtOut;    
     RayTracingPipelineContext rtPipe; 
     RayTracingDispatchContext rtDisp;
+
+    AccelerationStructureContext accSt;
 
 };
 

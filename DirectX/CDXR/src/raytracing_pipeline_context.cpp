@@ -164,6 +164,7 @@ RayTracingPipelineContext RayTracingPipelineBuilder::Create(
 	RayTracingPipelineContext rtPipeCtx;
 	rtPipeCtx.globalRootSig = CreateGlobalRootSignature(device);
 
+// === Create All Needed Subobjects === //
 	D3D12_STATE_SUBOBJECT rayGenLibSubobj = CreateLibSubobject(rtPipeCtx.rayGenLibSubobj, L"rayGen");
 	D3D12_STATE_SUBOBJECT missLibSubobj = CreateLibSubobject(rtPipeCtx.missLibSubobj, L"miss");
 	D3D12_STATE_SUBOBJECT chLibSubobj = CreateLibSubobject(rtPipeCtx.closestHitLibSubobj, L"closestHit");
@@ -175,9 +176,9 @@ RayTracingPipelineContext RayTracingPipelineBuilder::Create(
 		rtPipeCtx.globalRootSig.Get()
 	);
 
-	D3D12_STATE_SUBOBJECT pipelineConfigSubobj = CreatePipelineConfigSubobject(rtPipeCtx.pipeCfg);
+	D3D12_STATE_SUBOBJECT pipeCfgSubobj = CreatePipelineConfigSubobject(rtPipeCtx.pipeCfg);
 
-	D3D12_STATE_SUBOBJECT shaderConfigSubobj = CreateShaderConfigSubobject(rtPipeCtx.shaderCfg);
+	D3D12_STATE_SUBOBJECT shaderCfgSubobj = CreateShaderConfigSubobject(rtPipeCtx.shaderCfg);
 
 	std::array<D3D12_STATE_SUBOBJECT, 8> subobjs;
 	int idx = 0;
@@ -188,17 +189,18 @@ RayTracingPipelineContext RayTracingPipelineBuilder::Create(
 	subobjs[idx++] = hitGroupSubobj;
 	subobjs[idx++] = globalRootSigSubobj;
 
-	const int shaderConfigIndex = idx;
-	subobjs[idx++] = shaderConfigSubobj;
+	const int shaderCfgIdx = idx;
+	subobjs[idx++] = shaderCfgSubobj;
 
+	// I need export association, because I got errors for messed order of the subobjs creation.
 	D3D12_STATE_SUBOBJECT assocSubobj = 
 		CreateExportsAssociation(
 			rtPipeCtx.assocDesc, 
-			&subobjs[shaderConfigIndex]
+			&subobjs[shaderCfgIdx]
 		);
 
 	subobjs[idx++] = assocSubobj;
-	subobjs[idx++] = pipelineConfigSubobj;
+	subobjs[idx++] = pipeCfgSubobj;
 
 	rtPipeCtx.stateObj = CreateStateObj(device, subobjs);
 
@@ -260,7 +262,8 @@ ComPtr<ID3D12RootSignature> RayTracingPipelineBuilder::CreateGlobalRootSignature
 	ComPtr<ID3D12RootSignature> globalRootSign;
 	if (FAILED(device->CreateRootSignature(
 		0, blob->GetBufferPointer(), blob->GetBufferSize(),
-		IID_PPV_ARGS(&globalRootSign)))) {
+		IID_PPV_ARGS(&globalRootSign)
+	))) {
 
 		LOG_FATAL("Unable create Global Root Signature.");
 	}

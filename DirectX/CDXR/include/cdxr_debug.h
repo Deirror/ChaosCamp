@@ -9,6 +9,8 @@
 
 namespace cdxr {
 
+/// Debug Layer, which reports events on app close.
+/// Primary usage is to report if there are memory leaks.
 class CDXDebugLayer {
 public:
 	CDXDebugLayer();

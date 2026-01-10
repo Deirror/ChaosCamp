@@ -13,6 +13,7 @@ set(CDXR_SRC
    src/raytracing_pipeline_context.cpp
    src/raytracing_output_context.cpp
    src/raytracing_dispatch_context.cpp
+   src/acceleration_structure_context.cpp
 )
 
 set(CDXR_HDR
@@ -37,6 +38,7 @@ set(CDXR_HDR
    include/raytracing_pipeline_context.h
    include/raytracing_output_context.h
    include/raytracing_dispatch_context.h
+   include/acceleration_structure_context.h
    include/log.h
 )
 

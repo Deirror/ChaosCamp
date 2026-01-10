@@ -19,15 +19,9 @@ struct RasterPipelineBuilder {
         UINT height
     );
 
-    static D3D12_VIEWPORT CreateViewport(
-        UINT width,
-        UINT height
-    );
+    static D3D12_VIEWPORT CreateViewport(UINT width, UINT height);
 
-    static D3D12_RECT CreateRect(
-        UINT width,
-        UINT height
-    );
+    static D3D12_RECT CreateRect(UINT width, UINT height);
 
     static ComPtr<ID3D12RootSignature> CreateRootSignature(
         ID3D12Device*

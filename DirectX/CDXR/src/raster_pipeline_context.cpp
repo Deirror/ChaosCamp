@@ -3,7 +3,17 @@
 #include "TriangleVS.hlsl.h" // To include the file, hit compile on the .hlsl file in the dir.
 #include "Triangle.hlsl.h" // To include the file, hit compile on the .hlsl file in the dir.
 
-RasterPipelineContext RasterPipelineBuilder::Create(ID3D12Device* device, UINT width, UINT height) {
+void RasterPipelineContext::Resize(UINT width, UINT height) {
+
+	viewport = RasterPipelineBuilder::CreateViewport(width, height);
+	scissor = RasterPipelineBuilder::CreateRect(width, height);
+}
+
+RasterPipelineContext RasterPipelineBuilder::Create(
+	ID3D12Device* device, 
+	UINT width, 
+	UINT height
+) {
 
 	RasterPipelineContext rpCtx;
 
@@ -109,10 +119,4 @@ ComPtr<ID3D12PipelineState> RasterPipelineBuilder::CreatePipelineState(ID3D12Dev
 	}
 
 	return pipelineState;
-}
-
-void RasterPipelineContext::Resize(UINT width, UINT height) {
-
-	viewport = RasterPipelineBuilder::CreateViewport(width, height);
-	scissor = RasterPipelineBuilder::CreateRect(width, height);
 }

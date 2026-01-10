@@ -5,7 +5,7 @@ static UINT AlignedSize(UINT size, UINT alignBytes) {
 	return alignBytes * (size / alignBytes + (size % alignBytes ? 1 : 0));
 }
 
-void* GetShaderIdentifier(
+static void* GetShaderIdentifier(
 	ID3D12StateObjectProperties* props, 
 	const wchar_t* entryPoint
 ) {
@@ -13,13 +13,13 @@ void* GetShaderIdentifier(
 	void* id = props->GetShaderIdentifier(entryPoint);
 	if (!id) {
 
-		LOG_FATAL("Unable to find identifier.");
+		LOG_FATAL("Unable to find Identifier.");
 	}
 
 	return id;
 }
 
-void CopySBTDataToUploadHeap(ID3D12Resource* sbtUpload,
+static void CopySBTDataToUploadHeap(ID3D12Resource* sbtUpload,
 	UINT rayGenOffs, UINT missOffs, UINT hitGroupOffs, 
 	void* rayGenID, void* missID, void* hitGroupID) {
 
@@ -53,29 +53,49 @@ static void CopySBTDataToDefaultHeap(FrameContext& frame,
 	frame.Close();
 }
 
+void RayTracingDispatchContext::Reset() {
+
+	sbtUpload.Reset();
+	sbtDefault.Reset();
+	desc = {};
+}
+
+void RayTracingDispatchContext::UpdateDimensions(UINT width, UINT height) {
+
+	desc.Width = width;
+	desc.Height = height;
+}
+
 RayTracingDispatchContext RayTracingDispatchBuilder::Create(
-	FrameContext& frame, 
+	FrameContext& frame,
 	ID3D12StateObjectProperties* props,
 	ID3D12Device* device,
 	UINT width,
 	UINT height
 ) {
 
-	RayTracingDispatchContext rtDispCtx;
+	RayTracingDispatchContext rtDispCtx{};
 
+// === Get Identifiers === //
 	void* rayGenID = GetShaderIdentifier(props, L"rayGen");
 	void* missID = GetShaderIdentifier(props, L"miss");
 	void* hitGroupID = GetShaderIdentifier(props, L"HitGroup");
 
-	const UINT shaderIDSize = D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES;
-	const UINT recordSize = AlignedSize(shaderIDSize, D3D12_RAYTRACING_SHADER_RECORD_BYTE_ALIGNMENT);
+// === Calc Alignment Per Shader === //
+	const UINT shaderIdSize = D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES; 
+
+	const UINT recordAlign = D3D12_RAYTRACING_SHADER_RECORD_BYTE_ALIGNMENT; 
+	const UINT tableAlign = D3D12_RAYTRACING_SHADER_TABLE_BYTE_ALIGNMENT;  
+
+	const UINT recordStride = (UINT)AlignUp(shaderIdSize, recordAlign);
 
 	const UINT rayGenOffs = 0;
-	const UINT missOffs = AlignedSize(rayGenOffs + recordSize, D3D12_RAYTRACING_SHADER_RECORD_BYTE_ALIGNMENT);
-	const UINT hitGroupOffs = AlignedSize(missOffs + recordSize, D3D12_RAYTRACING_SHADER_RECORD_BYTE_ALIGNMENT);
+	const UINT missOffs = (UINT)AlignUp((UINT64)rayGenOffs + recordStride, tableAlign);   
+	const UINT hitGroupOffs = (UINT)AlignUp((UINT64)missOffs + recordStride, tableAlign);
 
-	const UINT sbtSize = hitGroupOffs + recordSize;
+	const UINT sbtSize = (UINT)AlignUp((UINT64)hitGroupOffs + recordStride, tableAlign);
 
+// === Create Shader-Binding Table Buffers === //
 	rtDispCtx.sbtUpload = CreateSBTBuff(
 		device, 
 		D3D12_HEAP_TYPE_UPLOAD, 
@@ -90,23 +110,27 @@ RayTracingDispatchContext RayTracingDispatchBuilder::Create(
 		sbtSize
 	);
 
+// === Copy Data To Heaps === //
 	CopySBTDataToUploadHeap(
 		rtDispCtx.sbtUpload.Get(),
 		rayGenOffs, missOffs, hitGroupOffs,
 		rayGenID, missID, hitGroupID
 	);
 
-	CopySBTDataToDefaultHeap(frame, 
-		rtDispCtx.sbtDefault.Get(), 
-		rtDispCtx.sbtUpload.Get());
+	CopySBTDataToDefaultHeap(
+		frame,
+		rtDispCtx.sbtDefault.Get(),
+		rtDispCtx.sbtUpload.Get()
+	);
 
+// === Prep Ray Data For Raytracing Shader === //
 	rtDispCtx.desc = PrepareDispatchRayDesc(
-		rtDispCtx.sbtDefault.Get(), 
-		recordSize, 
+		rtDispCtx.sbtDefault.Get(),
+		recordStride,
 		rayGenOffs,
 		missOffs,
 		hitGroupOffs,
-		width, 
+		width,
 		height
 	);
 

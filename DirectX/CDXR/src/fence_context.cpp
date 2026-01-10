@@ -46,7 +46,6 @@ ComPtr<ID3D12Fence> FenceBuilder::CreateFence(ID3D12Device* device) {
 HANDLE FenceBuilder::CreateFenceEvent() {
 
 	HANDLE event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-
 	if (!event) {
 
 		LOG_FATAL("Unable to create Event.");

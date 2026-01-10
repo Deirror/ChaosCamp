@@ -1,4 +1,4 @@
-#include "cdxr_renderer.h"
+﻿#include "cdxr_renderer.h"
 
 #include <fstream>
 //-----------------
@@ -17,6 +17,8 @@ void CDXRenderer::testClearAndSetRT() {
 }
 
 void CDXRenderer::beginFrame() {
+
+	frame.Reset(); 
 
 	Transition(
 		swpCh.CurrBackBuff(),
@@ -146,11 +148,19 @@ void CDXRenderer::flushGPU() {
 
 void CDXRenderer::init(HWND handle) {
 
+// === DirectX Facotry, Device And Command Queue Creation === //
 	d3d = D3DBuilder::Create();
 
+	// Really helpful for doing debug breaks. 
+	ComPtr<ID3D12InfoQueue> infoQ = QueryAs<ID3D12InfoQueue>(d3d.device.Get());
+	infoQ->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, TRUE);
+	infoQ->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, TRUE);
+
+// === Command Managers Creation === //
 	frame = FrameBuilder::Create(d3d.device.Get());
 	fence = FenceBuilder::Create(d3d.device.Get());
 
+// === Front-Back Buffers Creation === //
 	if (!handle) {
 		return;
 	}
@@ -165,11 +175,13 @@ void CDXRenderer::init(HWND handle) {
 		frameCount
 	);
 
+// === ReadBack Buffer Creation === //
 	rbb = ReadbackBuilder::Create(
 		d3d.device.Get(),
 		swpCh.CurrBackBuff()
 	);
 
+// === Vertex Buffer Data Prep And Creation === //
 	vertexData[0] = { 0.f, 0.5f, -1.f };
 	vertexData[1] = { 0.5f, -0.5f, -1.f };
 	vertexData[2] = { -0.5f, -0.5f, -1.f };
@@ -178,19 +190,29 @@ void CDXRenderer::init(HWND handle) {
 	vertexData[4] = { 1.5f, -0.5f, -1.5f };
 	vertexData[5] = { -0.5f, -0.5f, -1.5f };
 
+	frame.Reset();
+
 	vb = VertexBufferBuilder::Create(
-		d3d.device.Get(),
-		vertexData.data(),
-		vertexCount,
+		d3d.device.Get(), 
+		frame.cmdList.Get(), 
+		vertexData.data(), 
+		vertexCount, 
 		sizeof(Vertex)
 	);
 
+	frame.Close();
+
+	execute(false);
+	flushGPU();
+
+// === Raster Pipeline Creation - Signatures, Rects, Scissors === //
 	rasterPipe = RasterPipelineBuilder::Create(
 		d3d.device.Get(),
 		width, 
 		height
 	);
 
+// === Raytracing Contexts Creation === //
 	rtOut = RayTracingOutputBuilder::Create(
 		d3d.device.Get(), 
 		width, 
@@ -200,6 +222,23 @@ void CDXRenderer::init(HWND handle) {
 	rtPipe = RayTracingPipelineBuilder::Create(
 		d3d.device.Get()
 	);
+
+	frame.Reset();
+
+	accSt = AccelerationStructureBuilder::Create(
+		d3d.device.Get(),
+		frame.cmdList.Get(),
+		vb.defaultBuff.Get(),
+		vertexCount,
+		sizeof(Vertex)
+	);
+
+	frame.Close();
+
+	execute(false);
+	flushGPU();
+
+	CreateTLASShaderResourceView(d3d.device.Get(), accSt.tlas.result.Get(), rtOut.uavHeap.Get(), 0);
 
 	ComPtr<ID3D12StateObjectProperties> props =
 		QueryAs<ID3D12StateObjectProperties>(rtPipe.stateObj.Get());
@@ -217,8 +256,6 @@ void CDXRenderer::init(HWND handle) {
 }
 
 void CDXRenderer::render(const FrameData& data) {
-
-	frame.Reset(); 
 
 	beginFrame();
 	
@@ -238,7 +275,7 @@ void CDXRenderer::render(const FrameData& data) {
 		frame.cmdList->SetGraphicsRoot32BitConstant(0, *reinterpret_cast<const UINT*>(&data.offsX), 2);
 		frame.cmdList->SetGraphicsRoot32BitConstant(0, *reinterpret_cast<const UINT*>(&data.offsY), 3);
 
-		frame.cmdList->DrawInstanced(6, 2, 0, 0);
+		frame.cmdList->DrawInstanced(vertexCount, (vertexCount / 3), 0, 0);
 	}
 	else {
 
@@ -278,7 +315,7 @@ void CDXRenderer::resize(int width, int height) {
 		DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH |
 		DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING))) {
 
-		LOG_FATAL("Unable to resize buffers.");
+		LOG_FATAL("Unable to resize Buffers.");
 	}
 
 	swpCh.ReallocRTVs(d3d.device.Get(), frameCount); 
@@ -291,6 +328,7 @@ void CDXRenderer::resize(int width, int height) {
 	rasterPipe.Resize(width, height);
 
 	rtOut = RayTracingOutputBuilder::Create(d3d.device.Get(), width, height);
+	CreateTLASShaderResourceView(d3d.device.Get(), accSt.tlas.result.Get(), rtOut.uavHeap.Get(), 0);
 
 	rtDisp.desc.Width = width;
 	rtDisp.desc.Height = height;

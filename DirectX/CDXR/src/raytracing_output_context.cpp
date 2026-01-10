@@ -46,7 +46,8 @@ ComPtr<ID3D12Resource> RayTracingOutputBuilder::CreateRTOutput(
 	if (FAILED(device->CreateCommittedResource(
 		&heapProps, D3D12_HEAP_FLAG_NONE, &texDesc,
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
-		nullptr, IID_PPV_ARGS(&rtOutput)))) {
+		nullptr, IID_PPV_ARGS(&rtOutput)
+	))) {
 
 		LOG_FATAL("Unable to create RayTracing Output.");
 	}
@@ -79,7 +80,8 @@ ComPtr<ID3D12DescriptorHeap> RayTracingOutputBuilder::CreateUAVHeap(
 
 	ComPtr<ID3D12DescriptorHeap> uavHeap;
 	if (FAILED(device->CreateDescriptorHeap(
-		&heapDesc, IID_PPV_ARGS(&uavHeap)))) {
+		&heapDesc, IID_PPV_ARGS(&uavHeap)
+	))) {
 
 		LOG_FATAL("Unable to create UAV Heap.");
 	}
