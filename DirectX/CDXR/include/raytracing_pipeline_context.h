@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core.h>
+#include "core.h"
 
 struct RayTracingPipelineContext {
     ComPtr<ID3D12RootSignature> globalRootSig;
@@ -8,17 +8,17 @@ struct RayTracingPipelineContext {
 
     struct LibSubobject {
 		ComPtr<IDxcBlob> blob;
-		D3D12_EXPORT_DESC exprt{};
-		D3D12_DXIL_LIBRARY_DESC lib{};
+		D3D12_EXPORT_DESC exprt = {};
+		D3D12_DXIL_LIBRARY_DESC lib = {};
     };
 
     LibSubobject rayGenLibSubobj;
     LibSubobject missLibSubobj;
     LibSubobject closestHitLibSubobj;
 
-    D3D12_RAYTRACING_SHADER_CONFIG shaderCfg{};
-    D3D12_RAYTRACING_PIPELINE_CONFIG pipeCfg{};
-    D3D12_GLOBAL_ROOT_SIGNATURE globalRootSigDesc{};
+    D3D12_RAYTRACING_SHADER_CONFIG shaderCfg = {};
+    D3D12_RAYTRACING_PIPELINE_CONFIG pipeCfg = {};
+    D3D12_GLOBAL_ROOT_SIGNATURE globalRootSigDesc = {};
 
     D3D12_HIT_GROUP_DESC hitGroupDesc = {};
     D3D12_SUBOBJECT_TO_EXPORTS_ASSOCIATION assocDesc = {};

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core.h>
+#include "core.h"
 
 /// Consists of the rendering synchorization part.
 struct FenceContext {

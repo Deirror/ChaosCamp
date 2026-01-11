@@ -1,17 +1,17 @@
 #pragma once
 
-#include <d3d_context.h>
-#include <frame_context.h>
-#include <fence_context.h>
-#include <readback_context.h>
-#include <swapchain_context.h>
-#include <vertex_buff_context.h>
-#include <raster_pipeline_context.h>
-#include <raytracing_pipeline_context.h>
-#include <raytracing_output_context.h>
-#include <raytracing_dispatch_context.h>
-#include <acceleration_structure_context.h>
-#include <cdxr_debug.h>
+#include "d3d_context.h"
+#include "frame_context.h"
+#include "fence_context.h"
+#include "readback_context.h"
+#include "swapchain_context.h"
+#include "vertex_buff_context.h"
+#include "raster_pipeline_context.h"
+#include "raytracing_pipeline_context.h"
+#include "raytracing_output_context.h"
+#include "raytracing_dispatch_context.h"
+#include "acceleration_structure_context.h"
+#include "cdxr_debug.h"
 
 // C++ DirectX Rendering
 namespace cdxr { 

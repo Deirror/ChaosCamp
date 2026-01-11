@@ -4,8 +4,8 @@
 #include <QObject>
 #include <QTimer>
 //-----------------------------
-#include <app_renderer.h> 
-#include <app_qtgui_main_window.h> 
+#include "app_renderer.h"
+#include "app_qtgui_main_window.h"
 
 namespace dapp {
 

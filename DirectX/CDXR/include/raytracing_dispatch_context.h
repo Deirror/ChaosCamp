@@ -1,6 +1,6 @@
 #pragma once
 
-#include <frame_context.h>
+#include "frame_context.h"
 
 struct RayTracingDispatchContext {
     void Reset();
@@ -8,7 +8,7 @@ struct RayTracingDispatchContext {
 
     ComPtr<ID3D12Resource> sbtUpload;
     ComPtr<ID3D12Resource> sbtDefault;
-    D3D12_DISPATCH_RAYS_DESC desc{};
+    D3D12_DISPATCH_RAYS_DESC desc = {};
 };
 
 struct RayTracingDispatchBuilder {

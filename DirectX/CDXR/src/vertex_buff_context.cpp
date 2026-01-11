@@ -1,6 +1,6 @@
 #include "vertex_buff_context.h"
 
-#include <d3dx12.h>
+#include "d3dx12.h"
 
 VertexBufferContext VertexBufferBuilder::Create(
     ID3D12Device* device,

@@ -5,7 +5,7 @@
 #include <dxgidebug.h>
 #endif
 //---------------
-#include <core.h>
+#include "core.h"
 
 namespace cdxr {
 

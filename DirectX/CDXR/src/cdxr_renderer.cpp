@@ -2,7 +2,7 @@
 
 #include <fstream>
 //-----------------
-#include <d3dx12.h>
+#include "d3dx12.h"
 
 namespace cdxr {
 
@@ -238,7 +238,11 @@ void CDXRenderer::init(HWND handle) {
 	execute(false);
 	flushGPU();
 
-	CreateTLASShaderResourceView(d3d.device.Get(), accSt.tlas.result.Get(), rtOut.uavHeap.Get(), 0);
+	CreateTLASShaderResourceView(
+		d3d.device.Get(), 
+		accSt.tlas.result.Get(), 
+		rtOut.uavHeap.Get()
+	);
 
 	ComPtr<ID3D12StateObjectProperties> props =
 		QueryAs<ID3D12StateObjectProperties>(rtPipe.stateObj.Get());

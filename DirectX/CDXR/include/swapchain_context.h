@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core.h>
+#include "core.h"
 
 /// Manages the textures(buffers) which are used for writing and reading(displaying on the screen).
 /// Two buffers - front and back - are more than enough.
