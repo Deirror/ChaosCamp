@@ -3,6 +3,7 @@
 #include <fstream>
 //-----------------
 #include "d3dx12.h"
+#include "shapes.hpp"
 
 namespace cdxr {
 
@@ -182,13 +183,8 @@ void CDXRenderer::init(HWND handle) {
 	);
 
 // === Vertex Buffer Data Prep And Creation === //
-	vertexData[0] = { 0.f, 0.5f, -1.f };
-	vertexData[1] = { 0.5f, -0.5f, -1.f };
-	vertexData[2] = { -0.5f, -0.5f, -1.f };
-
-	vertexData[3] = { 1.f, 0.5f, -1.5f };
-	vertexData[4] = { 1.5f, -0.5f, -1.5f };
-	vertexData[5] = { -0.5f, -0.5f, -1.5f };
+	BuildSpiralRibbonTriangles(vertexData);
+	Build_DEIRRORz_X_Triangles(vertexData);
 
 	frame.Reset();
 

@@ -1,9 +1,11 @@
 struct VSInput {
-	float2 position : POSITION;
+	float3 position : POSITION;
+	nointerpolation uint partID : PART_ID;
 };
 
 struct VSOutput {
 	float4 position : SV_POSITION;
+	nointerpolation uint partID : PART_ID;
 };
 
 cbuffer Constants : register(b0) {
@@ -29,5 +31,7 @@ VSOutput VSMain(VSInput input) {
 	result.position.x += offsX;
 	result.position.y += offsY;
 
+	result.partID = input.partID;
+	
 	return result;
 }

@@ -18,6 +18,7 @@ struct Vertex {
 	float x = 0.f;
 	float y = 0.f;
 	float z = 0.f;
+	uint32_t id = 0;
 };
 
 template <typename Interface>

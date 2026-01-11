@@ -80,7 +80,7 @@ private:
     int width = defaultWidth;
     int height = defaultHeight;
 
-    static constexpr int vertexCount = 6;
+    static constexpr int vertexCount = 1440 + 318; // Spiral Ribbon and "DEIRRORz X"
     std::array<Vertex, vertexCount> vertexData;
 
     RenderMode mode = RenderMode::Rasterized;

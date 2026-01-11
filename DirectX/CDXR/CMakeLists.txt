@@ -39,6 +39,7 @@ set(CDXR_HDR
    include/raytracing_output_context.h
    include/raytracing_dispatch_context.h
    include/acceleration_structure_context.h
+   include/shapes.hpp
    include/log.h
 )
 

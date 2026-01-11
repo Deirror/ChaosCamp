@@ -34,11 +34,11 @@ void rayGen() {
     payload.pixelColor = float4(0, 0, 0, 1);
 
     TraceRay(
-        sceneBVH,
-        RAY_FLAG_NONE,
-        0xFF,
-        0, 1, 0,
-        ray,
+	    sceneBVH, 
+        RAY_FLAG_NONE, 
+        0xFF, 
+        0, 1, 0, 
+        ray, 
         payload
     );
 
@@ -47,10 +47,16 @@ void rayGen() {
 
 [shader("miss")]
 void miss(inout RayPayload payload) {
-    payload.pixelColor = float4(0.1, 0.2, 0.2, 1);
+	payload.pixelColor = float4(0.1, 0.2, 0.2, 1);
 }
 
 [shader("closesthit")]
 void closestHit(inout RayPayload payload, BuiltInTriangleIntersectionAttributes attr) {
-    payload.pixelColor = float4(0.7, 0.2, 0.6, 1);
+    uint tri = PrimitiveIndex();
+    if (tri < 480) { // Spiral Ribbon
+		payload.pixelColor = float4(0.2, 0.7, 0.8, 1);
+    }
+    else { // "DEIRRORz X"
+		payload.pixelColor = float4(0.7, 0.9, 0.8, 1);
+    }
 }
