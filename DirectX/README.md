@@ -10,5 +10,9 @@ Description
 - The project uses CMake for build system
 - There is a `gen_vs2022.bat`, which can be run to generate a .sln in the dir `./build_vs`. Then you can open the project and switch between the solutions
 
+- To do so, I suggest just opening the project root folder directly with `Visual Studio`
+- Then open the developer console/terminal in `Visual Studio` and type - `gen_vs2022.bat`
+- This generates the proper VS folder with the .sln file
+
 > [!NOTE]
 > Change the dir where your Qt binaries and libs are located, by editing the `gen_v2022.bat` - might not be as mine
