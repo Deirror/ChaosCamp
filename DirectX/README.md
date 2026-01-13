@@ -22,4 +22,4 @@ Description
 ## 2. Compile Part
 
 - If raster .hlsl files are not already compiled, then you have to hit compile through the `VS 2022` Gui on these two files
-- For good or bad, also you have to copy the raytracing .hlsl in the `Application` dir in `build_vs`, where the executable is - at the level of the `Debug`/`Release` dirs
+- For good or bad, also you have to copy the raytracing .hlsl in the `Application` dir in `build_vs`, where the executable is - at the level of the `Debug`/`Release` dirs. More clarifications - after you compile the raster shaders - a `shader` dir will appear in `Application`. You have to copy this - `hlsl/RayTracing.hlsl` at the level of the `shader` dir
