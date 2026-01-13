@@ -7,6 +7,8 @@ Description
 
 ### Reviewing 
 
+1. Generate Files
+
 - The project uses CMake for build system
 - There is a `gen_vs2022.bat`, which can be run to generate a .sln in the dir `./build_vs`. Then you can open the project and switch between the solutions
 
@@ -16,3 +18,5 @@ Description
 
 > [!NOTE]
 > Change the dir where your Qt binaries and libs are located, by editing the `gen_v2022.bat` - might not be as mine
+
+2. Compilition Part
