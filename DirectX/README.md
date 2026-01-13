@@ -7,7 +7,7 @@ Description
 
 ### Reviewing 
 
-1. Generate Files
+## 1. Generate Files
 
 - The project uses CMake for build system
 - There is a `gen_vs2022.bat`, which can be run to generate a .sln in the dir `./build_vs`. Then you can open the project and switch between the solutions
@@ -19,4 +19,7 @@ Description
 > [!NOTE]
 > Change the dir where your Qt binaries and libs are located, by editing the `gen_v2022.bat` - might not be as mine
 
-2. Compilition Part
+## 2. Compile Part
+
+- If raster .hlsl files are not already compiled, then you have to hit compile through the `VS 2022` Gui on these two files
+- For good or bad, also you have to copy the raytracing .hlsl in the `Application` dir in `build_vs`, where the executable is - at the level of the `Debug`/`Release` dirs
